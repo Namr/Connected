@@ -18,12 +18,35 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout"/>
+       <widget class="QPushButton" name="multiview">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>20</width>
+          <height>10</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Multi View</string>
+        </property>
+       </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="singleview">
         <property name="text">
-         <string>PushButton</string>
+         <string>Single View</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="compareview">
+        <property name="text">
+         <string>Compare</string>
         </property>
        </widget>
       </item>
@@ -40,10 +63,64 @@
         </property>
        </spacer>
       </item>
+      <item>
+       <widget class="QCheckBox" name="meshenable">
+        <property name="text">
+         <string>Brain Mesh</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="mrienable">
+        <property name="text">
+         <string>MRI</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Axial</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="axialSlider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Coronal</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="coronalSlider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>
-     <widget class="GLWidget" name="Widget" native="true">
+     <widget class="GLWidget" name="screen" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -63,8 +140,38 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionLoad_Nodes"/>
+    <addaction name="actionLoad_Edges"/>
+    <addaction name="actionLoad_MRI"/>
+    <addaction name="actionLoad_Brain_Mesh"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionLoad_Nodes">
+   <property name="text">
+    <string>Load Nodes</string>
+   </property>
+  </action>
+  <action name="actionLoad_Edges">
+   <property name="text">
+    <string>Load Edges</string>
+   </property>
+  </action>
+  <action name="actionLoad_MRI">
+   <property name="text">
+    <string>Load MRI</string>
+   </property>
+  </action>
+  <action name="actionLoad_Brain_Mesh">
+   <property name="text">
+    <string>Load Brain Mesh</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

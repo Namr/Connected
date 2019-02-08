@@ -10,6 +10,10 @@ class Connected : public QMainWindow
 public:
 	Connected(QWidget *parent = Q_NULLPTR);
 
+private slots:
+	void on_singleview_clicked();
+	void on_multiview_clicked();
+	void on_compareview_clicked();
 private:
 	Ui::ConnectedClass ui;
 };

@@ -2,6 +2,8 @@
 
 #include <qopenglwidget.h>
 #include <qopenglfunctions_4_0_core.h>
+#include <qtimer.h>
+#include <qevent.h>
 #include "Camera.h"
 #include "Brain.h"
 #include <ctime>
@@ -11,14 +13,23 @@ class GLWidget :
 {
 		Q_OBJECT
 public:
+	int viewingMode = 1; //modes: 1 = multiview 2 = orbit cam only 3 = comparason mode
 	GLWidget(QWidget *parent = 0);
 	void initializeGL();
 	void resizeGL(int w, int h);
 	void paintGL();
 	~GLWidget();
+
+	int leftKeyDown = 0;
+	int rightKeyDown = 0;
+	int upKeyDown = 0;
+	int downKeyDown = 0;
 private:
-	Brain bigboi;
-	Brain smolboi;
+	QTimer *frameTimer;
+	bool eventFilter(QObject* obj, QEvent* event);
+
+	Brain primaryBrain;
+	Brain secondaryBrain;
 	GLuint screenFramebuffer = 0;
 	GLuint renderedTexture;
 	GLuint depthrenderbuffer;
@@ -32,6 +43,5 @@ private:
 	float yaw = -30.0f;
 	float pitch = 90.0f;
 	int selectedNode = -1;
-	int viewingMode = 1; //modes: 1 = multiview 2 = orbit cam only 3 = comparason mode
 };
 

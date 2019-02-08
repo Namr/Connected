@@ -3,6 +3,9 @@
 GLWidget::GLWidget(QWidget *parent):
 	QOpenGLWidget(parent)
 {
+	QTimer *timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+	timer->start(10);
 }
 
 void GLWidget::initializeGL()
@@ -48,9 +51,9 @@ void GLWidget::initializeGL()
 
 	//set background color
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	bigboi = Brain(f, "assets/Node_AAL116.node",
+	primaryBrain = Brain(f, "assets/Node_AAL116.node",
 		"assets/connect.edge");
-	smolboi = Brain(f, "assets/Node_AAL116.node",
+	secondaryBrain = Brain(f, "assets/Node_AAL116.node",
 		"assets/connect2.edge");
 	int viewingModePressed = 0;
 	int sideSwitchPressed = 0;
@@ -105,30 +108,37 @@ void GLWidget::paintGL()
 	float ypos = this->mapFromGlobal(QCursor::pos()).y();
 	double currentTime = time(NULL);
 	float deltaTime = currentTime - lastTime;
+	deltaTime = 0.01f;
 	lastTime = currentTime;
 
-	//ypos = 720.0f - ypos;
-	/*
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	ypos = HEIGHT - ypos;
+
+	if (upKeyDown)
 	{
 		pitch += turnSpeed * deltaTime;
 	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	if (downKeyDown)
 	{
 		pitch -= turnSpeed * deltaTime;
 	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+	if (rightKeyDown)
 	{
 		yaw -= turnSpeed * deltaTime;
 	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	if (leftKeyDown)
 	{
 		yaw += turnSpeed * deltaTime;
 	}
-	*/
+
 	cam.position.x = 1.52f + (cos(yaw)  * sin(pitch) * 220);
 	cam.position.y = -33.28f + (sin(yaw) * sin(pitch) * 220);
 	cam.position.z = 6.23f * (cos(pitch) * 50);
+
+	if (viewingMode == 3)
+		cam.proj = glm::perspective(glm::radians(45.0f), (float)(WIDTH / 2) / HEIGHT, 1.0f, 2000.0f);
+	else
+		cam.proj = glm::perspective(glm::radians(45.0f), (float)WIDTH / HEIGHT, 1.0f, 2000.0f);
+
 	/*
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
 	{
@@ -279,29 +289,29 @@ void GLWidget::paintGL()
 	if (viewingMode == 1)
 	{
 		f->glViewport(0, 0, WIDTH / 2, HEIGHT / 2);
-		bigboi.update(f, front, xpos, ypos - (HEIGHT / 2), WIDTH / 2, HEIGHT / 2, selectedNode);
+		primaryBrain.update(f, front, xpos, ypos - (HEIGHT / 2), WIDTH / 2, HEIGHT / 2, selectedNode);
 
 		f->glViewport(WIDTH / 2, 0, WIDTH / 2, HEIGHT / 2);
-		bigboi.update(f, top, xpos - (WIDTH / 2), ypos - (HEIGHT / 2), WIDTH / 2, HEIGHT / 2, selectedNode);
+		primaryBrain.update(f, top, xpos - (WIDTH / 2), ypos - (HEIGHT / 2), WIDTH / 2, HEIGHT / 2, selectedNode);
 
 		f->glViewport(0, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
-		bigboi.update(f, side, xpos, ypos, WIDTH / 2, HEIGHT / 2, selectedNode);
+		primaryBrain.update(f, side, xpos, ypos, WIDTH / 2, HEIGHT / 2, selectedNode);
 
 		f->glViewport(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
-		bigboi.update(f, cam, xpos - (WIDTH / 2), ypos, WIDTH / 2, HEIGHT / 2, selectedNode);
+		primaryBrain.update(f, cam, xpos - (WIDTH / 2), ypos, WIDTH / 2, HEIGHT / 2, selectedNode);
 	}
 	else if (viewingMode == 2)
 	{
 		f->glViewport(0, 0, WIDTH, HEIGHT);
-		bigboi.update(f, cam, xpos, ypos, WIDTH, HEIGHT, selectedNode);
+		primaryBrain.update(f, cam, xpos, ypos, WIDTH, HEIGHT, selectedNode);
 	}
 	else if (viewingMode == 3)
 	{
 		f->glViewport(0, 0, WIDTH / 2, HEIGHT);
-		bigboi.update(f, cam, xpos, ypos, WIDTH / 2, HEIGHT, selectedNode);
+		primaryBrain.update(f, cam, xpos, ypos, WIDTH / 2, HEIGHT, selectedNode);
 
 		f->glViewport(WIDTH / 2, 0, WIDTH / 2, HEIGHT);
-		smolboi.update(f, cam, xpos - (WIDTH / 2), ypos, WIDTH / 2, HEIGHT, selectedNode);
+		secondaryBrain.update(f, cam, xpos - (WIDTH / 2), ypos, WIDTH / 2, HEIGHT, selectedNode);
 	}
 	f->glBindFramebuffer(GL_READ_FRAMEBUFFER, screenFramebuffer);
 	f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 2);
@@ -309,6 +319,51 @@ void GLWidget::paintGL()
 		0, 0, WIDTH, HEIGHT,
 		GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	f->glBindFramebuffer(GL_READ_FRAMEBUFFER, 2);
+}
+
+bool GLWidget::eventFilter(QObject* obj, QEvent* event)
+{
+	if (event->type() == QEvent::KeyPress)
+	{
+		QKeyEvent* key = static_cast<QKeyEvent*>(event);
+		if (key->key() == Qt::Key_A)
+		{
+			leftKeyDown = 1;
+		}
+		else if (key->key() == Qt::Key_D)
+		{
+			rightKeyDown = 1;
+		}
+		if (key->key() == Qt::Key_W)
+		{
+			upKeyDown = 1;
+		}
+		else if (key->key() == Qt::Key_S)
+		{
+			downKeyDown = 1;
+		}
+	}
+	else if (event->type() == QEvent::KeyRelease)
+	{
+		QKeyEvent* key = static_cast<QKeyEvent*>(event);
+		if (key->key() == Qt::Key_A)
+		{
+			leftKeyDown = 0;
+		}
+		else if (key->key() == Qt::Key_D)
+		{
+			rightKeyDown = 0;
+		}
+		if (key->key() == Qt::Key_W)
+		{
+			upKeyDown = 0;
+		}
+		else if (key->key() == Qt::Key_S)
+		{
+			downKeyDown = 0;
+		}
+	}
+	return false;
 }
 
 GLWidget::~GLWidget()
