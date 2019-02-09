@@ -4,6 +4,7 @@
 #include <qopenglfunctions_4_0_core.h>
 #include <qtimer.h>
 #include <qevent.h>
+#include <qmessagebox.h>
 #include "Camera.h"
 #include "Brain.h"
 #include <ctime>
@@ -20,16 +21,15 @@ public:
 	void paintGL();
 	~GLWidget();
 
+	Brain primaryBrain;
+	Brain secondaryBrain;
 	int leftKeyDown = 0;
 	int rightKeyDown = 0;
 	int upKeyDown = 0;
 	int downKeyDown = 0;
 private:
 	QTimer *frameTimer;
-	bool eventFilter(QObject* obj, QEvent* event);
 
-	Brain primaryBrain;
-	Brain secondaryBrain;
 	GLuint screenFramebuffer = 0;
 	GLuint renderedTexture;
 	GLuint depthrenderbuffer;
@@ -43,5 +43,7 @@ private:
 	float yaw = -30.0f;
 	float pitch = 90.0f;
 	int selectedNode = -1;
+protected:
+	bool eventFilter(QObject* obj, QEvent* event);
 };
 

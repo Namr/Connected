@@ -48,6 +48,12 @@
     <ClCompile Include="Brain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NIFTI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MRI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Connected.h">
@@ -78,6 +84,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Brain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NIFTI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MRI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

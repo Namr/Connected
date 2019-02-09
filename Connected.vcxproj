@@ -119,6 +119,8 @@
     <ClCompile Include="GLWidget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="MRI.cpp" />
+    <ClCompile Include="NIFTI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Connected.h" />
@@ -139,6 +141,8 @@
     <ClInclude Include="Brain.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="MRI.h" />
+    <ClInclude Include="NIFTI.h" />
     <ClInclude Include="tiny_obj_loader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

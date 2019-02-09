@@ -16,6 +16,7 @@
 
 #include "Model.h"
 #include "Camera.h"
+#include "MRI.h"
 #include <boost/algorithm/string.hpp>
 
 class Brain
@@ -23,7 +24,6 @@ class Brain
 	Model sphere;
 	Model mesh;
 	Model connector;
-	//MRI mri;
 	float colorTables[6][3] = {
 		{0.0f, 0.0f, 1.0f}, //blue
 		{0.0f, 1.0f, 0.0f}, //green
@@ -43,7 +43,8 @@ public:
 	void update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, float ypos, float viewportWidth, float viewportheight, int &selectedNode);
 	void setPosition(glm::vec3 position);
 	int displayShell = 1;
-	int displayMri = 0;
+	int displayMri = -1;
+	MRI mri;
 };
 
 

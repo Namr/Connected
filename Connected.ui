@@ -68,6 +68,9 @@
         <property name="text">
          <string>Brain Mesh</string>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item>
@@ -87,10 +90,19 @@
       <item>
        <widget class="QSlider" name="axialSlider">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimum">
+         <number>-80</number>
+        </property>
+        <property name="maximum">
+         <number>80</number>
+        </property>
+        <property name="value">
+         <number>-80</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -107,10 +119,19 @@
       <item>
        <widget class="QSlider" name="coronalSlider">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimum">
+         <number>-80</number>
+        </property>
+        <property name="maximum">
+         <number>65</number>
+        </property>
+        <property name="sliderPosition">
+         <number>-80</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>

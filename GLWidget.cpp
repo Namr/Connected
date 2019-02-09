@@ -113,19 +113,19 @@ void GLWidget::paintGL()
 
 	ypos = HEIGHT - ypos;
 
-	if (upKeyDown)
+	if (upKeyDown == 1)
 	{
 		pitch += turnSpeed * deltaTime;
 	}
-	if (downKeyDown)
+	if (downKeyDown == 1)
 	{
 		pitch -= turnSpeed * deltaTime;
 	}
-	if (rightKeyDown)
+	if (rightKeyDown == 1)
 	{
 		yaw -= turnSpeed * deltaTime;
 	}
-	if (leftKeyDown)
+	if (leftKeyDown == 1)
 	{
 		yaw += turnSpeed * deltaTime;
 	}
@@ -362,6 +362,10 @@ bool GLWidget::eventFilter(QObject* obj, QEvent* event)
 		{
 			downKeyDown = 0;
 		}
+	}
+	else
+	{
+		return QObject::eventFilter(obj, event);
 	}
 	return false;
 }

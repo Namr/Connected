@@ -65,6 +65,7 @@ Brain::Brain(QOpenGLFunctions_4_0_Core *f, std::string nodePath, std::string con
 
 	position = glm::mat4(1.0f);
 
+	mri = MRI(f);
 	sphere = Model();
 	mesh = Model();
 	connector = Model();
@@ -150,10 +151,10 @@ void Brain::update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, flo
 		node++;
 	}
 
-	/*
+	
 	if (displayMri == 1)
-		mri.render(camera, window);
-	*/
+		mri.render(f, camera);
+	
 	if (displayShell == 1)
 	{
 		f->glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
