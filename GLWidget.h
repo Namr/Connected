@@ -27,8 +27,12 @@ public:
 	int rightKeyDown = 0;
 	int upKeyDown = 0;
 	int downKeyDown = 0;
+	int leftMouseDown = 0;
 private:
 	QTimer *frameTimer;
+
+	int WIDTH;
+	int HEIGHT;
 
 	GLuint screenFramebuffer = 0;
 	GLuint renderedTexture;
@@ -43,7 +47,5 @@ private:
 	float yaw = -30.0f;
 	float pitch = 90.0f;
 	int selectedNode = -1;
-protected:
-	bool eventFilter(QObject* obj, QEvent* event);
 };
 

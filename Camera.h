@@ -14,6 +14,7 @@ public:
 	int viewMode = 1; // 1 default, -1 alt
 	Camera::Camera();
 	Camera(int w, int h);
+	void Resize(int w, int h);
 };
 
 

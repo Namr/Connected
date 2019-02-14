@@ -4,7 +4,8 @@ Connected::Connected(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
-	ui.screen->installEventFilter(centralWidget());
+	KeyListener* key = new KeyListener(ui.screen);
+	ui.centralWidget->installEventFilter(key);
 	connect(ui.axialSlider, SIGNAL(valueChanged(int)), this, SLOT(on_axialSlider_valuechanged(int))); 
 	connect(ui.coronalSlider, SIGNAL(valueChanged(int)), this, SLOT(on_coronalSlider_valuechanged(int)));
 }

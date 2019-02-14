@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_Connected.h"
+#include "KeyListener.h"
 
 class Connected : public QMainWindow
 {

@@ -14,3 +14,7 @@ Camera::Camera(int w, int h)
 	proj = glm::perspective(glm::radians(45.0f), (float) w / h, 1.0f, 2000.0f);
 }
 
+void Camera::Resize(int w, int h)
+{
+	proj = glm::perspective(glm::radians(45.0f), (float)w / h, 1.0f, 2000.0f);
+}

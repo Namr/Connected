@@ -54,12 +54,18 @@
     <ClCompile Include="MRI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KeyListener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Connected.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="GLWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="KeyListener.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

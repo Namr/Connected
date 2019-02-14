@@ -85,7 +85,7 @@ void Brain::setPosition(glm::vec3 pos)
 	//mri.parentPosition = position;
 }
 
-void Brain::update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, float ypos, float viewportWidth, float viewportheight, int &selectedNode)
+void Brain::update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, float ypos, float viewportWidth, float viewportheight, int &selectedNode, int mouseDown)
 {
 	int node = 0;
 	for (glm::mat4 pos : nodePositions)
@@ -115,7 +115,7 @@ void Brain::update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, flo
 		int connectedNode = 0;
 		for (float connection : connections[node])
 		{
-			if (connection > 0.5 /*&& (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2) == GLFW_RELEASE || hit || selectedNode == node || selectedNode == connectedNode)*/)
+			if (connection > 0.5 && (mouseDown == 0 || hit || selectedNode == node || selectedNode == connectedNode))
 			{
 				//move connector to the spheres location, and then aim it at the connected node
 				connector.model = glm::mat4(1);
