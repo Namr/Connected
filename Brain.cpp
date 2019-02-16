@@ -36,7 +36,11 @@ Brain::Brain(QOpenGLFunctions_4_0_Core *f, std::string nodePath, std::string con
 		nodeFile.close();
 	}
 	else
-		std::cout << "ERROR: Node File not found! Check your paths";
+	{
+		QMessageBox messageBox;
+		messageBox.critical(0, "Error", "Node File not found! Check your paths");
+		messageBox.setFixedSize(500, 200);
+	}
 
 	//load in connection data
 	std::ifstream connectionFile;
@@ -61,7 +65,11 @@ Brain::Brain(QOpenGLFunctions_4_0_Core *f, std::string nodePath, std::string con
 		nodeFile.close();
 	}
 	else
-		std::cout << "ERROR: Connections File not found! Check your paths";
+	{
+		QMessageBox messageBox;
+		messageBox.critical(0, "Error", "Edge File not found! Check your paths");
+		messageBox.setFixedSize(500, 200);
+	}
 
 	position = glm::mat4(1.0f);
 
@@ -72,6 +80,79 @@ Brain::Brain(QOpenGLFunctions_4_0_Core *f, std::string nodePath, std::string con
 	sphere.loadFromObj(f, "assets/sphere.obj", 0);
 	mesh.loadFromObj(f, "assets/brain.obj", 0);
 	connector.loadFromObj(f, "assets/connector.obj", 0);
+}
+
+void Brain::reloadBrain(std::string nodePath, std::string connectionPath)
+{
+
+	nodePositions.clear();
+	nodeNames.clear();
+	nodeColors.clear();
+	connections.clear();
+
+	std::ifstream nodeFile;
+	nodeFile.open(nodePath);
+	std::string line;
+
+	//iterate over each line in the node file if it is found, store it in line, and operate on it
+	if (nodeFile.is_open())
+	{
+		int nodeNum = 0;
+		while (getline(nodeFile, line))
+		{
+			//split line by spaces so the xyz components are isolated, then create a vec3 to store that position and store it in a list
+			std::vector<std::string> tokenized;
+			boost::split(tokenized, line, [](char c) { return c == ' ' || c == '	'; });
+
+			float x = stof(tokenized[0]);
+			float y = stof(tokenized[1]);
+			float z = stof(tokenized[2]);
+			int colorID = std::stoi(tokenized[3]) - 1;  //subtract one so that way instead of going from 1-6 its 0-5 and fits array notations
+			std::string name = tokenized[5];
+
+			glm::mat4 pos = glm::mat4(1.0f);
+			pos = glm::translate(pos, glm::vec3(x, y, z));
+			nodePositions.push_back(pos);
+			nodeNames.push_back(name);
+			nodeColors.push_back(colorID);
+		}
+		nodeFile.close();
+	}
+	else
+	{
+		QMessageBox messageBox;
+		messageBox.critical(0, "Error", "Node File not found! Check your paths");
+		messageBox.setFixedSize(500, 200);
+	}
+
+	//load in connection data
+	std::ifstream connectionFile;
+	connectionFile.open(connectionPath);
+
+	//iterate over each line in the connections file (which is a connection) organizes it into a list of lists
+	//it is a list of a list of all the nodes connections
+	//i.e connections[1] is a list of all the connections to node 1 and connections[1][2] is the strength of the connection between nodes 1 and 2
+	if (connectionFile.is_open())
+	{
+		int nodeNum = 0;
+		for (int n = 0; n < nodePositions.size(); n++)
+		{
+			std::vector<float> nodesConnections;
+			for (int c = 0; c < nodePositions.size(); c++)
+			{
+				getline(connectionFile, line);
+				nodesConnections.push_back(stof(line));
+			}
+			connections.push_back(nodesConnections);
+		}
+		nodeFile.close();
+	}
+	else
+	{
+		QMessageBox messageBox;
+		messageBox.critical(0, "Error", "Edge File not found! Check your paths");
+		messageBox.setFixedSize(500, 200);
+	}
 }
 
 void Brain::setPosition(glm::vec3 pos)

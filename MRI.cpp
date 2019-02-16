@@ -16,12 +16,12 @@ MRI::MRI(QOpenGLFunctions_4_0_Core *f) : data(f, "assets/xT1_brain.tif")
 	axial = axial * glm::mat4_cast(axialRotation);
 
 	coronal = glm::translate(coronal, glm::vec3(1.52f, -80.23f, -80.23f));
-	coronal = glm::translate(coronal, glm::vec3(-10.0f, 0.0f, -50.0f));
-	coronal = glm::scale(coronal, glm::vec3(216 / 2.5, 1.0f, 700 / 2.5));
+	coronal = glm::translate(coronal, glm::vec3(-140.0f, 0.0f, -50.0f));
+	coronal = glm::scale(coronal, glm::vec3(470.0f / 2.5, 1.0f, 700 / 2.5));
 
 	axial = glm::translate(axial, glm::vec3(1.52f, -80.23f, -80.23f));
 	axial = glm::translate(axial, glm::vec3(-30.0f, 0.0f, -80.0f));
-	axial = glm::scale(axial, glm::vec3(300 / 2.5, 1.0f, 800 / 2.5));
+	axial = glm::scale(axial, glm::vec3(280 / 2.5, 1.0f, 780 / 2.5));
 }
 
 void MRI::render(QOpenGLFunctions_4_0_Core *f, Camera &camera)
@@ -31,8 +31,8 @@ void MRI::render(QOpenGLFunctions_4_0_Core *f, Camera &camera)
 	plane.view = 0;
 	plane.render(f, camera);
 
-	plane.model = glm::translate(axial, glm::vec3(0.0f, axialPosition + 80, 0.0f));
-	plane.layer = map(axialPosition + 80, -90.23f + 80, 90.23f + 80, 0.0f, 1.0f);
+	plane.model = glm::translate(axial, glm::vec3(0.0f, axialPosition + 90, 0.0f));
+	plane.layer = map(axialPosition + 90, -90.23f + 90, 90.23f + 250, 0.0f, 1.0f);
 	plane.view = 1;
 	plane.render(f, camera);
 }

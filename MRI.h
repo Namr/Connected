@@ -20,8 +20,8 @@ public:
 	Model plane;
 	glm::mat4 coronal = glm::mat4(1.0f);
 	glm::mat4 axial = glm::mat4(1.0f);
-	float coronalPosition = 20.0f;
-	float axialPosition = 20.0f;
+	float coronalPosition = -90.0f;
+	float axialPosition = -80.0f;
 	void render(QOpenGLFunctions_4_0_Core *f, Camera &camera);
 	~MRI();
 };

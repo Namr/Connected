@@ -8,6 +8,8 @@
 
 #include <qopenglfunctions_4_0_core.h>
 #include <qopenglwidget.h>
+#include <qmessagebox.h>
+
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -40,6 +42,7 @@ class Brain
 public:
 	Brain(QOpenGLFunctions_4_0_Core *f, std::string nodePath, std::string connectionPath);
 	Brain();
+	void reloadBrain(std::string nodePath, std::string connectionPath);
 	void update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, float ypos, float viewportWidth, float viewportheight, int &selectedNode, int mouseDown);
 	void setPosition(glm::vec3 position);
 	int displayShell = 1;

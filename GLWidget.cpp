@@ -123,6 +123,18 @@ void GLWidget::paintGL()
 	deltaTime = 0.01f;
 	lastTime = currentTime;
 
+
+	if (primaryShouldReload == 1)
+	{
+		primaryBrain.reloadBrain(primaryNodeName, primaryEdgeName);
+		primaryShouldReload = 0;
+	}
+	else if (secondaryShouldReload == 1)
+	{
+		secondaryBrain.reloadBrain(secondaryNodeName, secondaryEdgeName);
+		secondaryShouldReload = 0;
+	}
+
 	ypos = HEIGHT - ypos;
 
 	if (upKeyDown == 1)

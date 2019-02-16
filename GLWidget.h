@@ -22,7 +22,15 @@ public:
 	~GLWidget();
 
 	Brain primaryBrain;
+	int primaryShouldReload = 0;
+	std::string primaryNodeName;
+	std::string primaryEdgeName;
+
 	Brain secondaryBrain;
+	int secondaryShouldReload = 0;
+	std::string secondaryNodeName;
+	std::string secondaryEdgeName;
+
 	int leftKeyDown = 0;
 	int rightKeyDown = 0;
 	int upKeyDown = 0;

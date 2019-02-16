@@ -125,7 +125,7 @@
          </sizepolicy>
         </property>
         <property name="minimum">
-         <number>-80</number>
+         <number>-90</number>
         </property>
         <property name="maximum">
          <number>65</number>
@@ -165,32 +165,20 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionLoad_Nodes"/>
-    <addaction name="actionLoad_Edges"/>
-    <addaction name="actionLoad_MRI"/>
-    <addaction name="actionLoad_Brain_Mesh"/>
+    <addaction name="actionLoad_Connectome"/>
+    <addaction name="actionLoad_Secondary_Connectome"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionLoad_Nodes">
+  <action name="actionLoad_Connectome">
    <property name="text">
-    <string>Load Nodes</string>
+    <string>Load Primary Connectome</string>
    </property>
   </action>
-  <action name="actionLoad_Edges">
+  <action name="actionLoad_Secondary_Connectome">
    <property name="text">
-    <string>Load Edges</string>
-   </property>
-  </action>
-  <action name="actionLoad_MRI">
-   <property name="text">
-    <string>Load MRI</string>
-   </property>
-  </action>
-  <action name="actionLoad_Brain_Mesh">
-   <property name="text">
-    <string>Load Brain Mesh</string>
+    <string>Load Secondary Connectome</string>
    </property>
   </action>
  </widget>

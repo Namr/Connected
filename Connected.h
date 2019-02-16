@@ -1,8 +1,10 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <qfiledialog.h>
 #include "ui_Connected.h"
 #include "KeyListener.h"
+#include "Brain.h"
 
 class Connected : public QMainWindow
 {
@@ -17,6 +19,8 @@ private slots:
 	void on_compareview_clicked();
 	void on_meshenable_clicked();
 	void on_mrienable_clicked();
+	void on_actionLoad_Connectome_triggered();
+	void on_actionLoad_Secondary_Connectome_triggered();
 	void on_axialSlider_valuechanged(int newValue);
 	void on_coronalSlider_valuechanged(int newValue);
 private:
