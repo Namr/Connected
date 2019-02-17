@@ -164,69 +164,6 @@ void GLWidget::paintGL()
 		cam.proj = glm::perspective(glm::radians(45.0f), (float)WIDTH / HEIGHT, 1.0f, 2000.0f);
 
 	/*
-	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
-	{
-		std::cout << "X: " << cam.position.x << "Y:" << cam.position.y << "Z:" << cam.position.z << std::endl;
-	}
-	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
-	{
-		viewingModePressed = 1;
-	}
-	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-	{
-		shellDisablePressed = 1;
-	}
-	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_RELEASE && shellDisablePressed == 1)
-	{
-		shellDisablePressed = 0;
-		if (bigboi.displayShell == 1)
-		{
-			bigboi.displayShell = 0;
-			smolboi.displayShell = 0;
-		}
-		else
-		{
-			bigboi.displayShell = 1;
-			smolboi.displayShell = 1;
-		}
-	}
-	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
-	{
-		MRIDisablePressed = 1;
-	}
-	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE && MRIDisablePressed == 1)
-	{
-		MRIDisablePressed = 0;
-		if (bigboi.displayMri == 1)
-		{
-			bigboi.displayMri = 0;
-			smolboi.displayMri = 0;
-		}
-		else
-		{
-			bigboi.displayMri = 1;
-			smolboi.displayMri = 1;
-		}
-	}
-	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_RELEASE && viewingModePressed == 1)
-	{
-		viewingModePressed = 0;
-		if (viewingMode == 3)
-		{
-			viewingMode = 1;
-			cam.proj = glm::perspective(glm::radians(45.0f), 640.0f / 360.0f, 1.0f, 2000.0f);
-		}
-		else
-		{
-			viewingMode += 1;
-			if (viewingMode == 3)
-				cam.proj = glm::perspective(glm::radians(45.0f), (float)(WIDTH / 2) / HEIGHT, 1.0f, 2000.0f);
-		}
-	}
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_3) == GLFW_PRESS && viewingMode == 1)
-	{
-		sideSwitchPressed = 1;
-	}
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_3) == GLFW_RELEASE && viewingMode == 1 && sideSwitchPressed == 1)
 	{
 		sideSwitchPressed = 0;

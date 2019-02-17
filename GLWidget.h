@@ -53,8 +53,7 @@ private:
 	Camera side;
 	Camera front;
 	time_t lastTime;
-	float speed = 0.1f;
-	float turnSpeed = 0.4f;
+	float turnSpeed = 0.8f;
 	float yaw = -30.0f;
 	float pitch = 90.0f;
 	int selectedNode = -1;
