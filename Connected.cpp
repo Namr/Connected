@@ -8,7 +8,7 @@ Connected::Connected(QWidget *parent)
 	ui.centralWidget->installEventFilter(key);
 	connect(ui.axialSlider, SIGNAL(valueChanged(int)), this, SLOT(on_axialSlider_valuechanged(int))); 
 	connect(ui.coronalSlider, SIGNAL(valueChanged(int)), this, SLOT(on_coronalSlider_valuechanged(int)));
-
+	connect(ui.thresholdSlider, SIGNAL(valueChanged(int)), this, SLOT(on_thresholdSlider_valuechanged(int)));
 	ui.screen->nodeName = ui.nodeName;
 }
 
@@ -39,6 +39,7 @@ void Connected::on_actionLoad_Secondary_Connectome_triggered()
 		ui.screen->update();
 	}
 }
+
 
 void Connected::on_multiview_clicked()
 {
@@ -85,5 +86,11 @@ void Connected::on_coronalSlider_valuechanged(int newValue)
 {
 	ui.screen->primaryBrain.mri.coronalPosition = newValue;
 	ui.screen->secondaryBrain.mri.coronalPosition = newValue;
+	ui.screen->update();
+}
+
+void Connected::on_thresholdSlider_valuechanged(int newValue)
+{
+	ui.screen->threshold = (float)newValue / 100.0f;
 	ui.screen->update();
 }

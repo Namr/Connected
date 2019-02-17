@@ -34,6 +34,7 @@ public:
 	std::string secondaryEdgeName;
 
 	QLabel *nodeName;
+	float threshold = 0.5;
 
 	int leftKeyDown = 0;
 	int rightKeyDown = 0;
@@ -41,8 +42,6 @@ public:
 	int downKeyDown = 0;
 	int leftMouseDown = 0;
 private:
-	QTimer *frameTimer;
-
 	int WIDTH;
 	int HEIGHT;
 

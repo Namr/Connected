@@ -195,7 +195,8 @@ void Brain::update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, flo
 		int connectedNode = 0;
 		for (float connection : connections[node])
 		{
-			if (connection > 0.5 && (mouseDown == 0 || hit || selectedNode == node || selectedNode == connectedNode))
+			if (connection > threshold && (mouseDown == 0 || hit || selectedNode == node || selectedNode == connectedNode))
+			if (connection > threshold && (mouseDown == 0 || hit || selectedNode == node || selectedNode == connectedNode))
 			{
 				//move connector to the spheres location, and then aim it at the connected node
 				connector.model = glm::mat4(1);

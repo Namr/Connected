@@ -46,6 +46,7 @@ public:
 	void setPosition(glm::vec3 position);
 
 	std::vector<std::string> nodeNames;
+	float threshold = 0.5;
 
 	int displayShell = 1;
 	int displayMri = -1;

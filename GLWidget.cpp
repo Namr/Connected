@@ -12,13 +12,11 @@ void GLWidget::initializeGL()
 {
 	WIDTH = this->width();
 	HEIGHT = this->height();
-
 	QOpenGLFunctions_4_0_Core *f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_0_Core>();
 	
 	f->glEnable(GL_BLEND);
 	f->glEnable(GL_DEPTH_TEST);
 	f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 
 	f->glGenFramebuffers(1, &screenFramebuffer);
 	f->glBindFramebuffer(GL_FRAMEBUFFER, screenFramebuffer);
@@ -87,7 +85,6 @@ void GLWidget::initializeGL()
 		glm::vec3(0.0f, 0.0f, -1.0f) // up axis
 	);
 
-	lastTime = time(NULL);
 	cam.position = front.position;
 }
 
@@ -118,15 +115,15 @@ void GLWidget::paintGL()
 
 	float xpos = this->mapFromGlobal(QCursor::pos()).x();
 	float ypos = this->mapFromGlobal(QCursor::pos()).y();
-	double currentTime = time(NULL);
-	float deltaTime = currentTime - lastTime;
-	deltaTime = 0.01f;
-	lastTime = currentTime;
+
+	float deltaTime = 0.01f;
 
 	if (nodeName != nullptr)
 	{
 		nodeName->setText(primaryBrain.nodeNames[selectedNode].c_str());
 	}
+	primaryBrain.threshold = threshold;
+	secondaryBrain.threshold = threshold;
 
 	if (primaryShouldReload == 1)
 	{
