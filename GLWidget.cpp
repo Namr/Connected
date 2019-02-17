@@ -123,6 +123,10 @@ void GLWidget::paintGL()
 	deltaTime = 0.01f;
 	lastTime = currentTime;
 
+	if (nodeName != nullptr)
+	{
+		nodeName->setText(primaryBrain.nodeNames[selectedNode].c_str());
+	}
 
 	if (primaryShouldReload == 1)
 	{

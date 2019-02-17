@@ -35,7 +35,6 @@ class Brain
 		{1.0f, 0.5f, 0.0f} //orange
 	};
 	std::vector<glm::mat4> nodePositions;
-	std::vector<std::string> nodeNames;
 	std::vector<int> nodeColors;
 	std::vector<std::vector<float>> connections;
 	glm::mat4 position;
@@ -45,6 +44,9 @@ public:
 	void reloadBrain(std::string nodePath, std::string connectionPath);
 	void update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown);
 	void setPosition(glm::vec3 position);
+
+	std::vector<std::string> nodeNames;
+
 	int displayShell = 1;
 	int displayMri = -1;
 	MRI mri;

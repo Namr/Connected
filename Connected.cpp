@@ -8,6 +8,8 @@ Connected::Connected(QWidget *parent)
 	ui.centralWidget->installEventFilter(key);
 	connect(ui.axialSlider, SIGNAL(valueChanged(int)), this, SLOT(on_axialSlider_valuechanged(int))); 
 	connect(ui.coronalSlider, SIGNAL(valueChanged(int)), this, SLOT(on_coronalSlider_valuechanged(int)));
+
+	ui.screen->nodeName = ui.nodeName;
 }
 
 void Connected::on_actionLoad_Connectome_triggered()

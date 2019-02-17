@@ -5,6 +5,8 @@
 #include <qtimer.h>
 #include <qevent.h>
 #include <qmessagebox.h>
+#include <qlabel.h>
+
 #include "Camera.h"
 #include "Brain.h"
 #include <ctime>
@@ -30,6 +32,8 @@ public:
 	int secondaryShouldReload = 0;
 	std::string secondaryNodeName;
 	std::string secondaryEdgeName;
+
+	QLabel *nodeName;
 
 	int leftKeyDown = 0;
 	int rightKeyDown = 0;
