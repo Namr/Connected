@@ -15,10 +15,13 @@ void Connected::on_actionLoad_Connectome_triggered()
 	QString nodeName = QFileDialog::getOpenFileName(this, "Select Node File");
 	QString edgeName = QFileDialog::getOpenFileName(this, "Select Edge File");
 
-	ui.screen->primaryNodeName = nodeName.toStdString().c_str();
-	ui.screen->primaryEdgeName = edgeName.toStdString().c_str();
-	ui.screen->primaryShouldReload = 1;
-	ui.screen->update();
+	if (!nodeName.isEmpty() && !nodeName.isNull() && !edgeName.isEmpty() && !edgeName.isNull())
+	{
+		ui.screen->primaryNodeName = nodeName.toStdString().c_str();
+		ui.screen->primaryEdgeName = edgeName.toStdString().c_str();
+		ui.screen->primaryShouldReload = 1;
+		ui.screen->update();
+	}
 }
 
 void Connected::on_actionLoad_Secondary_Connectome_triggered()
@@ -26,10 +29,13 @@ void Connected::on_actionLoad_Secondary_Connectome_triggered()
 	QString nodeName = QFileDialog::getOpenFileName(this, "Select Node File");
 	QString edgeName = QFileDialog::getOpenFileName(this, "Select Edge File");
 
-	ui.screen->secondaryNodeName = nodeName.toStdString().c_str();
-	ui.screen->secondaryEdgeName = edgeName.toStdString().c_str();
-	ui.screen->secondaryShouldReload = 1;
-	ui.screen->update();
+	if (!nodeName.isEmpty() && !nodeName.isNull() && !edgeName.isEmpty() && !edgeName.isNull())
+	{
+		ui.screen->secondaryNodeName = nodeName.toStdString().c_str();
+		ui.screen->secondaryEdgeName = edgeName.toStdString().c_str();
+		ui.screen->secondaryShouldReload = 1;
+		ui.screen->update();
+	}
 }
 
 void Connected::on_multiview_clicked()

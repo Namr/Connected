@@ -135,7 +135,6 @@ void GLWidget::paintGL()
 		secondaryShouldReload = 0;
 	}
 
-	ypos = HEIGHT - ypos;
 
 	if (upKeyDown == 1)
 	{
@@ -313,29 +312,29 @@ void GLWidget::paintGL()
 	if (viewingMode == 1)
 	{
 		f->glViewport(0, 0, WIDTH / 2, HEIGHT / 2);
-		primaryBrain.update(f, front, xpos, ypos - (HEIGHT / 2), WIDTH / 2, HEIGHT / 2, selectedNode, leftMouseDown);
+		primaryBrain.update(f, front, xpos, ypos, selectedNode, leftMouseDown);
 
 		f->glViewport(WIDTH / 2, 0, WIDTH / 2, HEIGHT / 2);
-		primaryBrain.update(f, top, xpos - (WIDTH / 2), ypos - (HEIGHT / 2), WIDTH / 2, HEIGHT / 2, selectedNode, leftMouseDown);
+		primaryBrain.update(f, top, xpos, ypos, selectedNode, leftMouseDown);
 
 		f->glViewport(0, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
-		primaryBrain.update(f, side, xpos, ypos, WIDTH / 2, HEIGHT / 2, selectedNode, leftMouseDown);
+		primaryBrain.update(f, side, xpos, ypos, selectedNode, leftMouseDown);
 
 		f->glViewport(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
-		primaryBrain.update(f, cam, xpos - (WIDTH / 2), ypos, WIDTH / 2, HEIGHT / 2, selectedNode, leftMouseDown);
+		primaryBrain.update(f, cam, xpos, ypos, selectedNode, leftMouseDown);
 	}
 	else if (viewingMode == 2)
 	{
 		f->glViewport(0, 0, WIDTH, HEIGHT);
-		primaryBrain.update(f, cam, xpos, ypos, WIDTH, HEIGHT, selectedNode, leftMouseDown);
+		primaryBrain.update(f, cam, xpos, ypos, selectedNode, leftMouseDown);
 	}
 	else if (viewingMode == 3)
 	{
 		f->glViewport(0, 0, WIDTH / 2, HEIGHT);
-		primaryBrain.update(f, cam, xpos, ypos, WIDTH / 2, HEIGHT, selectedNode, leftMouseDown);
+		primaryBrain.update(f, cam, xpos, ypos, selectedNode, leftMouseDown);
 
 		f->glViewport(WIDTH / 2, 0, WIDTH / 2, HEIGHT);
-		secondaryBrain.update(f, cam, xpos - (WIDTH / 2), ypos, WIDTH / 2, HEIGHT, selectedNode, leftMouseDown);
+		secondaryBrain.update(f, cam, xpos, ypos, selectedNode, leftMouseDown);
 	}
 	f->glBindFramebuffer(GL_READ_FRAMEBUFFER, screenFramebuffer);
 	f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 2);

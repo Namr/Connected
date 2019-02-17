@@ -166,7 +166,7 @@ void Brain::setPosition(glm::vec3 pos)
 	//mri.parentPosition = position;
 }
 
-void Brain::update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, float ypos, float viewportWidth, float viewportheight, int &selectedNode, int mouseDown)
+void Brain::update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown)
 {
 	int node = 0;
 	for (glm::mat4 pos : nodePositions)
@@ -175,14 +175,13 @@ void Brain::update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, flo
 		sphere.model = pos;
 		sphere.model = glm::scale(sphere.model, glm::vec3(1.5f, 1.5f, 1.5f));
 
-		//check if the mouse cursor is over this sphere
-		//unproject twice to build a ray from near to far plane
-		float mouseX = xpos / (viewportWidth  * 0.5f) - 1.0f;
-		float mouseY = ypos / (viewportheight * 0.5f) - 1.0f;
-		glm::vec4 screenPos = glm::vec4(mouseX, -mouseY, 1.0f, 1.0f);
-		glm::mat4 invVP = glm::inverse(camera.proj * camera.view);
-		glm::vec4 worldPos = invVP * screenPos;
-		glm::vec3 dir = glm::normalize(glm::vec3(worldPos));
+		GLint viewportraw[4];
+		glGetIntegerv(GL_VIEWPORT, viewportraw);
+
+		glm::vec4 viewport = glm::vec4(viewportraw[0], viewportraw[1], viewportraw[2], viewportraw[3]);
+		glm::vec3 v0 = glm::unProject(glm::vec3(xpos, ypos, 0.0f), camera.view, camera.proj, viewport);
+		glm::vec3 v1 = glm::unProject(glm::vec3(xpos, ypos, 1.0f), camera.view, camera.proj, viewport);
+		glm::vec3 dir = glm::normalize((v1 - v0));
 
 		glm::vec3 hitPos;
 		glm::vec3 hitNorm;

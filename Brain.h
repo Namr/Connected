@@ -43,7 +43,7 @@ public:
 	Brain(QOpenGLFunctions_4_0_Core *f, std::string nodePath, std::string connectionPath);
 	Brain();
 	void reloadBrain(std::string nodePath, std::string connectionPath);
-	void update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, float ypos, float viewportWidth, float viewportheight, int &selectedNode, int mouseDown);
+	void update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown);
 	void setPosition(glm::vec3 position);
 	int displayShell = 1;
 	int displayMri = -1;
