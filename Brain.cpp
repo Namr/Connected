@@ -7,69 +7,7 @@ Brain::Brain()
 
 Brain::Brain(QOpenGLFunctions_4_0_Core *f, std::string nodePath, std::string connectionPath)
 {
-	std::ifstream nodeFile;
-	nodeFile.open(nodePath);
-	std::string line;
-
-	//iterate over each line in the node file if it is found, store it in line, and operate on it
-	if (nodeFile.is_open())
-	{
-		int nodeNum = 0;
-		while (getline(nodeFile, line))
-		{
-			//split line by spaces so the xyz components are isolated, then create a vec3 to store that position and store it in a list
-			std::vector<std::string> tokenized;
-			boost::split(tokenized, line, [](char c) { return c == ' ' || c == '	'; });
-
-			float x = stof(tokenized[0]);
-			float y = stof(tokenized[1]);
-			float z = stof(tokenized[2]);
-			int colorID = std::stoi(tokenized[3]) - 1;  //subtract one so that way instead of going from 1-6 its 0-5 and fits array notations
-			std::string name = tokenized[5];
-
-			glm::mat4 pos = glm::mat4(1.0f);
-			pos = glm::translate(pos, glm::vec3(x, y, z));
-			nodePositions.push_back(pos);
-			nodeNames.push_back(name);
-			nodeColors.push_back(colorID);
-		}
-		nodeFile.close();
-	}
-	else
-	{
-		QMessageBox messageBox;
-		messageBox.critical(0, "Error", "Node File not found! Check your paths");
-		messageBox.setFixedSize(500, 200);
-	}
-
-	//load in connection data
-	std::ifstream connectionFile;
-	connectionFile.open(connectionPath);
-
-	//iterate over each line in the connections file (which is a connection) organizes it into a list of lists
-	//it is a list of a list of all the nodes connections
-	//i.e connections[1] is a list of all the connections to node 1 and connections[1][2] is the strength of the connection between nodes 1 and 2
-	if (connectionFile.is_open())
-	{
-		int nodeNum = 0;
-		for (int n = 0; n < nodePositions.size(); n++)
-		{
-			std::vector<float> nodesConnections;
-			for (int c = 0; c < nodePositions.size(); c++)
-			{
-				getline(connectionFile, line);
-				nodesConnections.push_back(stof(line));
-			}
-			connections.push_back(nodesConnections);
-		}
-		nodeFile.close();
-	}
-	else
-	{
-		QMessageBox messageBox;
-		messageBox.critical(0, "Error", "Edge File not found! Check your paths");
-		messageBox.setFixedSize(500, 200);
-	}
+	reloadBrain(nodePath, connectionPath);
 
 	position = glm::mat4(1.0f);
 
@@ -84,7 +22,6 @@ Brain::Brain(QOpenGLFunctions_4_0_Core *f, std::string nodePath, std::string con
 
 void Brain::reloadBrain(std::string nodePath, std::string connectionPath)
 {
-
 	nodePositions.clear();
 	nodeNames.clear();
 	nodeColors.clear();
@@ -100,21 +37,24 @@ void Brain::reloadBrain(std::string nodePath, std::string connectionPath)
 		int nodeNum = 0;
 		while (getline(nodeFile, line))
 		{
-			//split line by spaces so the xyz components are isolated, then create a vec3 to store that position and store it in a list
-			std::vector<std::string> tokenized;
-			boost::split(tokenized, line, [](char c) { return c == ' ' || c == '	'; });
+			if (line.find('#') == std::string::npos) //ignore comments
+			{
+				//split line by spaces so the xyz components are isolated, then create a vec3 to store that position and store it in a list
+				std::vector<std::string> tokenized;
+				boost::split(tokenized, line, [](char c) { return c == ' ' || c == '	'; });
 
-			float x = stof(tokenized[0]);
-			float y = stof(tokenized[1]);
-			float z = stof(tokenized[2]);
-			int colorID = std::stoi(tokenized[3]) - 1;  //subtract one so that way instead of going from 1-6 its 0-5 and fits array notations
-			std::string name = tokenized[5];
+				float x = stof(tokenized[0]);
+				float y = stof(tokenized[1]);
+				float z = stof(tokenized[2]);
+				int colorID = std::stoi(tokenized[3]) - 1;  //subtract one so that way instead of going from 1-6 its 0-5 and fits array notations
+				std::string name = tokenized[5];
 
-			glm::mat4 pos = glm::mat4(1.0f);
-			pos = glm::translate(pos, glm::vec3(x, y, z));
-			nodePositions.push_back(pos);
-			nodeNames.push_back(name);
-			nodeColors.push_back(colorID);
+				glm::mat4 pos = glm::mat4(1.0f);
+				pos = glm::translate(pos, glm::vec3(x, y, z));
+				nodePositions.push_back(pos);
+				nodeNames.push_back(name);
+				nodeColors.push_back(colorID);
+			}
 		}
 		nodeFile.close();
 	}
@@ -129,23 +69,63 @@ void Brain::reloadBrain(std::string nodePath, std::string connectionPath)
 	std::ifstream connectionFile;
 	connectionFile.open(connectionPath);
 
-	//iterate over each line in the connections file (which is a connection) organizes it into a list of lists
-	//it is a list of a list of all the nodes connections
-	//i.e connections[1] is a list of all the connections to node 1 and connections[1][2] is the strength of the connection between nodes 1 and 2
+	//check if edge file is single data points per line, or whole node data per line
 	if (connectionFile.is_open())
 	{
-		int nodeNum = 0;
-		for (int n = 0; n < nodePositions.size(); n++)
+		//get a sample line (thats not a comment) and see how many data points are on it, and read accordingly
+		getline(connectionFile, line);
+		while (line.find('#') != std::string::npos)
 		{
-			std::vector<float> nodesConnections;
-			for (int c = 0; c < nodePositions.size(); c++)
-			{
-				getline(connectionFile, line);
-				nodesConnections.push_back(stof(line));
-			}
-			connections.push_back(nodesConnections);
+			getline(connectionFile, line);
 		}
-		nodeFile.close();
+
+		std::vector<std::string> tokenTest;
+		boost::split(tokenTest, line, [](char c) { return c == ' ' || c == '	'; });
+		connectionFile.clear();
+		connectionFile.seekg(0, std::ios::beg);
+
+		//iterate over each line in the connections file (which is a connection) organizes it into a list of lists
+		//it is a list of a list of all the nodes connections
+		//i.e connections[1] is a list of all the connections to node 1 and connections[1][2] is the strength of the connection between nodes 1 and 2
+		if (tokenTest.size() > 1)
+		{
+			int nodeNum = 0;
+			for (int n = 0; n < nodePositions.size(); n++)
+			{
+				std::vector<float> nodesConnections;
+				//get each line of the file, if its in a matrix format, split it each data point stands on its own
+				getline(connectionFile, line);
+				std::vector<std::string> tokenized;
+				std::vector<float> tokenizedNums;
+				boost::split(tokenized, line, [](char c) { return c == ' ' || c == '	'; });
+				//turn the string data into float data
+				for (std::string str : tokenized)
+				{
+					if (str.find('#') == std::string::npos) //ignore comments
+						tokenizedNums.push_back(std::stof(str));
+				}
+
+				//concatenate that line of data into the final datastructure
+				nodesConnections.insert(nodesConnections.end(), tokenizedNums.begin(), tokenizedNums.end());
+				connections.push_back(nodesConnections);
+			}
+			nodeFile.close();
+		}
+		else
+		{
+			int nodeNum = 0;
+			for (int n = 0; n < nodePositions.size(); n++)
+			{
+				std::vector<float> nodesConnections;
+				for (int c = 0; c < nodePositions.size(); c++)
+				{
+					getline(connectionFile, line);
+					nodesConnections.push_back(stof(line));
+				}
+				connections.push_back(nodesConnections);
+			}
+			nodeFile.close();
+		}
 	}
 	else
 	{
@@ -195,7 +175,7 @@ void Brain::update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, flo
 		int connectedNode = 0;
 		for (float connection : connections[node])
 		{
-			if (connection > threshold && (mouseDown == 0 || hit || selectedNode == node || selectedNode == connectedNode))
+			//filter out connections below threshold or filter out non isolated nodes if the mouse is down
 			if (connection > threshold && (mouseDown == 0 || hit || selectedNode == node || selectedNode == connectedNode))
 			{
 				//move connector to the spheres location, and then aim it at the connected node
@@ -207,15 +187,16 @@ void Brain::update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, flo
 				);
 				connector.model *= glm::inverse(look); //apply the lookat trasnformation
 
+
 				//now scale it so it actually reaches that node
 				float dist = glm::distance(glm::vec3(sphere.model[3]), glm::vec3(nodePositions[connectedNode][3]));
-				connector.model = glm::scale(connector.model, glm::vec3(connection / 3, connection / 3, dist * 0.3));
-
+				connector.model = glm::scale(connector.model, glm::vec3(connection / 3, connection / 3, dist * 0.5));
 				//this line ensures the scale occurs from the BASE of the model
 				connector.model *= glm::mat4(1, 0, 0, 0,
 					0, 1, 0, 0,
 					0, 0, 1, 0,
 					0, 0, -1, 1);
+
 				connector.render(f, camera, connection, 0.0f, 1.0 - connection, 0.8f);
 			}
 			connectedNode++;
