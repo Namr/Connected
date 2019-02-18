@@ -21,6 +21,7 @@ public:
 	void initializeGL();
 	void resizeGL(int w, int h);
 	void paintGL();
+	void flipView();
 	~GLWidget();
 
 	Brain primaryBrain;

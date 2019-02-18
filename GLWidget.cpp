@@ -163,77 +163,6 @@ void GLWidget::paintGL()
 	else
 		cam.proj = glm::perspective(glm::radians(45.0f), (float)WIDTH / HEIGHT, 1.0f, 2000.0f);
 
-	/*
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_3) == GLFW_RELEASE && viewingMode == 1 && sideSwitchPressed == 1)
-	{
-		sideSwitchPressed = 0;
-		if (xpos < (WIDTH / 2))
-		{
-			if (ypos > (HEIGHT / 2))
-			{
-				front.viewMode *= -1;
-				if (front.viewMode == 1)
-				{
-					front.view = glm::lookAt(
-						front.position, // position
-						glm::vec3(1.52f, -33.28f, 6.23f), // camera center
-						glm::vec3(0.0f, 0.0f, -1.0f) // up axis
-					);
-				}
-				else
-				{
-					front.view = glm::lookAt(
-						front.altPosition, // position
-						glm::vec3(1.52f, -33.28f, 6.23f), // camera center
-						glm::vec3(0.0f, 0.0f, -1.0f) // up axis
-					);
-				}
-			}
-			else
-			{
-				side.viewMode *= -1;
-				if (side.viewMode == 1)
-				{
-					side.view = glm::lookAt(
-						side.position, // position
-						glm::vec3(1.52f, -33.28f, 6.23f), // camera center
-						glm::vec3(0.0f, 0.0f, -1.0f) // up axis
-					);
-				}
-				else
-				{
-					side.view = glm::lookAt(
-						side.altPosition, // position
-						glm::vec3(1.52f, -33.28f, 6.23f), // camera center
-						glm::vec3(0.0f, 0.0f, -1.0f) // up axis
-					);
-				}
-			}
-		}
-		else
-		{
-			if (ypos > (HEIGHT / 2))
-			{
-				top.viewMode *= -1;
-				if (top.viewMode == 1)
-				{
-					top.view = glm::lookAt(
-						top.position, // position
-						glm::vec3(1.52f, -33.28f, -80.23f), // camera center
-						glm::vec3(0.0f, 0.0f, 1.0f) // up axis
-					);
-				}
-				else
-				{
-					top.view = glm::lookAt(
-						top.altPosition, // position
-						glm::vec3(1.52f, -33.28f, -80.23f), // camera center
-						glm::vec3(0.0f, 0.0f, 1.0f) // up axis
-					);
-				}
-			}
-		}
-	}	*/
 	cam.view = glm::lookAt(
 		cam.position,             // position
 		glm::vec3(1.52f, -33.28f, 6.23f), // camera center
@@ -282,6 +211,77 @@ void GLWidget::paintGL()
 	f->glBindFramebuffer(GL_READ_FRAMEBUFFER, 2);
 }
 
+void GLWidget::flipView()
+{
+	float xpos = this->mapFromGlobal(QCursor::pos()).x();
+	float ypos = this->mapFromGlobal(QCursor::pos()).y();
+	if (xpos < (WIDTH / 2))
+	{
+		if (ypos < (HEIGHT / 2))
+		{
+			front.viewMode *= -1;
+			if (front.viewMode == 1)
+			{
+				front.view = glm::lookAt(
+					front.position, // position
+					glm::vec3(1.52f, -33.28f, 6.23f), // camera center
+					glm::vec3(0.0f, 0.0f, -1.0f) // up axis
+				);
+			}
+			else
+			{
+				front.view = glm::lookAt(
+					front.altPosition, // position
+					glm::vec3(1.52f, -33.28f, 6.23f), // camera center
+					glm::vec3(0.0f, 0.0f, -1.0f) // up axis
+				);
+			}
+		}
+		else
+		{
+			side.viewMode *= -1;
+			if (side.viewMode == 1)
+			{
+				side.view = glm::lookAt(
+					side.position, // position
+					glm::vec3(1.52f, -33.28f, 6.23f), // camera center
+					glm::vec3(0.0f, 0.0f, -1.0f) // up axis
+				);
+			}
+			else
+			{
+				side.view = glm::lookAt(
+					side.altPosition, // position
+					glm::vec3(1.52f, -33.28f, 6.23f), // camera center
+					glm::vec3(0.0f, 0.0f, -1.0f) // up axis
+				);
+			}
+		}
+	}
+	else
+	{
+		if (ypos < (HEIGHT / 2))
+		{
+			top.viewMode *= -1;
+			if (top.viewMode == 1)
+			{
+				top.view = glm::lookAt(
+					top.position, // position
+					glm::vec3(1.52f, -33.28f, -80.23f), // camera center
+					glm::vec3(0.0f, 0.0f, 1.0f) // up axis
+				);
+			}
+			else
+			{
+				top.view = glm::lookAt(
+					top.altPosition, // position
+					glm::vec3(1.52f, -33.28f, -80.23f), // camera center
+					glm::vec3(0.0f, 0.0f, 1.0f) // up axis
+				);
+			}
+		}
+	}
+}
 GLWidget::~GLWidget()
 {
 }

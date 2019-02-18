@@ -61,6 +61,10 @@ bool KeyListener::eventFilter(QObject* obj, QEvent* event)
 		{
 			gl->leftMouseDown = 1;
 		}
+		if (key->button() == Qt::MouseButton::MiddleButton)
+		{
+			gl->flipView();
+		}
 	}
 	else if (event->type() == QEvent::MouseButtonRelease)
 	{
