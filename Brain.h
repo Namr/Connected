@@ -6,7 +6,7 @@
 #include <vector>
 #include <fstream>
 
-#include <qopenglfunctions_4_0_core.h>
+#include <qopenglfunctions_3_3_core.h>
 #include <qopenglwidget.h>
 #include <qmessagebox.h>
 
@@ -39,10 +39,10 @@ class Brain
 	std::vector<std::vector<float>> connections;
 	glm::mat4 position;
 public:
-	Brain(QOpenGLFunctions_4_0_Core *f, std::string nodePath, std::string connectionPath);
+	Brain(QOpenGLFunctions_3_3_Core *f, std::string nodePath, std::string connectionPath);
 	Brain();
 	void reloadBrain(std::string nodePath, std::string connectionPath);
-	void update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown);
+	void update(QOpenGLFunctions_3_3_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown);
 	void setPosition(glm::vec3 position);
 
 	std::vector<std::string> nodeNames;

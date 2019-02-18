@@ -12,7 +12,7 @@ void GLWidget::initializeGL()
 {
 	WIDTH = this->width();
 	HEIGHT = this->height();
-	QOpenGLFunctions_4_0_Core *f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_0_Core>();
+	QOpenGLFunctions_3_3_Core *f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_3_Core>();
 	
 	f->glEnable(GL_BLEND);
 	f->glEnable(GL_DEPTH_TEST);
@@ -90,7 +90,7 @@ void GLWidget::initializeGL()
 
 void GLWidget::resizeGL(int w, int h)
 {
-	QOpenGLFunctions_4_0_Core *f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_0_Core>();
+	QOpenGLFunctions_3_3_Core *f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_3_Core>();
 	WIDTH = w;
 	HEIGHT = h;
 	
@@ -110,7 +110,7 @@ void GLWidget::resizeGL(int w, int h)
 
 void GLWidget::paintGL() 
 {
-	QOpenGLFunctions_4_0_Core *f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_4_0_Core>();
+	QOpenGLFunctions_3_3_Core *f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_3_Core>();
 	// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 
 	float xpos = this->mapFromGlobal(QCursor::pos()).x();

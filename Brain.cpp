@@ -5,8 +5,9 @@ Brain::Brain()
 
 }
 
-Brain::Brain(QOpenGLFunctions_4_0_Core *f, std::string nodePath, std::string connectionPath)
+Brain::Brain(QOpenGLFunctions_3_3_Core *f, std::string nodePath, std::string connectionPath)
 {
+	
 	reloadBrain(nodePath, connectionPath);
 
 	position = glm::mat4(1.0f);
@@ -146,7 +147,7 @@ void Brain::setPosition(glm::vec3 pos)
 	//mri.parentPosition = position;
 }
 
-void Brain::update(QOpenGLFunctions_4_0_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown)
+void Brain::update(QOpenGLFunctions_3_3_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown)
 {
 	int node = 0;
 	for (glm::mat4 pos : nodePositions)

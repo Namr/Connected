@@ -1,7 +1,7 @@
 #pragma once
 
 #include <qopenglwidget.h>
-#include <qopenglfunctions_4_0_core.h>
+#include <qopenglfunctions_3_3_core.h>
 #include <qtimer.h>
 #include <qevent.h>
 #include <qmessagebox.h>
@@ -57,6 +57,6 @@ private:
 	float turnSpeed = 0.8f;
 	float yaw = -30.0f;
 	float pitch = 90.0f;
-	int selectedNode = -1;
+	int selectedNode = 0;
 };
 

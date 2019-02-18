@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include <qopenglfunctions_4_0_core.h>
+#include <qopenglfunctions_3_3_core.h>
 #include <qopenglwidget.h>
 #include <qfile.h>
 #include "NIFTI.h"
@@ -11,10 +11,10 @@
 
 class MRI
 {
-	GLuint loadShader(QOpenGLFunctions_4_0_Core *f, const char *filepath, GLenum type);
+	GLuint loadShader(QOpenGLFunctions_3_3_Core *f, const char *filepath, GLenum type);
 	float map(float s, float a1, float a2, float b1, float b2);
 public:
-	MRI(QOpenGLFunctions_4_0_Core *f);
+	MRI(QOpenGLFunctions_3_3_Core *f);
 	MRI();
 	NIFTI data;
 	Model plane;
@@ -22,7 +22,7 @@ public:
 	glm::mat4 axial = glm::mat4(1.0f);
 	float coronalPosition = -90.0f;
 	float axialPosition = -80.0f;
-	void render(QOpenGLFunctions_4_0_Core *f, Camera &camera);
+	void render(QOpenGLFunctions_3_3_Core *f, Camera &camera);
 	~MRI();
 };
 

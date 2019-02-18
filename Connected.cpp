@@ -10,6 +10,13 @@ Connected::Connected(QWidget *parent)
 	connect(ui.coronalSlider, SIGNAL(valueChanged(int)), this, SLOT(on_coronalSlider_valuechanged(int)));
 	connect(ui.thresholdSlider, SIGNAL(valueChanged(int)), this, SLOT(on_thresholdSlider_valuechanged(int)));
 	ui.screen->nodeName = ui.nodeName;
+
+	QTime dieTime = QTime::currentTime().addMSecs(100);
+	while (QTime::currentTime() < dieTime)
+	{
+		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+	}
+	
 }
 
 void Connected::on_actionLoad_Connectome_triggered()

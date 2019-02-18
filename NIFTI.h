@@ -1,8 +1,9 @@
 #pragma once
 
-#include <qopenglfunctions_4_0_core.h>
+#include <qopenglfunctions_3_3_core.h>
 #include <qopenglwidget.h>
 #include <qfile.h>
+#include <qmessagebox.h>
 
 #include <string>
 #include <fstream>
@@ -19,7 +20,7 @@ public:
 	uint16_t *data;
 	GLuint texture;
 	NIFTI();
-	NIFTI(QOpenGLFunctions_4_0_Core *f, std::string filepath);
+	NIFTI(QOpenGLFunctions_3_3_Core *f, std::string filepath);
 };
 
 template <class T>

@@ -1,7 +1,7 @@
 #include "NIFTI.h"
 
 NIFTI::NIFTI() {}
-NIFTI::NIFTI(QOpenGLFunctions_4_0_Core *f, std::string filename)
+NIFTI::NIFTI(QOpenGLFunctions_3_3_Core *f, std::string filename)
 {
 	//find the number of layers in the tiff file
 	TIFF *temp = TIFFOpen(filename.c_str(), "r");
@@ -13,45 +13,60 @@ NIFTI::NIFTI(QOpenGLFunctions_4_0_Core *f, std::string filename)
 		} while (TIFFReadDirectory(temp));
 		TIFFClose(temp);
 	}
+	else
+	{
+		QMessageBox messageBox;
+		messageBox.critical(0, "Error", "MRI File not found! Check your paths");
+		messageBox.setFixedSize(500, 200);
+	}
 
 	TIFF *image = TIFFOpen(filename.c_str(), "r");
 	if (image)
 	{
 		TIFFGetField(image, TIFFTAG_IMAGEWIDTH, &width);
 		TIFFGetField(image, TIFFTAG_IMAGELENGTH, &height);
-		uint16_t *buf = (uint16_t *)_TIFFmalloc(width * sizeof(uint16_t));
-		data = new uint16_t[height * width * depth];
-
-		for (int layer = 0; layer < depth; layer++)
+		if (width > 0 && height > 0 && depth > 0)
 		{
-			for (int row = 0; row < height; row++)
+			uint16_t *buf = (uint16_t *)_TIFFmalloc(width * sizeof(uint16_t));
+			data = new uint16_t[height * width * depth];
+
+			for (int layer = 0; layer < depth; layer++)
 			{
-				TIFFReadScanline(image, (tdata_t)buf, row);
-				for (int col = 0; col < width; col++)
-					data[(layer * width * height) + (row * width) + col] = buf[col];
+				for (int row = 0; row < height; row++)
+				{
+					TIFFReadScanline(image, (tdata_t)buf, row);
+					for (int col = 0; col < width; col++)
+						data[(layer * width * height) + (row * width) + col] = buf[col];
+				}
+				TIFFReadDirectory(image);
 			}
-			TIFFReadDirectory(image);
+
+
+
+			_TIFFfree((tdata_t)buf);
+			TIFFClose(image);
+
+			//generate the buffers for the texture data which will be supplied by another function
+			f->glActiveTexture(GL_TEXTURE0);
+			f->glGenTextures(1, &texture);
+			f->glBindTexture(GL_TEXTURE_3D, texture);
+
+			//allocate memory for the incoming data and upload it
+			f->glTexImage3D(GL_TEXTURE_3D, 0, GL_R16, width, height, depth, 0, GL_RED, GL_UNSIGNED_SHORT, data);
+
+			free(data);
+
+			//Set Texture Parameters
+			f->glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			f->glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			f->glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			f->glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		}
-
-		_TIFFfree((tdata_t)buf);
-		TIFFClose(image);
-
-		//generate the buffers for the texture data which will be supplied by another function
-		f->glActiveTexture(GL_TEXTURE0);
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_3D, texture);
-
-		//allocate memory for the incoming data and upload it
-		f->glTexImage3D(GL_TEXTURE_3D, 0, GL_R16, width, height, depth, 0, GL_RED, GL_UNSIGNED_SHORT, data);
-
-		free(data);
-
-		//Set Texture Parameters
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	}
 	else
-		std::cout << "ERROR: IMAGE UNABLE TO LOAD" << std::endl;
+	{
+		QMessageBox messageBox;
+		messageBox.critical(0, "Error", "MRI File not found! Check your paths");
+		messageBox.setFixedSize(500, 200);
+	}
 }

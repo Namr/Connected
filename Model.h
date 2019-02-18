@@ -1,8 +1,9 @@
 #pragma once
 
-#include <qopenglfunctions_4_0_core.h>
+#include <qopenglfunctions_3_3_core.h>
 #include <qopenglwidget.h>
 #include <qfile.h>
+#include <qmessagebox.h>
 
 #include <string>
 #include <vector>
@@ -18,8 +19,8 @@
 #include "tiny_obj_loader.h"
 class Model
 {
-	GLuint loadShader(QOpenGLFunctions_4_0_Core *f, const char *filepath, GLenum type);
-	void GLInit(QOpenGLFunctions_4_0_Core *f);
+	GLuint loadShader(QOpenGLFunctions_3_3_Core *f, const char *filepath, GLenum type);
+	void GLInit(QOpenGLFunctions_3_3_Core *f);
 
 	unsigned int VAO, VBO, EBO;
 	GLuint shaderProgram;
@@ -31,10 +32,10 @@ class Model
 
 public:
 	Model();
-	void loadFromObj(QOpenGLFunctions_4_0_Core *f, std::string path, int hasTextures);
-	void addTexture(QOpenGLFunctions_4_0_Core *f, int id);
-	void render(QOpenGLFunctions_4_0_Core *f, Camera &camera);
-	void render(QOpenGLFunctions_4_0_Core *f, Camera &camera, float r, float g, float b, float a);
+	void loadFromObj(QOpenGLFunctions_3_3_Core *f, std::string path, int hasTextures);
+	void addTexture(QOpenGLFunctions_3_3_Core *f, int id);
+	void render(QOpenGLFunctions_3_3_Core *f, Camera &camera);
+	void render(QOpenGLFunctions_3_3_Core *f, Camera &camera, float r, float g, float b, float a);
 	float layer = 0.0f;
 	int view = 0;
 	glm::mat4 model;

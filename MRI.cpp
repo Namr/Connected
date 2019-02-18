@@ -3,7 +3,7 @@
 MRI::MRI()
 {}
 
-MRI::MRI(QOpenGLFunctions_4_0_Core *f) : data(f, "assets/xT1_brain.tif")
+MRI::MRI(QOpenGLFunctions_3_3_Core *f) : data(f, "assets/xT1_brain.tif")
 {
 	plane = Model();
 	plane.loadFromObj(f, "assets/plane.obj", 1);
@@ -24,7 +24,7 @@ MRI::MRI(QOpenGLFunctions_4_0_Core *f) : data(f, "assets/xT1_brain.tif")
 	axial = glm::scale(axial, glm::vec3(280 / 2.5, 1.0f, 780 / 2.5));
 }
 
-void MRI::render(QOpenGLFunctions_4_0_Core *f, Camera &camera)
+void MRI::render(QOpenGLFunctions_3_3_Core *f, Camera &camera)
 {
 	plane.model = glm::translate(coronal, glm::vec3(0.0f, coronalPosition + 80, 0.0f));
 	plane.layer = map(coronalPosition + 80, -115.23f + 80, 100.23f + 80, 0.0f, 1.0f);
@@ -37,7 +37,7 @@ void MRI::render(QOpenGLFunctions_4_0_Core *f, Camera &camera)
 	plane.render(f, camera);
 }
 
-GLuint MRI::loadShader(QOpenGLFunctions_4_0_Core *f, const char *filepath, GLenum type)
+GLuint MRI::loadShader(QOpenGLFunctions_3_3_Core *f, const char *filepath, GLenum type)
 {
 	FILE *file = fopen(filepath, "rb");
 	if (!file)

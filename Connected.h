@@ -2,6 +2,8 @@
 
 #include <QtWidgets/QMainWindow>
 #include <qfiledialog.h>
+#include <qtime>
+
 #include "ui_Connected.h"
 #include "KeyListener.h"
 #include "Brain.h"
