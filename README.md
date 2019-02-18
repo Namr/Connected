@@ -18,7 +18,6 @@ A modern, fast, and feature-rich human brain connectome viewer
 * Support for a wider range of file formats
 
 ## Known Issues
-* Application sometimes wont start on first try, depending on system
 * MRI scale is disproportionate to the 3D render
 * Controls are framerate dependent
 * Mismatching node and edge files results in a crash

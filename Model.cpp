@@ -16,7 +16,7 @@ std::string slurp(const std::string &path)
 	return f.readAll().toStdString();
 }
 
-void Model::loadFromObj(QOpenGLFunctions_4_0_Core *f, std::string path, int hasTextures)
+void Model::loadFromObj(QOpenGLFunctions_3_3_Core *f, std::string path, int hasTextures)
 {
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;
@@ -54,7 +54,7 @@ void Model::loadFromObj(QOpenGLFunctions_4_0_Core *f, std::string path, int hasT
 	GLInit(f);
 }
 
-void Model::GLInit(QOpenGLFunctions_4_0_Core *f)
+void Model::GLInit(QOpenGLFunctions_3_3_Core *f)
 {
 	// generate and bind the buffers assosiated with this chunk in order to assign
 	// vertices and color to the mesh
@@ -79,16 +79,18 @@ void Model::GLInit(QOpenGLFunctions_4_0_Core *f)
 	if (!success)
 	{
 		f->glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR VERTEX SHADER COMPILE FAILED\n"
-			<< infoLog << std::endl;
+		QMessageBox messageBox;
+		messageBox.critical(0, "Error", "Vertex Shader Compile Fail");
+		messageBox.setFixedSize(500, 200);
 	};
 
 	f->glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
 		f->glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR FRAGMENT SHADER COMPILE FAILED\n"
-			<< infoLog << std::endl;
+		QMessageBox messageBox;
+		messageBox.critical(0, "Error", "Fragment Shader compile fail");
+		messageBox.setFixedSize(500, 200);
 	};
 
 	// create a program from the shaders
@@ -139,7 +141,7 @@ void Model::GLInit(QOpenGLFunctions_4_0_Core *f)
 	f->glUniform1i(uniView, view);
 }
 
-void Model::render(QOpenGLFunctions_4_0_Core *f, Camera &camera)
+void Model::render(QOpenGLFunctions_3_3_Core *f, Camera &camera)
 {
 	f->glUseProgram(shaderProgram);
 	f->glBindVertexArray(VAO);
@@ -156,7 +158,7 @@ void Model::render(QOpenGLFunctions_4_0_Core *f, Camera &camera)
 	glDrawElements(GL_TRIANGLES, triangles.size(), GL_UNSIGNED_INT, 0);
 }
 
-void Model::render(QOpenGLFunctions_4_0_Core *f, Camera &camera, float r, float g, float b, float a)
+void Model::render(QOpenGLFunctions_3_3_Core *f, Camera &camera, float r, float g, float b, float a)
 {
 	f->glUseProgram(shaderProgram);
 	f->glBindVertexArray(VAO);
@@ -174,13 +176,13 @@ void Model::render(QOpenGLFunctions_4_0_Core *f, Camera &camera, float r, float 
 	f->glDrawElements(GL_TRIANGLES, triangles.size(), GL_UNSIGNED_INT, 0);
 }
 
-void Model::addTexture(QOpenGLFunctions_4_0_Core *f, int id)
+void Model::addTexture(QOpenGLFunctions_3_3_Core *f, int id)
 {
 	f->glUniform1i(uniIsTexOn, 1);
 	f->glUniform1i(uniTexture, id);
 }
 
-GLuint Model::loadShader(QOpenGLFunctions_4_0_Core *f, const char *filepath, GLenum type)
+GLuint Model::loadShader(QOpenGLFunctions_3_3_Core *f, const char *filepath, GLenum type)
 {
 	FILE *file = fopen(filepath, "rb");
 	if (!file)
