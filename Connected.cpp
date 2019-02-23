@@ -11,10 +11,10 @@ Connected::Connected(QWidget *parent)
 	connect(ui.thresholdSlider, SIGNAL(valueChanged(int)), this, SLOT(on_thresholdSlider_valuechanged(int)));
 	ui.screen->nodeName = ui.nodeName;
 
-	QTime dieTime = QTime::currentTime().addMSecs(100);
+	QTime dieTime = QTime::currentTime().addMSecs(500);
 	while (QTime::currentTime() < dieTime)
 	{
-		QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+		QCoreApplication::processEvents(QEventLoop::AllEvents, 500);
 	}
 	
 }
