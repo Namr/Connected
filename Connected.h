@@ -23,6 +23,8 @@ private slots:
 	void on_mrienable_clicked();
 	void on_actionLoad_Connectome_triggered();
 	void on_actionLoad_Secondary_Connectome_triggered();
+	void on_actionLoad_Primary_Node_Data_triggered();
+	void on_actionLoad_Secondary_Node_Data_triggered();
 	void on_axialSlider_valuechanged(int newValue);
 	void on_coronalSlider_valuechanged(int newValue);
 	void on_thresholdSlider_valuechanged(int newValue);

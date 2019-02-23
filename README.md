@@ -7,6 +7,7 @@ A modern, fast, and feature-rich human brain connectome viewer
 * Node isolation (show only connections to and from a single node)
 * Side by Side comparson of two connectome datasets
 * Overlay of subject MRI ontop of 3D render of connectome
+* Overlay of graph signal ontop of 3D render of connectome
 * Circlegraph view of conncetome data (Work in Progress)
 
 ## Planned Features
@@ -21,6 +22,15 @@ A modern, fast, and feature-rich human brain connectome viewer
 * MRI scale is disproportionate to the 3D render
 * Controls are framerate dependent
 * Mismatching node and edge files results in a crash
+
+## Supported File Formats
+* Node position and name data should be in a plaintext format whose filenames end with .node
+* each node should be declared in the format seen below, and each of these node declarations should be on new lines
+* > -38.65	-5.68	50.94	4	4.96	PreCG.L
+* Connection data should be in plaintext .edge files, and the connections strength should be between 0 and 1
+* The edge files should have one number per line (and be nodeSize * nodeSize in length where nodeSize is the number of nodes in your .node file)
+* Edge files can also be in the format where each line has nodeSize many data points, and the file has nodeSize number of lines
+* graph signal data should be in a plaintext file, with one number per line, and it should have nodeSize number of lines
 
 ## Usage Guide
 The program will start in multiview mode showing the **Primary Brain**. The top, side, and front views can be switched to their 

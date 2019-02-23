@@ -47,6 +47,27 @@ void Connected::on_actionLoad_Secondary_Connectome_triggered()
 	}
 }
 
+void Connected::on_actionLoad_Primary_Node_Data_triggered()
+{
+	QString nodeName = QFileDialog::getOpenFileName(this, "Select Node Data File");
+
+	if (!nodeName.isEmpty() && !nodeName.isNull())
+	{
+		ui.screen->primaryBrain.loadAppendedNodeData(nodeName.toStdString());
+		ui.screen->update();
+	}
+}
+
+void Connected::on_actionLoad_Secondary_Node_Data_triggered()
+{
+	QString nodeName = QFileDialog::getOpenFileName(this, "Select Node Data File");
+
+	if (!nodeName.isEmpty() && !nodeName.isNull())
+	{
+		ui.screen->secondaryBrain.loadAppendedNodeData(nodeName.toStdString());
+		ui.screen->update();
+	}
+}
 
 void Connected::on_multiview_clicked()
 {

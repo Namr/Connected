@@ -136,6 +136,37 @@ void Brain::reloadBrain(std::string nodePath, std::string connectionPath)
 	}
 }
 
+void Brain::loadAppendedNodeData(std::string filepath)
+{
+	appendedNodeData.clear();
+
+	std::ifstream nodeFile;
+	nodeFile.open(filepath);
+	std::string line;
+
+	//iterate over each line in the node file if it is found, store it in line, and operate on it
+	if (nodeFile.is_open())
+	{
+		int nodeNum = 0;
+		while (getline(nodeFile, line))
+		{
+			if (line.find('#') == std::string::npos) //ignore comments
+			{
+				appendedNodeData.push_back(std::stof(line));
+			}
+		}
+		nodeFile.close();
+
+		hasAppendedData = 1;
+	}
+	else
+	{
+		QMessageBox messageBox;
+		messageBox.critical(0, "Error", "Appended Node Data File not found! Check your paths");
+		messageBox.setFixedSize(500, 200);
+	}
+}
+
 void Brain::setPosition(glm::vec3 pos)
 {
 	position = glm::mat4(1.0f);
@@ -201,6 +232,23 @@ void Brain::update(QOpenGLFunctions_3_3_Core *f, Camera &camera, float xpos, flo
 				connector.render(f, camera, connection, 0.0f, 1.0 - connection, 0.8f);
 			}
 			connectedNode++;
+		}
+		if (hasAppendedData) //if we have appended data, render it
+		{
+			connector.model = glm::mat4(1);
+			connector.model = sphere.model;
+			connector.model = glm::scale(connector.model, glm::vec3(0.1f, 0.5f, -appendedNodeData[node]));
+
+			//this line ensures the scale occurs from the BASE of the model
+			connector.model *= glm::mat4(1, 0, 0, 0,
+				0, 1, 0, 0,
+				0, 0, 1, 0,
+				0, 0, -1, 1);
+
+			if(appendedNodeData[node] >= 0)
+				connector.render(f, camera, 0.0f, 0.0f, 1.0f, 1.0f);
+			else
+				connector.render(f, camera, 0.8f, 0.8f, 0.8f, 1.0f);
 		}
 		if (hit)
 		{
