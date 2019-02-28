@@ -102,7 +102,7 @@ void Brain::reloadBrain(std::string nodePath, std::string connectionPath)
 				//turn the string data into float data
 				for (std::string str : tokenized)
 				{
-					if (str.find('#') == std::string::npos) //ignore comments
+					if (str.find('#') == std::string::npos && str.find_first_not_of("0123456789.") == std::string::npos && str.find_first_of("0123456789.") != std::string::npos) //ignore comments
 						tokenizedNums.push_back(std::stof(str));
 				}
 
@@ -144,7 +144,7 @@ void Brain::loadAppendedNodeData(std::string filepath)
 	nodeFile.open(filepath);
 	std::string line;
 
-	//iterate over each line in the node file if it is found, store it in line, and operate on it
+	//iterate over each line in the graph signal file if it is found, store it in line, and operate on it
 	if (nodeFile.is_open())
 	{
 		int nodeNum = 0;
@@ -152,7 +152,7 @@ void Brain::loadAppendedNodeData(std::string filepath)
 		{
 			if (line.find('#') == std::string::npos) //ignore comments
 			{
-				appendedNodeData.push_back(std::stof(line));
+				appendedNodeData.push_back(std::stod(line));
 			}
 		}
 		nodeFile.close();
@@ -162,7 +162,7 @@ void Brain::loadAppendedNodeData(std::string filepath)
 	else
 	{
 		QMessageBox messageBox;
-		messageBox.critical(0, "Error", "Appended Node Data File not found! Check your paths");
+		messageBox.critical(0, "Error", "Graph Signal Data File not found! Check your paths");
 		messageBox.setFixedSize(500, 200);
 	}
 }
@@ -237,7 +237,7 @@ void Brain::update(QOpenGLFunctions_3_3_Core *f, Camera &camera, float xpos, flo
 		{
 			connector.model = glm::mat4(1);
 			connector.model = sphere.model;
-			connector.model = glm::scale(connector.model, glm::vec3(0.1f, 0.5f, -appendedNodeData[node]));
+			connector.model = glm::scale(connector.model, glm::vec3(1.0f, 0.5f, -appendedNodeData[node] * 20));
 
 			//this line ensures the scale occurs from the BASE of the model
 			connector.model *= glm::mat4(1, 0, 0, 0,
