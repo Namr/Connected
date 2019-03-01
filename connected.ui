@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ConnectedClass</class>
+ <widget class="QMainWindow" name="ConnectedClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>1018</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Connected</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QPushButton" name="multiview">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>20</width>
+          <height>10</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Multi View</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="singleview">
+        <property name="text">
+         <string>Single View</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="compareview">
+        <property name="text">
+         <string>Compare</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="nodeLabel">
+        <property name="text">
+         <string>Node Name:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="nodeName">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="thresholdLabel">
+        <property name="text">
+         <string>Threshold:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="thresholdSlider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>50</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="meshenable">
+        <property name="text">
+         <string>Brain Mesh</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="mrienable">
+        <property name="text">
+         <string>MRI</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="AxialLabel">
+        <property name="text">
+         <string>Axial</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="axialSlider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimum">
+         <number>-80</number>
+        </property>
+        <property name="maximum">
+         <number>80</number>
+        </property>
+        <property name="value">
+         <number>-80</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="CoronalLabel">
+        <property name="text">
+         <string>Coronal</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="coronalSlider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimum">
+         <number>-90</number>
+        </property>
+        <property name="maximum">
+         <number>65</number>
+        </property>
+        <property name="sliderPosition">
+         <number>-90</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="GLWidget" name="screen" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1280</width>
+     <height>33</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionLoad_Connectome"/>
+    <addaction name="actionLoad_Secondary_Connectome"/>
+    <addaction name="actionLoad_Primary_Node_Data"/>
+    <addaction name="actionLoad_Secondary_Node_Data"/>
+   </widget>
+   <addaction name="menuFile"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionLoad_Connectome">
+   <property name="text">
+    <string>Load Primary Connectome</string>
+   </property>
+  </action>
+  <action name="actionLoad_Secondary_Connectome">
+   <property name="text">
+    <string>Load Secondary Connectome</string>
+   </property>
+  </action>
+  <action name="actionLoad_Primary_Node_Data">
+   <property name="text">
+    <string>Load Primary Graph Signal</string>
+   </property>
+  </action>
+  <action name="actionLoad_Secondary_Node_Data">
+   <property name="text">
+    <string>Load Secondary Graph Signal</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>GLWidget</class>
+   <extends>QWidget</extends>
+   <header>GLWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
