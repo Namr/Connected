@@ -5,6 +5,7 @@ Connected::Connected(QWidget *parent)
 {
     ui.setupUi(this);
     KeyListener* key = new KeyListener(ui.screen);
+    CSettings = new colorSettings();
     ui.centralWidget->installEventFilter(key);
     connect(ui.axialSlider, SIGNAL(valueChanged(int)), this, SLOT(on_axialSlider_valuechanged(int)));
     connect(ui.coronalSlider, SIGNAL(valueChanged(int)), this, SLOT(on_coronalSlider_valuechanged(int)));
@@ -121,4 +122,9 @@ void Connected::on_thresholdSlider_valuechanged(int newValue)
 {
     ui.screen->threshold = (float)newValue / 100.0f;
     ui.screen->update();
+}
+
+void Connected::on_actionColor_Settings_triggered()
+{
+    CSettings->show();
 }

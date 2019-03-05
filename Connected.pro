@@ -31,7 +31,8 @@ SOURCES += \
     keylistener.cpp \
     mri.cpp \
     model.cpp \
-    nifti.cpp
+    nifti.cpp \
+    colorsettings.cpp
 
 HEADERS += \
         connected.h \
@@ -42,10 +43,12 @@ HEADERS += \
     mri.h \
     model.h \
     nifti.h \
-    tiny_obj_loader.h
+    tiny_obj_loader.h \
+    colorsettings.h
 
 FORMS += \
-        connected.ui
+        connected.ui \
+    colorsettings.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

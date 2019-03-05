@@ -213,7 +213,16 @@
     <addaction name="actionLoad_Primary_Node_Data"/>
     <addaction name="actionLoad_Secondary_Node_Data"/>
    </widget>
+   <widget class="QMenu" name="menuPrefrences">
+    <property name="title">
+     <string>Prefrences</string>
+    </property>
+    <addaction name="actionColor_Settings"/>
+    <addaction name="actionRender_Settings"/>
+    <addaction name="actionMRI_Settings"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuPrefrences"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionLoad_Connectome">
@@ -234,6 +243,21 @@
   <action name="actionLoad_Secondary_Node_Data">
    <property name="text">
     <string>Load Secondary Graph Signal</string>
+   </property>
+  </action>
+  <action name="actionColor_Settings">
+   <property name="text">
+    <string>Color Settings</string>
+   </property>
+  </action>
+  <action name="actionRender_Settings">
+   <property name="text">
+    <string>Network Settings</string>
+   </property>
+  </action>
+  <action name="actionMRI_Settings">
+   <property name="text">
+    <string>MRI Settings</string>
    </property>
   </action>
  </widget>

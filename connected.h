@@ -6,6 +6,7 @@
 #include <QTime>
 
 #include "ui_connected.h"
+#include "colorsettings.h"
 #include "keylistener.h"
 #include "brain.h"
 
@@ -30,8 +31,11 @@ private slots:
     void on_coronalSlider_valuechanged(int newValue);
     void on_thresholdSlider_valuechanged(int newValue);
 
+    void on_actionColor_Settings_triggered();
+
 private:
     Ui::ConnectedClass ui;
+    colorSettings *CSettings;
 };
 
 #endif // CONNECTED_H
