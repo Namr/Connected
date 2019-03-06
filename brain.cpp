@@ -188,7 +188,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
         sphere.model = glm::scale(sphere.model, glm::vec3(1.5f, 1.5f, 1.5f));
 
         GLint viewportraw[4];
-        glGetIntegerv(GL_VIEWPORT, viewportraw);
+        f->glGetIntegerv(GL_VIEWPORT, viewportraw);
 
         glm::vec4 viewport = glm::vec4(viewportraw[0], viewportraw[1], viewportraw[2], viewportraw[3]);
         glm::vec3 v0 = glm::unProject(glm::vec3(xpos, ypos, 0.0f), camera.view, camera.proj, viewport);

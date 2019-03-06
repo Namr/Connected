@@ -56,3 +56,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 unix:!macx: LIBS += -ltiff -lGL
+
+win32:INCLUDEPATH += "C:/Program Files (x86)/glm/include/" \
+                     "C:/Program Files/boost/boost_1_67_0/" \
+                     "C:/Program Files (x86)/tiff/include"
+
+win32: LIBS += "-LC:/Program Files (x86)/tiff/lib/" -ltiff

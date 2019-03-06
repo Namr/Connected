@@ -56,7 +56,7 @@ void GLWidget::initializeGL()
 
 
     //set background color
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     primaryBrain = Brain(f, "assets/Node_AAL116.node",
         "assets/connect.edge");
     secondaryBrain = Brain(f, "assets/Node_AAL116.node",
