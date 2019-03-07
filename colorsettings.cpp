@@ -8,9 +8,39 @@ colorSettings::colorSettings(QWidget *parent) :
     ui->setupUi(this);
     scene = new QGraphicsScene();
     ui->graphicsView->setScene(scene);
-    colors[selectedColor].R = 255;
-    colors[selectedColor].G = 255;
-    colors[selectedColor].B = 255;
+
+    colors[0].R = 0;
+    colors[0].G = 0;
+    colors[0].B = 255;
+
+    colors[1].R = 0;
+    colors[1].G = 255;
+    colors[1].B = 0;
+
+    colors[2].R = 255;
+    colors[2].G = 255;
+    colors[2].B = 0;
+
+    colors[3].R = 255;
+    colors[3].G = 0;
+    colors[3].B = 85;
+
+    colors[4].R = 0;
+    colors[4].G = 255;
+    colors[4].B = 255;
+
+    colors[5].R = 255;
+    colors[5].G = 127;
+    colors[5].B = 0;
+
+    colors[6].R = 0;
+    colors[6].G = 0;
+    colors[6].B = 0;
+
+    colors[7].R = 230;
+    colors[7].G = 230;
+    colors[7].B = 230;
+
     ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
 }
 
@@ -39,6 +69,7 @@ void colorSettings::on_horizontalSlider_3_sliderMoved(int position)
     ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
 }
 
+//node 1
 void colorSettings::on_radioButton_clicked()
 {
     selectedColor = 0;
@@ -48,6 +79,7 @@ void colorSettings::on_radioButton_clicked()
     ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
 }
 
+//node 2
 void colorSettings::on_radioButton_2_clicked()
 {
     selectedColor = 1;
@@ -57,6 +89,7 @@ void colorSettings::on_radioButton_2_clicked()
     ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
 }
 
+//node 3
 void colorSettings::on_radioButton_3_clicked()
 {
     selectedColor = 2;
@@ -66,6 +99,7 @@ void colorSettings::on_radioButton_3_clicked()
     ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
 }
 
+//node 4
 void colorSettings::on_radioButton_4_clicked()
 {
     selectedColor = 3;
@@ -75,6 +109,7 @@ void colorSettings::on_radioButton_4_clicked()
     ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
 }
 
+//node 5
 void colorSettings::on_radioButton_5_clicked()
 {
     selectedColor = 4;
@@ -84,7 +119,7 @@ void colorSettings::on_radioButton_5_clicked()
     ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
 }
 
-
+//node 6
 void colorSettings::on_radioButton_6_clicked()
 {
     selectedColor = 5;
@@ -94,9 +129,20 @@ void colorSettings::on_radioButton_6_clicked()
     ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
 }
 
+//background
 void colorSettings::on_radioButton_7_clicked()
 {
     selectedColor = 6;
+    ui->horizontalSlider->setValue(colors[selectedColor].R);
+    ui->horizontalSlider_2->setValue(colors[selectedColor].G);
+    ui->horizontalSlider_3->setValue(colors[selectedColor].B);
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+}
+
+//brain mesh
+void colorSettings::on_radioButton_8_clicked()
+{
+    selectedColor = 7;
     ui->horizontalSlider->setValue(colors[selectedColor].R);
     ui->horizontalSlider_2->setValue(colors[selectedColor].G);
     ui->horizontalSlider_3->setValue(colors[selectedColor].B);

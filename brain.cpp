@@ -16,9 +16,9 @@ Brain::Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, std::string con
     sphere = Model();
     mesh = Model();
     connector = Model();
-    sphere.loadFromObj(f, "assets/sphere.obj", 0);
-    mesh.loadFromObj(f, "assets/brain.obj", 0);
-    connector.loadFromObj(f, "assets/connector.obj", 0);
+    sphere.loadFromObj(f, "C:/Users/vrdem/Documents/GitHub/Connected/assets/sphere.obj", 0);
+    mesh.loadFromObj(f, "C:/Users/vrdem/Documents/GitHub/Connected/assets/brain.obj", 0);
+    connector.loadFromObj(f, "C:/Users/vrdem/Documents/GitHub/Connected/assets/connector.obj", 0);
 }
 
 void Brain::reloadBrain(std::string nodePath, std::string connectionPath)
@@ -257,7 +257,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
             //glfwSetWindowTitle(window, nodeNames[node].c_str());
         }
         else
-            sphere.render(f, camera, colorTables[nodeColors[node]][0], colorTables[nodeColors[node]][1], colorTables[nodeColors[node]][2], 1);
+            sphere.render(f, camera, colors[nodeColors[node]].R / 255.0f, colors[nodeColors[node]].G / 255.0f, colors[nodeColors[node]].B / 255.0f, 1);
 
         node++;
     }
@@ -269,7 +269,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
     if (displayShell == 1)
     {
         f->glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        mesh.render(f, camera, 0.9f, 0.9f, 0.9f, 0.3f);
+        mesh.render(f, camera, colors[7].R / 255.0f, colors[7].G / 255.0f, colors[7].B / 255.0f, 0.3f);
         f->glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 }

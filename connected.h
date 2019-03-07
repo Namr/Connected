@@ -7,6 +7,7 @@
 
 #include "ui_connected.h"
 #include "colorsettings.h"
+#include "networksettings.h"
 #include "keylistener.h"
 #include "brain.h"
 
@@ -33,9 +34,12 @@ private slots:
 
     void on_actionColor_Settings_triggered();
 
+    void on_actionRender_Settings_triggered();
+
 private:
     Ui::ConnectedClass ui;
     colorSettings *CSettings;
+    NetworkSettings *NSettings;
 };
 
 #endif // CONNECTED_H

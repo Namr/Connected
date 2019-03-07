@@ -23,6 +23,7 @@ public:
     explicit colorSettings(QWidget *parent = nullptr);
     ~colorSettings();
 
+    NColor colors[8];
 private slots:
     void on_horizontalSlider_sliderMoved(int position);
 
@@ -44,11 +45,12 @@ private slots:
 
     void on_radioButton_7_clicked();
 
+    void on_radioButton_8_clicked();
+
 private:
     Ui::colorSettings *ui;
     QGraphicsScene *scene;
     int selectedColor = 0;
-    NColor colors[7];
 };
 
 #endif // COLORSETTINGS_H

@@ -32,7 +32,8 @@ SOURCES += \
     mri.cpp \
     model.cpp \
     nifti.cpp \
-    colorsettings.cpp
+    colorsettings.cpp \
+    networksettings.cpp
 
 HEADERS += \
         connected.h \
@@ -44,11 +45,13 @@ HEADERS += \
     model.h \
     nifti.h \
     tiny_obj_loader.h \
-    colorsettings.h
+    colorsettings.h \
+    networksettings.h
 
 FORMS += \
         connected.ui \
-    colorsettings.ui
+    colorsettings.ui \
+    networksettings.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

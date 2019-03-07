@@ -24,6 +24,9 @@
           <property name="text">
            <string>Node Color 1</string>
           </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -58,6 +61,13 @@
          <widget class="QRadioButton" name="radioButton_6">
           <property name="text">
            <string>Node Color 6</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_8">
+          <property name="text">
+           <string>Brain Mesh Color</string>
           </property>
          </widget>
         </item>
@@ -160,7 +170,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>33</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

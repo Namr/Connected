@@ -20,6 +20,7 @@
 #include "model.h"
 #include "camera.h"
 #include "mri.h"
+#include "colorsettings.h"
 #include <boost/algorithm/string.hpp>
 
 class Brain
@@ -27,14 +28,6 @@ class Brain
     Model sphere;
     Model mesh;
     Model connector;
-    float colorTables[6][3] = {
-        {0.0f, 0.0f, 1.0f}, //blue
-        {0.0f, 1.0f, 0.0f}, //green
-        {1.0f, 1.0f, 0.0f}, //yellow
-        {1.0f, 0.0f, 0.3f}, //pink
-        {0.0f, 1.0f, 1.0f}, //teal
-        {1.0f, 0.5f, 0.0f} //orange
-    };
     std::vector<glm::mat4> nodePositions;
     std::vector<int> nodeColors;
     std::vector<std::vector<float>> connections;
@@ -52,6 +45,8 @@ public:
     void loadAppendedNodeData(std::string filepath);
     std::vector<std::string> nodeNames;
     float threshold = 0.5;
+
+    NColor *colors;
 
     int displayShell = 1;
     int displayMri = -1;

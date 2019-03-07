@@ -6,12 +6,14 @@ Connected::Connected(QWidget *parent)
     ui.setupUi(this);
     KeyListener* key = new KeyListener(ui.screen);
     CSettings = new colorSettings();
+    NSettings = new NetworkSettings();
+
     ui.centralWidget->installEventFilter(key);
     connect(ui.axialSlider, SIGNAL(valueChanged(int)), this, SLOT(on_axialSlider_valuechanged(int)));
     connect(ui.coronalSlider, SIGNAL(valueChanged(int)), this, SLOT(on_coronalSlider_valuechanged(int)));
     connect(ui.thresholdSlider, SIGNAL(valueChanged(int)), this, SLOT(on_thresholdSlider_valuechanged(int)));
     ui.screen->nodeName = ui.nodeName;
-
+    ui.screen->colors = CSettings->colors;
     QTime dieTime = QTime::currentTime().addMSecs(100);
     while (QTime::currentTime() < dieTime)
     {
@@ -127,4 +129,9 @@ void Connected::on_thresholdSlider_valuechanged(int newValue)
 void Connected::on_actionColor_Settings_triggered()
 {
     CSettings->show();
+}
+
+void Connected::on_actionRender_Settings_triggered()
+{
+    NSettings->show();
 }

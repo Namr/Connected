@@ -57,10 +57,10 @@ void GLWidget::initializeGL()
 
     //set background color
     f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    primaryBrain = Brain(f, "assets/Node_AAL116.node",
-        "assets/connect.edge");
-    secondaryBrain = Brain(f, "assets/Node_AAL116.node",
-        "assets/connect2.edge");
+    primaryBrain = Brain(f, "C:/Users/vrdem/Documents/GitHub/Connected/assets/Node_AAL116.node",
+        "C:/Users/vrdem/Documents/GitHub/Connected/assets/connect.edge");
+    secondaryBrain = Brain(f, "C:/Users/vrdem/Documents/GitHub/Connected/assets/Node_AAL116.node",
+        "C:/Users/vrdem/Documents/GitHub/Connected/assets/connect2.edge");
 
     cam = Camera(WIDTH, HEIGHT);;
     top = Camera(WIDTH / 2, HEIGHT / 2);
@@ -94,6 +94,9 @@ void GLWidget::initializeGL()
 
 void GLWidget::resizeGL(int w, int h)
 {
+
+    primaryBrain.colors = colors;
+    secondaryBrain.colors = colors;
 
     QOpenGLFunctions_3_2_Core *f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_2_Core>();
     WIDTH = w;
@@ -175,6 +178,7 @@ void GLWidget::paintGL()
     );
 
     f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, screenFramebuffer);
+    f->glClearColor(colors[6].R / 255.0f, colors[6].G / 255.0f, colors[6].B / 255.0f, 1.0f);
     f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     f->glEnable(GL_FRAMEBUFFER_SRGB);
 
@@ -209,11 +213,11 @@ void GLWidget::paintGL()
         secondaryBrain.update(f, cam, xpos, ypos, selectedNode, leftMouseDown);
     }
     f->glBindFramebuffer(GL_READ_FRAMEBUFFER, screenFramebuffer);
-    f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 3);
+    f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dispFramebuffer);
     f->glBlitFramebuffer(0, HEIGHT, WIDTH, 0,
         0, 0, WIDTH, HEIGHT,
         GL_COLOR_BUFFER_BIT, GL_NEAREST);
-    f->glBindFramebuffer(GL_READ_FRAMEBUFFER, 3);
+    f->glBindFramebuffer(GL_READ_FRAMEBUFFER, dispFramebuffer);
 }
 
 void GLWidget::flipView()

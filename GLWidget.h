@@ -12,6 +12,7 @@
 
 #include "camera.h"
 #include "brain.h"
+#include "colorsettings.h"
 #include <ctime>
 
 class GLWidget :
@@ -45,10 +46,13 @@ public:
     int upKeyDown = 0;
     int downKeyDown = 0;
     int leftMouseDown = 0;
+
+    NColor *colors;
 private:
     int WIDTH;
     int HEIGHT;
 
+    int dispFramebuffer = 2;
     GLuint screenFramebuffer = 0;
     GLuint renderedTexture;
     GLuint depthrenderbuffer;
