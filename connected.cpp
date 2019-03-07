@@ -12,8 +12,13 @@ Connected::Connected(QWidget *parent)
     connect(ui.axialSlider, SIGNAL(valueChanged(int)), this, SLOT(on_axialSlider_valuechanged(int)));
     connect(ui.coronalSlider, SIGNAL(valueChanged(int)), this, SLOT(on_coronalSlider_valuechanged(int)));
     connect(ui.thresholdSlider, SIGNAL(valueChanged(int)), this, SLOT(on_thresholdSlider_valuechanged(int)));
+
     ui.screen->nodeName = ui.nodeName;
     ui.screen->colors = CSettings->colors;
+    ui.screen->nodeSize = &NSettings->nodeSize;
+    ui.screen->connectionSize = &NSettings->connectionSize;
+    ui.screen->graphSignalSize = &NSettings->graphSignalSize;
+
     QTime dieTime = QTime::currentTime().addMSecs(100);
     while (QTime::currentTime() < dieTime)
     {

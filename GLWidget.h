@@ -48,6 +48,9 @@ public:
     int leftMouseDown = 0;
 
     NColor *colors;
+    float *nodeSize;
+    float *connectionSize;
+    float *graphSignalSize;
 private:
     int WIDTH;
     int HEIGHT;

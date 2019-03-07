@@ -95,9 +95,6 @@ void GLWidget::initializeGL()
 void GLWidget::resizeGL(int w, int h)
 {
 
-    primaryBrain.colors = colors;
-    secondaryBrain.colors = colors;
-
     QOpenGLFunctions_3_2_Core *f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_2_Core>();
     WIDTH = w;
     HEIGHT = h;
@@ -130,8 +127,22 @@ void GLWidget::paintGL()
     {
         nodeName->setText(primaryBrain.nodeNames[selectedNode].c_str());
     }
+
+    //update varibles
+    primaryBrain.colors = colors;
+    secondaryBrain.colors = colors;
+
     primaryBrain.threshold = threshold;
     secondaryBrain.threshold = threshold;
+
+    primaryBrain.nodeSize = *nodeSize;
+    secondaryBrain.nodeSize = *nodeSize;
+
+    primaryBrain.connectionSize = *connectionSize;
+    secondaryBrain.connectionSize = *connectionSize;
+
+    primaryBrain.graphSignalSize = *graphSignalSize;
+    secondaryBrain.graphSignalSize = *graphSignalSize;
 
     if (primaryShouldReload == 1)
     {

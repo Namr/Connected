@@ -185,7 +185,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
     {
         //move sphere to position and then render it
         sphere.model = pos;
-        sphere.model = glm::scale(sphere.model, glm::vec3(1.5f, 1.5f, 1.5f));
+        sphere.model = glm::scale(sphere.model, glm::vec3(nodeSize, nodeSize, nodeSize));
 
         GLint viewportraw[4];
         f->glGetIntegerv(GL_VIEWPORT, viewportraw);
@@ -222,7 +222,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
 
                 //now scale it so it actually reaches that node
                 float dist = glm::distance(glm::vec3(sphere.model[3]), glm::vec3(nodePositions[connectedNode][3]));
-                connector.model = glm::scale(connector.model, glm::vec3(connection / 3, connection / 3, dist * 0.5));
+                connector.model = glm::scale(connector.model, glm::vec3(connection * connectionSize, connection * connectionSize, dist * 0.5));
                 //this line ensures the scale occurs from the BASE of the model
                 connector.model *= glm::mat4(1, 0, 0, 0,
                     0, 1, 0, 0,
@@ -236,8 +236,10 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
         if (hasAppendedData) //if we have appended data, render it
         {
             connector.model = glm::mat4(1);
-            connector.model = sphere.model;
-            connector.model = glm::scale(connector.model, glm::vec3(1.0f, 0.5f, -appendedNodeData[node] * 20));
+            connector.model = glm::translate(connector.model, glm::vec3(sphere.model[3]));
+            glm::quat axialRotation = glm::quat(glm::vec3(1.5708f, 0.0f, 1.5708f));
+            connector.model = connector.model * glm::mat4_cast(axialRotation);
+            connector.model = glm::scale(connector.model, glm::vec3(0.7f, -appendedNodeData[node] * graphSignalSize, 0.7));
 
             //this line ensures the scale occurs from the BASE of the model
             connector.model *= glm::mat4(1, 0, 0, 0,

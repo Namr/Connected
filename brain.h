@@ -47,6 +47,9 @@ public:
     float threshold = 0.5;
 
     NColor *colors;
+    float nodeSize = 1.5f;
+    float connectionSize = 0.3f;
+    float graphSignalSize = 20.0f;
 
     int displayShell = 1;
     int displayMri = -1;
