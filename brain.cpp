@@ -263,16 +263,15 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
 
         node++;
     }
-
-
-    if (displayMri == 1)
-        mri.render(f, camera);
-
     if (displayShell == 1)
     {
         f->glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         mesh.render(f, camera, colors[7].R / 255.0f, colors[7].G / 255.0f, colors[7].B / 255.0f, 0.3f);
         f->glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+    if (displayMri == 1)
+    {
+        mri.render(f, camera);
     }
 }
 

@@ -12,6 +12,7 @@
 
 #include "camera.h"
 #include "brain.h"
+#include "mri.h"
 #include "colorsettings.h"
 #include <ctime>
 
@@ -51,6 +52,9 @@ public:
     float *nodeSize;
     float *connectionSize;
     float *graphSignalSize;
+    MTransform *coronal;
+    MTransform *axial;
+
 private:
     int WIDTH;
     int HEIGHT;

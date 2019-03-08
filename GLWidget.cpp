@@ -144,6 +144,11 @@ void GLWidget::paintGL()
     primaryBrain.graphSignalSize = *graphSignalSize;
     secondaryBrain.graphSignalSize = *graphSignalSize;
 
+    primaryBrain.mri.axialTrans = *axial;
+    primaryBrain.mri.coronalTrans = *coronal;
+    secondaryBrain.mri.axialTrans = *axial;
+    secondaryBrain.mri.coronalTrans = *coronal;
+
     if (primaryShouldReload == 1)
     {
         primaryBrain.reloadBrain(primaryNodeName, primaryEdgeName);

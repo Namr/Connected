@@ -7,6 +7,7 @@ Connected::Connected(QWidget *parent)
     KeyListener* key = new KeyListener(ui.screen);
     CSettings = new colorSettings();
     NSettings = new NetworkSettings();
+    MSettings = new MriSettings();
 
     ui.centralWidget->installEventFilter(key);
     connect(ui.axialSlider, SIGNAL(valueChanged(int)), this, SLOT(on_axialSlider_valuechanged(int)));
@@ -18,6 +19,8 @@ Connected::Connected(QWidget *parent)
     ui.screen->nodeSize = &NSettings->nodeSize;
     ui.screen->connectionSize = &NSettings->connectionSize;
     ui.screen->graphSignalSize = &NSettings->graphSignalSize;
+    ui.screen->coronal = &MSettings->coronal;
+    ui.screen->axial = &MSettings->axial;
 
     QTime dieTime = QTime::currentTime().addMSecs(100);
     while (QTime::currentTime() < dieTime)
@@ -139,4 +142,9 @@ void Connected::on_actionColor_Settings_triggered()
 void Connected::on_actionRender_Settings_triggered()
 {
     NSettings->show();
+}
+
+void Connected::on_actionMRI_Settings_triggered()
+{
+    MSettings->show();
 }
