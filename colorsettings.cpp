@@ -41,6 +41,10 @@ colorSettings::colorSettings(QWidget *parent) :
     colors[7].G = 230;
     colors[7].B = 230;
 
+    colors[8].R = 255;
+    colors[8].G = 255;
+    colors[8].B = 0;
+
     ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
 }
 
@@ -143,6 +147,16 @@ void colorSettings::on_radioButton_7_clicked()
 void colorSettings::on_radioButton_8_clicked()
 {
     selectedColor = 7;
+    ui->horizontalSlider->setValue(colors[selectedColor].R);
+    ui->horizontalSlider_2->setValue(colors[selectedColor].G);
+    ui->horizontalSlider_3->setValue(colors[selectedColor].B);
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+}
+
+//text
+void colorSettings::on_radioButton_9_clicked()
+{
+    selectedColor = 8;
     ui->horizontalSlider->setValue(colors[selectedColor].R);
     ui->horizontalSlider_2->setValue(colors[selectedColor].G);
     ui->horizontalSlider_3->setValue(colors[selectedColor].B);

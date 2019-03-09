@@ -1,4 +1,5 @@
 #include "brain.h"
+#include "GLWidget.h"
 
 Brain::Brain()
 {
@@ -180,17 +181,17 @@ void Brain::setPosition(glm::vec3 pos)
 
 void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown)
 {
+
+    GLint viewportraw[4];
+    f->glGetIntegerv(GL_VIEWPORT, viewportraw);
+
+    glm::vec4 viewport = glm::vec4(viewportraw[0], viewportraw[1], viewportraw[2], viewportraw[3]);
     int node = 0;
     for (glm::mat4 pos : nodePositions)
     {
         //move sphere to position and then render it
         sphere.model = pos;
         sphere.model = glm::scale(sphere.model, glm::vec3(nodeSize, nodeSize, nodeSize));
-
-        GLint viewportraw[4];
-        f->glGetIntegerv(GL_VIEWPORT, viewportraw);
-
-        glm::vec4 viewport = glm::vec4(viewportraw[0], viewportraw[1], viewportraw[2], viewportraw[3]);
         glm::vec3 v0 = glm::unProject(glm::vec3(xpos, ypos, 0.0f), camera.view, camera.proj, viewport);
         glm::vec3 v1 = glm::unProject(glm::vec3(xpos, ypos, 1.0f), camera.view, camera.proj, viewport);
         glm::vec3 dir = glm::normalize((v1 - v0));
@@ -205,8 +206,14 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
 
         //for each node that this node is connected to, draw a connection
         int connectedNode = 0;
+        bool shouldRenderText = false;
         for (float connection : connections[node])
         {
+            //if this statisfies rendering text, change the flag
+            if(connection > textThreshold && connectedNode != node)
+            {
+                shouldRenderText = true;
+            }
             //filter out connections below threshold or filter out non isolated nodes if the mouse is down
             if (connection > threshold && (mouseDown == 0 || hit || selectedNode == node || selectedNode == connectedNode))
             {
@@ -259,7 +266,12 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
         }
         else
             sphere.render(f, camera, colors[nodeColors[node]].R / 255.0f, colors[nodeColors[node]].G / 255.0f, colors[nodeColors[node]].B / 255.0f, 1);
-
+        //render text if applicable
+        if(shouldRenderText == true)
+        {
+            screen->renderText(sphere.model, camera, viewport, QString(nodeNames[node].c_str()));
+            shouldRenderText = false;
+        }
         node++;
     }
     if (displayMri == 1)
@@ -273,4 +285,3 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
         f->glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 }
-

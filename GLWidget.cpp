@@ -63,6 +63,9 @@ void GLWidget::initializeGL()
     secondaryBrain = Brain(f, "C:/Users/vrdem/Documents/GitHub/Connected/assets/Node_AAL116.node",
         "C:/Users/vrdem/Documents/GitHub/Connected/assets/connect2.edge");
 
+    primaryBrain.screen = this;
+    secondaryBrain.screen = this;
+
     cam = Camera(WIDTH, HEIGHT);;
     top = Camera(WIDTH / 2, HEIGHT / 2);
     side = Camera(WIDTH / 2, HEIGHT / 2);
@@ -129,12 +132,20 @@ void GLWidget::paintGL()
         nodeName->setText(primaryBrain.nodeNames[selectedNode].c_str());
     }
 
+    f->glEnable(GL_BLEND);
+    f->glEnable(GL_DEPTH_TEST);
+    f->glDepthFunc(GL_LESS);
+    f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     //update varibles
     primaryBrain.colors = colors;
     secondaryBrain.colors = colors;
 
-    primaryBrain.threshold = threshold;
-    secondaryBrain.threshold = threshold;
+    primaryBrain.threshold = *threshold;
+    secondaryBrain.threshold = *threshold;
+
+    primaryBrain.textThreshold = *textThreshold;
+    secondaryBrain.textThreshold = *textThreshold;
 
     primaryBrain.nodeSize = *nodeSize;
     secondaryBrain.nodeSize = *nodeSize;
@@ -235,6 +246,18 @@ void GLWidget::paintGL()
         0, 0, WIDTH, HEIGHT,
         GL_COLOR_BUFFER_BIT, GL_NEAREST);
     f->glBindFramebuffer(GL_READ_FRAMEBUFFER, dispFramebuffer);
+
+    //do anything related to QPainter now
+    // Render text
+    painter.begin(this);
+    painter.setPen(QColor(colors[8].R, colors[8].G, colors[8].B));
+    painter.setFont(QFont("Times", 10, QFont::Bold));
+    for(NText text: nodeTexts)
+    {
+        painter.drawText(text.x, text.y, text.str);
+    }
+    nodeTexts.clear();
+    painter.end();
 }
 
 void GLWidget::flipView()
@@ -308,6 +331,20 @@ void GLWidget::flipView()
         }
     }
 }
+
+void GLWidget::renderText(glm::mat4 model, Camera cam, glm::vec4 viewport, const QString &str)
+{
+    // Identify x and y locations to render text within widget
+    glm::vec3 textPos = glm::vec3(0,0,0);
+    textPos = glm::project(glm::vec3(model[3]), cam.view, cam.proj, viewport);
+
+    NText text;
+    text.x = textPos.x;
+    text.y = textPos.y;
+    text.str = str;
+    nodeTexts.push_back(text);
+}
+
 GLWidget::~GLWidget()
 {
 }

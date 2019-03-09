@@ -23,6 +23,8 @@
 #include "colorsettings.h"
 #include <boost/algorithm/string.hpp>
 
+class GLWidget;
+
 class Brain
 {
     Model sphere;
@@ -41,10 +43,12 @@ public:
     void reloadBrain(std::string nodePath, std::string connectionPath);
     void update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown);
     void setPosition(glm::vec3 position);
-
     void loadAppendedNodeData(std::string filepath);
+
+    GLWidget *screen;
     std::vector<std::string> nodeNames;
-    float threshold = 0.5;
+    float threshold = 0.5f;
+    float textThreshold = 1.0f;
 
     NColor *colors;
     float nodeSize = 1.5f;

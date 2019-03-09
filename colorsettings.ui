@@ -65,6 +65,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QRadioButton" name="radioButton_9">
+          <property name="text">
+           <string>Text Color</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QRadioButton" name="radioButton_8">
           <property name="text">
            <string>Brain Mesh Color</string>

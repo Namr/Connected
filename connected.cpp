@@ -12,13 +12,16 @@ Connected::Connected(QWidget *parent)
     ui.centralWidget->installEventFilter(key);
     connect(ui.axialSlider, SIGNAL(valueChanged(int)), this, SLOT(on_axialSlider_valuechanged(int)));
     connect(ui.coronalSlider, SIGNAL(valueChanged(int)), this, SLOT(on_coronalSlider_valuechanged(int)));
-    connect(ui.thresholdSlider, SIGNAL(valueChanged(int)), this, SLOT(on_thresholdSlider_valuechanged(int)));
 
     ui.screen->nodeName = ui.nodeName;
     ui.screen->colors = CSettings->colors;
+
     ui.screen->nodeSize = &NSettings->nodeSize;
     ui.screen->connectionSize = &NSettings->connectionSize;
     ui.screen->graphSignalSize = &NSettings->graphSignalSize;
+    ui.screen->threshold = &NSettings->threshold;
+    ui.screen->textThreshold = &NSettings->textThreshold;
+
     ui.screen->coronal = &MSettings->coronal;
     ui.screen->axial = &MSettings->axial;
 
@@ -125,12 +128,6 @@ void Connected::on_coronalSlider_valuechanged(int newValue)
 {
     ui.screen->primaryBrain.mri.coronalPosition = newValue;
     ui.screen->secondaryBrain.mri.coronalPosition = newValue;
-    ui.screen->update();
-}
-
-void Connected::on_thresholdSlider_valuechanged(int newValue)
-{
-    ui.screen->threshold = (float)newValue / 100.0f;
     ui.screen->update();
 }
 

@@ -17,12 +17,18 @@ public:
     float nodeSize = 1.5f;
     float connectionSize = 0.3f;
     float graphSignalSize = 20.0f;
+    float threshold = 0.5f;
+    float textThreshold = 1.0f;
 private slots:
     void on_nodeSizeSlider_sliderMoved(int position);
 
     void on_ConnectionSizeSlider_sliderMoved(int position);
 
     void on_GraphSignalSizeSlider_sliderMoved(int position);
+
+    void on_horizontalSlider_sliderMoved(int position);
+
+    void on_horizontalSlider_2_sliderMoved(int position);
 
 private:
     Ui::NetworkSettings *ui;

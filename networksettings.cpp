@@ -27,3 +27,13 @@ void NetworkSettings::on_GraphSignalSizeSlider_sliderMoved(int position)
 {
     graphSignalSize = position;
 }
+
+void NetworkSettings::on_horizontalSlider_sliderMoved(int position)
+{
+    threshold = position / 100.0f;
+}
+
+void NetworkSettings::on_horizontalSlider_2_sliderMoved(int position)
+{
+    textThreshold = position / 100.0f;
+}
