@@ -16,7 +16,7 @@ MriSettings::MriSettings(QWidget *parent) :
     coronal.sz = 258;
 
     axial.x = -30;
-    axial.y = -150;
+    axial.y = -110;
     axial.z = -126;
 
     axial.sx = 95;

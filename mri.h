@@ -29,7 +29,7 @@ public:
     glm::mat4 coronal = glm::mat4(1.0f);
     glm::mat4 axial = glm::mat4(1.0f);
     float coronalPosition = -90.0f;
-    float axialPosition = -80.0f;
+    float axialPosition = 50;
     void render(QOpenGLFunctions_3_2_Core *f, Camera &camera);
     ~MRI();
 };

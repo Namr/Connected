@@ -24,6 +24,7 @@ void GLWidget::initializeGL()
 
     f->glEnable(GL_BLEND);
     f->glEnable(GL_DEPTH_TEST);
+    f->glDepthFunc(GL_LESS);
     f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     f->glGenFramebuffers(1, &screenFramebuffer);

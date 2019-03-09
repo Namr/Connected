@@ -20,6 +20,9 @@ MRI::MRI(QOpenGLFunctions_3_2_Core *f) : data(f, "C:/Users/vrdem/Documents/GitHu
 
     axial = glm::translate(axial, glm::vec3(axialTrans.x, axialTrans.y, axialTrans.z));
     axial = glm::scale(axial, glm::vec3(axialTrans.sx, axialTrans.sy, axialTrans.sz));
+
+    axialPosition = axialTrans.y;
+    coronalPosition = coronalTrans.y;
 }
 
 void MRI::render(QOpenGLFunctions_3_2_Core *f, Camera &camera)
@@ -45,8 +48,8 @@ void MRI::render(QOpenGLFunctions_3_2_Core *f, Camera &camera)
     plane.view = 0;
     plane.render(f, camera);
 
-    plane.model = glm::translate(axial, glm::vec3(0.0f, axialPosition + 90, 0.0f));
-    plane.layer = map(axialPosition + 90, -90.23f + 90, 90.23f + 250, 0.0f, 1.0f);
+    plane.model = glm::translate(axial, glm::vec3(0.0f, axialPosition, 0.0f));
+    plane.layer = map(axialPosition, axialTrans.y - 10, axialTrans.y + 150, 0.0f, 1.0f);
     plane.view = 1;
     plane.render(f, camera);
 }
