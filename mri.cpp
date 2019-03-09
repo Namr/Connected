@@ -43,8 +43,8 @@ void MRI::render(QOpenGLFunctions_3_2_Core *f, Camera &camera)
     axial = glm::translate(axial, glm::vec3(axialTrans.x, axialTrans.y, axialTrans.z));
     axial = glm::scale(axial, glm::vec3(axialTrans.sx, axialTrans.sy, axialTrans.sz));
 
-    plane.model = glm::translate(coronal, glm::vec3(0.0f, coronalPosition + 80, 0.0f));
-    plane.layer = map(coronalPosition + 80, -115.23f + 80, 100.23f + 80, 0.0f, 1.0f);
+    plane.model = glm::translate(coronal, glm::vec3(0.0f, coronalPosition, 0.0f));
+    plane.layer = map(coronalPosition, coronalTrans.y, coronalTrans.y + 240, 0.0f, 1.0f);
     plane.view = 0;
     plane.render(f, camera);
 
