@@ -58,10 +58,10 @@ void GLWidget::initializeGL()
 
     //set background color
     f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    primaryBrain = Brain(f, "C:/Users/vrdem/Documents/GitHub/Connected/assets/Node_AAL116.node",
-        "C:/Users/vrdem/Documents/GitHub/Connected/assets/connect.edge");
-    secondaryBrain = Brain(f, "C:/Users/vrdem/Documents/GitHub/Connected/assets/Node_AAL116.node",
-        "C:/Users/vrdem/Documents/GitHub/Connected/assets/connect2.edge");
+    primaryBrain = Brain(f, "assets/Node_AAL116.node",
+        "assets/connect.edge");
+    secondaryBrain = Brain(f, "assets/Node_AAL116.node",
+        "assets/connect2.edge");
 
     primaryBrain.screen = this;
     secondaryBrain.screen = this;
@@ -250,8 +250,8 @@ void GLWidget::paintGL()
     //do anything related to QPainter now
     // Render text
     painter.begin(this);
-    painter.setPen(QColor(colors[8].R, colors[8].G, colors[8].B));
-    painter.setFont(QFont("Times", 10, QFont::Bold));
+    painter.setPen(QColor(colors[8].R, colors[8].G, colors[8].B, colors[8].A));
+    painter.setFont(QFont("Times", *textSize, QFont::Bold));
     for(NText text: nodeTexts)
     {
         painter.drawText(text.x, text.y, text.str);

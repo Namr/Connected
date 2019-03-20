@@ -37,3 +37,8 @@ void NetworkSettings::on_horizontalSlider_2_sliderMoved(int position)
 {
     textThreshold = position / 100.0f;
 }
+
+void NetworkSettings::on_horizontalSlider_3_sliderMoved(int position)
+{
+    textSize = position;
+}

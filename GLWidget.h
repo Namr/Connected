@@ -65,6 +65,7 @@ public:
     float *graphSignalSize;
     float *threshold;
     float *textThreshold;
+    int *textSize;
     MTransform *coronal;
     MTransform *axial;
 

@@ -40,12 +40,13 @@ colorSettings::colorSettings(QWidget *parent) :
     colors[7].R = 230;
     colors[7].G = 230;
     colors[7].B = 230;
+    colors[7].A = 69;
 
     colors[8].R = 255;
     colors[8].G = 255;
     colors[8].B = 0;
 
-    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }
 
 colorSettings::~colorSettings()
@@ -57,20 +58,26 @@ colorSettings::~colorSettings()
 void colorSettings::on_horizontalSlider_sliderMoved(int position)
 {
     colors[selectedColor].R = position;
-    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }
 
 //green
 void colorSettings::on_horizontalSlider_2_sliderMoved(int position)
 {
     colors[selectedColor].G = position;
-    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }
 //blue
 void colorSettings::on_horizontalSlider_3_sliderMoved(int position)
 {
     colors[selectedColor].B = position;
-    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
+}
+
+void colorSettings::on_horizontalSlider_4_sliderMoved(int position)
+{
+    colors[selectedColor].A = position;
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }
 
 //node 1
@@ -80,7 +87,8 @@ void colorSettings::on_radioButton_clicked()
     ui->horizontalSlider->setValue(colors[selectedColor].R);
     ui->horizontalSlider_2->setValue(colors[selectedColor].G);
     ui->horizontalSlider_3->setValue(colors[selectedColor].B);
-    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+    ui->horizontalSlider_4->setValue(colors[selectedColor].A);
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }
 
 //node 2
@@ -90,7 +98,8 @@ void colorSettings::on_radioButton_2_clicked()
     ui->horizontalSlider->setValue(colors[selectedColor].R);
     ui->horizontalSlider_2->setValue(colors[selectedColor].G);
     ui->horizontalSlider_3->setValue(colors[selectedColor].B);
-    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+    ui->horizontalSlider_4->setValue(colors[selectedColor].A);
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }
 
 //node 3
@@ -100,7 +109,8 @@ void colorSettings::on_radioButton_3_clicked()
     ui->horizontalSlider->setValue(colors[selectedColor].R);
     ui->horizontalSlider_2->setValue(colors[selectedColor].G);
     ui->horizontalSlider_3->setValue(colors[selectedColor].B);
-    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+    ui->horizontalSlider_4->setValue(colors[selectedColor].A);
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }
 
 //node 4
@@ -110,7 +120,8 @@ void colorSettings::on_radioButton_4_clicked()
     ui->horizontalSlider->setValue(colors[selectedColor].R);
     ui->horizontalSlider_2->setValue(colors[selectedColor].G);
     ui->horizontalSlider_3->setValue(colors[selectedColor].B);
-    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+    ui->horizontalSlider_4->setValue(colors[selectedColor].A);
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }
 
 //node 5
@@ -120,7 +131,8 @@ void colorSettings::on_radioButton_5_clicked()
     ui->horizontalSlider->setValue(colors[selectedColor].R);
     ui->horizontalSlider_2->setValue(colors[selectedColor].G);
     ui->horizontalSlider_3->setValue(colors[selectedColor].B);
-    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+    ui->horizontalSlider_4->setValue(colors[selectedColor].A);
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }
 
 //node 6
@@ -130,7 +142,8 @@ void colorSettings::on_radioButton_6_clicked()
     ui->horizontalSlider->setValue(colors[selectedColor].R);
     ui->horizontalSlider_2->setValue(colors[selectedColor].G);
     ui->horizontalSlider_3->setValue(colors[selectedColor].B);
-    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+    ui->horizontalSlider_4->setValue(colors[selectedColor].A);
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }
 
 //background
@@ -140,7 +153,8 @@ void colorSettings::on_radioButton_7_clicked()
     ui->horizontalSlider->setValue(colors[selectedColor].R);
     ui->horizontalSlider_2->setValue(colors[selectedColor].G);
     ui->horizontalSlider_3->setValue(colors[selectedColor].B);
-    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+    ui->horizontalSlider_4->setValue(colors[selectedColor].A);
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }
 
 //brain mesh
@@ -150,7 +164,8 @@ void colorSettings::on_radioButton_8_clicked()
     ui->horizontalSlider->setValue(colors[selectedColor].R);
     ui->horizontalSlider_2->setValue(colors[selectedColor].G);
     ui->horizontalSlider_3->setValue(colors[selectedColor].B);
-    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+    ui->horizontalSlider_4->setValue(colors[selectedColor].A);
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }
 
 //text
@@ -160,5 +175,6 @@ void colorSettings::on_radioButton_9_clicked()
     ui->horizontalSlider->setValue(colors[selectedColor].R);
     ui->horizontalSlider_2->setValue(colors[selectedColor].G);
     ui->horizontalSlider_3->setValue(colors[selectedColor].B);
-    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B), Qt::SolidPattern));
+    ui->horizontalSlider_4->setValue(colors[selectedColor].A);
+    ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }

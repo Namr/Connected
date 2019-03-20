@@ -3,10 +3,10 @@
 MRI::MRI()
 {}
 
-MRI::MRI(QOpenGLFunctions_3_2_Core *f) : data(f, "C:/Users/vrdem/Documents/GitHub/Connected/assets/xT1_brain.tif")
+MRI::MRI(QOpenGLFunctions_3_2_Core *f) : data(f, "assets/xT1_brain.tif")
 {
     plane = Model();
-    plane.loadFromObj(f, "C:/Users/vrdem/Documents/GitHub/Connected/assets/plane.obj", 1);
+    plane.loadFromObj(f, "assets/plane.obj", 1);
     plane.addTexture(f, 0);
 
     glm::quat coronalRotation = glm::quat(glm::vec3(0.0f, 1.5708f, 0.0f));

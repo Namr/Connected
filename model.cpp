@@ -63,9 +63,9 @@ void Model::GLInit(QOpenGLFunctions_3_2_Core *f)
     f->glGenBuffers(1, &EBO);
 
     // load the shaders from their corresponding files
-    GLuint vertexShader = loadShader(f, "C:/Users/vrdem/Documents/GitHub/Connected/shaders/vertex.glsl", GL_VERTEX_SHADER);
+    GLuint vertexShader = loadShader(f, "shaders/vertex.glsl", GL_VERTEX_SHADER);
     GLuint fragmentShader =
-        loadShader(f, "C:/Users/vrdem/Documents/GitHub/Connected/shaders/fragment.glsl", GL_FRAGMENT_SHADER);
+        loadShader(f, "shaders/fragment.glsl", GL_FRAGMENT_SHADER);
 
     // compile the GPU programs
     f->glCompileShader(vertexShader);

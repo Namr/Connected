@@ -182,6 +182,8 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionSave_Settings"/>
+    <addaction name="actionLoad_Project"/>
     <addaction name="actionLoad_Connectome"/>
     <addaction name="actionLoad_Secondary_Connectome"/>
     <addaction name="actionLoad_Primary_Node_Data"/>
@@ -232,6 +234,16 @@
   <action name="actionMRI_Settings">
    <property name="text">
     <string>MRI Settings</string>
+   </property>
+  </action>
+  <action name="actionSave_Settings">
+   <property name="text">
+    <string>Save Project</string>
+   </property>
+  </action>
+  <action name="actionLoad_Project">
+   <property name="text">
+    <string>Load Project</string>
    </property>
   </action>
  </widget>

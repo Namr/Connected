@@ -19,6 +19,7 @@ public:
     float graphSignalSize = 20.0f;
     float threshold = 0.5f;
     float textThreshold = 1.0f;
+    int textSize = 10;
 private slots:
     void on_nodeSizeSlider_sliderMoved(int position);
 
@@ -29,6 +30,8 @@ private slots:
     void on_horizontalSlider_sliderMoved(int position);
 
     void on_horizontalSlider_2_sliderMoved(int position);
+
+    void on_horizontalSlider_3_sliderMoved(int position);
 
 private:
     Ui::NetworkSettings *ui;

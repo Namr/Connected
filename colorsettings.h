@@ -13,6 +13,7 @@ struct NColor
     int R = 0;
     int G = 0;
     int B = 0;
+    int A = 255;
 };
 
 class colorSettings : public QMainWindow
@@ -48,6 +49,8 @@ private slots:
     void on_radioButton_8_clicked();
 
     void on_radioButton_9_clicked();
+
+    void on_horizontalSlider_4_sliderMoved(int position);
 
 private:
     Ui::colorSettings *ui;
