@@ -31,7 +31,10 @@ SOURCES += \
     keylistener.cpp \
     mri.cpp \
     model.cpp \
-    nifti.cpp
+    nifti.cpp \
+    colorsettings.cpp \
+    networksettings.cpp \
+    mrisettings.cpp
 
 HEADERS += \
         connected.h \
@@ -42,10 +45,16 @@ HEADERS += \
     mri.h \
     model.h \
     nifti.h \
-    tiny_obj_loader.h
+    tiny_obj_loader.h \
+    colorsettings.h \
+    networksettings.h \
+    mrisettings.h
 
 FORMS += \
-        connected.ui
+        connected.ui \
+    colorsettings.ui \
+    networksettings.ui \
+    mrisettings.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -53,3 +62,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 unix:!macx: LIBS += -ltiff -lGL
+
+win32:INCLUDEPATH += "C:/Program Files (x86)/glm/include/" \
+                     "C:/Program Files/boost/boost_1_67_0/" \
+                     "C:/Program Files (x86)/tiff/include"
+
+win32: LIBS += "-LC:/Program Files (x86)/tiff/lib/" -ltiff

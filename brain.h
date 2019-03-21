@@ -20,21 +20,16 @@
 #include "model.h"
 #include "camera.h"
 #include "mri.h"
+#include "colorsettings.h"
 #include <boost/algorithm/string.hpp>
+
+class GLWidget;
 
 class Brain
 {
     Model sphere;
     Model mesh;
     Model connector;
-    float colorTables[6][3] = {
-        {0.0f, 0.0f, 1.0f}, //blue
-        {0.0f, 1.0f, 0.0f}, //green
-        {1.0f, 1.0f, 0.0f}, //yellow
-        {1.0f, 0.0f, 0.3f}, //pink
-        {0.0f, 1.0f, 1.0f}, //teal
-        {1.0f, 0.5f, 0.0f} //orange
-    };
     std::vector<glm::mat4> nodePositions;
     std::vector<int> nodeColors;
     std::vector<std::vector<float>> connections;
@@ -48,10 +43,17 @@ public:
     void reloadBrain(std::string nodePath, std::string connectionPath);
     void update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown);
     void setPosition(glm::vec3 position);
-
     void loadAppendedNodeData(std::string filepath);
+
+    GLWidget *screen;
     std::vector<std::string> nodeNames;
-    float threshold = 0.5;
+    float threshold = 0.5f;
+    float textThreshold = 1.0f;
+
+    NColor *colors;
+    float nodeSize = 1.5f;
+    float connectionSize = 0.3f;
+    float graphSignalSize = 20.0f;
 
     int displayShell = 1;
     int displayMri = -1;

@@ -4,6 +4,7 @@
 #include <qopenglwidget.h>
 #include <qopenglfunctions_3_2_core.h>
 #include <qopenglfunctions.h>
+#include <QPainter>
 
 #include <qtimer.h>
 #include <qevent.h>
@@ -11,8 +12,17 @@
 #include <qlabel.h>
 
 #include "camera.h"
+#include "mri.h"
 #include "brain.h"
+#include "colorsettings.h"
 #include <ctime>
+
+struct NText
+{
+    float x;
+    float y;
+    QString str;
+};
 
 class GLWidget :
     public QOpenGLWidget
@@ -25,7 +35,10 @@ public:
     void resizeGL(int w, int h);
     void paintGL();
     void flipView();
+    void renderText(glm::mat4 model, Camera cam, glm::vec4 viewport, const QString &str);
     ~GLWidget();
+
+    QPainter painter;
 
     Brain primaryBrain;
     int primaryShouldReload = 0;
@@ -38,17 +51,29 @@ public:
     std::string secondaryEdgeName;
 
     QLabel *nodeName;
-    float threshold = 0.5;
 
     int leftKeyDown = 0;
     int rightKeyDown = 0;
     int upKeyDown = 0;
     int downKeyDown = 0;
     int leftMouseDown = 0;
+
+    NColor *colors;
+    std::vector<NText> nodeTexts;
+    float *nodeSize;
+    float *connectionSize;
+    float *graphSignalSize;
+    float *threshold;
+    float *textThreshold;
+    int *textSize;
+    MTransform *coronal;
+    MTransform *axial;
+
 private:
     int WIDTH;
     int HEIGHT;
 
+    int dispFramebuffer = 2;
     GLuint screenFramebuffer = 0;
     GLuint renderedTexture;
     GLuint depthrenderbuffer;

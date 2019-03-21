@@ -9,6 +9,12 @@
 #include <glm/glm.hpp>
 #include "model.h"
 
+struct MTransform
+{
+    float x, y, z;
+    float sx, sy, sz;
+};
+
 class MRI
 {
     GLuint loadShader(QOpenGLFunctions_3_2_Core *f, const char *filepath, GLenum type);
@@ -18,10 +24,12 @@ public:
     MRI();
     NIFTI data;
     Model plane;
+    MTransform coronalTrans;
+    MTransform axialTrans;
     glm::mat4 coronal = glm::mat4(1.0f);
     glm::mat4 axial = glm::mat4(1.0f);
     float coronalPosition = -90.0f;
-    float axialPosition = -80.0f;
+    float axialPosition = 50;
     void render(QOpenGLFunctions_3_2_Core *f, Camera &camera);
     ~MRI();
 };

@@ -24,6 +24,7 @@ void GLWidget::initializeGL()
 
     f->glEnable(GL_BLEND);
     f->glEnable(GL_DEPTH_TEST);
+    f->glDepthFunc(GL_LESS);
     f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     f->glGenFramebuffers(1, &screenFramebuffer);
@@ -56,11 +57,14 @@ void GLWidget::initializeGL()
 
 
     //set background color
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     primaryBrain = Brain(f, "assets/Node_AAL116.node",
         "assets/connect.edge");
     secondaryBrain = Brain(f, "assets/Node_AAL116.node",
         "assets/connect2.edge");
+
+    primaryBrain.screen = this;
+    secondaryBrain.screen = this;
 
     cam = Camera(WIDTH, HEIGHT);;
     top = Camera(WIDTH / 2, HEIGHT / 2);
@@ -127,8 +131,35 @@ void GLWidget::paintGL()
     {
         nodeName->setText(primaryBrain.nodeNames[selectedNode].c_str());
     }
-    primaryBrain.threshold = threshold;
-    secondaryBrain.threshold = threshold;
+
+    f->glEnable(GL_BLEND);
+    f->glEnable(GL_DEPTH_TEST);
+    f->glDepthFunc(GL_LESS);
+    f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    //update varibles
+    primaryBrain.colors = colors;
+    secondaryBrain.colors = colors;
+
+    primaryBrain.threshold = *threshold;
+    secondaryBrain.threshold = *threshold;
+
+    primaryBrain.textThreshold = *textThreshold;
+    secondaryBrain.textThreshold = *textThreshold;
+
+    primaryBrain.nodeSize = *nodeSize;
+    secondaryBrain.nodeSize = *nodeSize;
+
+    primaryBrain.connectionSize = *connectionSize;
+    secondaryBrain.connectionSize = *connectionSize;
+
+    primaryBrain.graphSignalSize = *graphSignalSize;
+    secondaryBrain.graphSignalSize = *graphSignalSize;
+
+    primaryBrain.mri.axialTrans = *axial;
+    primaryBrain.mri.coronalTrans = *coronal;
+    secondaryBrain.mri.axialTrans = *axial;
+    secondaryBrain.mri.coronalTrans = *coronal;
 
     if (primaryShouldReload == 1)
     {
@@ -175,6 +206,7 @@ void GLWidget::paintGL()
     );
 
     f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, screenFramebuffer);
+    f->glClearColor(colors[6].R / 255.0f, colors[6].G / 255.0f, colors[6].B / 255.0f, 1.0f);
     f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     f->glEnable(GL_FRAMEBUFFER_SRGB);
 
@@ -209,11 +241,23 @@ void GLWidget::paintGL()
         secondaryBrain.update(f, cam, xpos, ypos, selectedNode, leftMouseDown);
     }
     f->glBindFramebuffer(GL_READ_FRAMEBUFFER, screenFramebuffer);
-    f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 3);
+    f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dispFramebuffer);
     f->glBlitFramebuffer(0, HEIGHT, WIDTH, 0,
         0, 0, WIDTH, HEIGHT,
         GL_COLOR_BUFFER_BIT, GL_NEAREST);
-    f->glBindFramebuffer(GL_READ_FRAMEBUFFER, 3);
+    f->glBindFramebuffer(GL_READ_FRAMEBUFFER, dispFramebuffer);
+
+    //do anything related to QPainter now
+    // Render text
+    painter.begin(this);
+    painter.setPen(QColor(colors[8].R, colors[8].G, colors[8].B, colors[8].A));
+    painter.setFont(QFont("Times", *textSize, QFont::Bold));
+    for(NText text: nodeTexts)
+    {
+        painter.drawText(text.x, text.y, text.str);
+    }
+    nodeTexts.clear();
+    painter.end();
 }
 
 void GLWidget::flipView()
@@ -287,6 +331,20 @@ void GLWidget::flipView()
         }
     }
 }
+
+void GLWidget::renderText(glm::mat4 model, Camera cam, glm::vec4 viewport, const QString &str)
+{
+    // Identify x and y locations to render text within widget
+    glm::vec3 textPos = glm::vec3(0,0,0);
+    textPos = glm::project(glm::vec3(model[3]), cam.view, cam.proj, viewport);
+
+    NText text;
+    text.x = textPos.x;
+    text.y = textPos.y;
+    text.str = str;
+    nodeTexts.push_back(text);
+}
+
 GLWidget::~GLWidget()
 {
 }

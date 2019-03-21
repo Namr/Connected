@@ -5,11 +5,26 @@ Connected::Connected(QWidget *parent)
 {
     ui.setupUi(this);
     KeyListener* key = new KeyListener(ui.screen);
+    CSettings = new colorSettings();
+    NSettings = new NetworkSettings();
+    MSettings = new MriSettings();
+
     ui.centralWidget->installEventFilter(key);
     connect(ui.axialSlider, SIGNAL(valueChanged(int)), this, SLOT(on_axialSlider_valuechanged(int)));
     connect(ui.coronalSlider, SIGNAL(valueChanged(int)), this, SLOT(on_coronalSlider_valuechanged(int)));
-    connect(ui.thresholdSlider, SIGNAL(valueChanged(int)), this, SLOT(on_thresholdSlider_valuechanged(int)));
+
     ui.screen->nodeName = ui.nodeName;
+    ui.screen->colors = CSettings->colors;
+
+    ui.screen->nodeSize = &NSettings->nodeSize;
+    ui.screen->connectionSize = &NSettings->connectionSize;
+    ui.screen->graphSignalSize = &NSettings->graphSignalSize;
+    ui.screen->threshold = &NSettings->threshold;
+    ui.screen->textThreshold = &NSettings->textThreshold;
+    ui.screen->textSize = &NSettings->textSize;
+
+    ui.screen->coronal = &MSettings->coronal;
+    ui.screen->axial = &MSettings->axial;
 
     QTime dieTime = QTime::currentTime().addMSecs(100);
     while (QTime::currentTime() < dieTime)
@@ -117,8 +132,193 @@ void Connected::on_coronalSlider_valuechanged(int newValue)
     ui.screen->update();
 }
 
-void Connected::on_thresholdSlider_valuechanged(int newValue)
+void Connected::on_actionColor_Settings_triggered()
 {
-    ui.screen->threshold = (float)newValue / 100.0f;
-    ui.screen->update();
+    CSettings->show();
+}
+
+void Connected::on_actionRender_Settings_triggered()
+{
+    NSettings->show();
+}
+
+void Connected::on_actionMRI_Settings_triggered()
+{
+    MSettings->show();
+}
+
+void Connected::on_actionSave_Settings_triggered()
+{
+    QString settingsFile = QFileDialog::getSaveFileName(this, "Select Project File");
+    QSettings settings(settingsFile, QSettings::IniFormat);
+
+    //loop through colors
+    for(int i = 0; i < 9; i++)
+    {
+        //loop through color components
+        for(int c = 0; c < 3; c++)
+        {
+            std::string name = "Color" + std::to_string(i) + ":" + std::to_string(c);
+            if(c == 0)
+                settings.setValue(QString(name.c_str()), CSettings->colors[i].R);
+            else if(c == 1)
+                settings.setValue(QString(name.c_str()), CSettings->colors[i].G);
+            else
+                settings.setValue(QString(name.c_str()), CSettings->colors[i].B);
+        }
+    }
+
+    settings.setValue("nodeSize", NSettings->nodeSize);
+    settings.setValue("connectionSize", NSettings->connectionSize);
+    settings.setValue("graphSignalSize", NSettings->graphSignalSize);
+    settings.setValue("threshold", NSettings->threshold);
+    settings.setValue("textThreshold", NSettings->textThreshold);
+    settings.setValue("textSize", NSettings->textSize);
+
+    //unpack MTransform and put its components into
+
+    for(int i = 0; i < 6; i++)
+    {
+        std::string name = "Transform0:" + std::to_string(i);
+        switch(i)
+        {
+            case 0:
+                settings.setValue(QString(name.c_str()), MSettings->coronal.x);
+                break;
+            case 1:
+                settings.setValue(QString(name.c_str()), MSettings->coronal.y);
+                break;
+            case 2:
+                settings.setValue(QString(name.c_str()), MSettings->coronal.z);
+                break;
+            case 3:
+                settings.setValue(QString(name.c_str()), MSettings->coronal.sx);
+                break;
+            case 4:
+                settings.setValue(QString(name.c_str()), MSettings->coronal.sy);
+                break;
+            case 5:
+                settings.setValue(QString(name.c_str()), MSettings->coronal.sz);
+                break;
+        }
+    }
+
+    for(int i = 0; i < 6; i++)
+    {
+        std::string name = "Transform1:" + std::to_string(i);
+        switch(i)
+        {
+            case 0:
+                settings.setValue(QString(name.c_str()), MSettings->axial.x);
+                break;
+            case 1:
+                settings.setValue(QString(name.c_str()), MSettings->axial.y);
+                break;
+            case 2:
+                settings.setValue(QString(name.c_str()), MSettings->axial.z);
+                break;
+            case 3:
+                settings.setValue(QString(name.c_str()), MSettings->axial.sx);
+                break;
+            case 4:
+                settings.setValue(QString(name.c_str()), MSettings->axial.sy);
+                break;
+            case 5:
+                settings.setValue(QString(name.c_str()), MSettings->axial.sz);
+                break;
+        }
+    }
+
+    settings.sync();
+}
+
+void Connected::on_actionLoad_Project_triggered()
+{
+    QString settingsFile = QFileDialog::getOpenFileName(this, "Select Project File");
+    QSettings settings(settingsFile, QSettings::IniFormat);
+
+    //loop through colors
+    for(int i = 0; i < 9; i++)
+    {
+        //loop through color components
+        for(int c = 0; c < 3; c++)
+        {
+            std::string name = "Color" + std::to_string(i) + ":" + std::to_string(c);
+            if(c == 0)
+                CSettings->colors[i].R = settings.value(QString(name.c_str()), 0).toInt();
+            else if(c == 1)
+                CSettings->colors[i].G = settings.value(QString(name.c_str()), 0).toInt();
+            else
+                CSettings->colors[i].B = settings.value(QString(name.c_str()), 0).toInt();
+        }
+    }
+
+    ui.screen->colors = CSettings->colors;
+    CSettings->refresh();
+
+    NSettings->nodeSize = settings.value("nodeSize", 1.0).toFloat();
+    NSettings->connectionSize = settings.value("connectionSize", 1.0).toFloat();
+    NSettings->graphSignalSize = settings.value("graphSignalSize", 1.0).toFloat();
+    NSettings->threshold = settings.value("threshold", 1.0).toFloat();
+    NSettings->textThreshold = settings.value("textThreshold", 1.0).toFloat();
+    NSettings->textSize = settings.value("textSize", 1.0).toInt();
+
+    NSettings->refresh();
+
+    //unpack MTransform and put its components into
+
+    for(int i = 0; i < 6; i++)
+    {
+        std::string name = "Transform0:" + std::to_string(i);
+        switch(i)
+        {
+            case 0:
+                MSettings->coronal.x = settings.value(QString(name.c_str()), 1.0).toInt();
+                break;
+            case 1:
+                MSettings->coronal.y = settings.value(QString(name.c_str()), 1.0).toInt();
+                break;
+            case 2:
+                MSettings->coronal.z = settings.value(QString(name.c_str()), 1.0).toInt();
+                break;
+            case 3:
+                MSettings->coronal.sx = settings.value(QString(name.c_str()), 1.0).toInt();
+                break;
+            case 4:
+                MSettings->coronal.sy = settings.value(QString(name.c_str()), 1.0).toInt();
+                break;
+            case 5:
+                MSettings->coronal.sz = settings.value(QString(name.c_str()), 1.0).toInt();
+                break;
+        }
+    }
+
+    for(int i = 0; i < 6; i++)
+    {
+        std::string name = "Transform1:" + std::to_string(i);
+        switch(i)
+        {
+            case 0:
+                MSettings->axial.x = settings.value(QString(name.c_str()), 1.0).toInt();
+                break;
+            case 1:
+                MSettings->axial.y = settings.value(QString(name.c_str()), 1.0).toInt();
+                break;
+            case 2:
+                MSettings->axial.z = settings.value(QString(name.c_str()), 1.0).toInt();
+                break;
+            case 3:
+                MSettings->axial.sx = settings.value(QString(name.c_str()), 1.0).toInt();
+                break;
+            case 4:
+                MSettings->axial.sy = settings.value(QString(name.c_str()), 1.0).toInt();
+                break;
+            case 5:
+                MSettings->axial.sz = settings.value(QString(name.c_str()), 1.0).toInt();
+                break;
+        }
+    }
+
+    MSettings->refresh();
+    settings.sync();
 }

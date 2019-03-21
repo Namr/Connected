@@ -37,5 +37,9 @@ void main()
 				outColor = vec4(texture(textureArray, vec3(TexCoords.x, TexCoords.y, layer)).rrr, 1.0f);
 			}
 		}
+		if( outColor.a<=0.0 )
+		{
+			discard;
+		}
 	}
 }

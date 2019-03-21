@@ -155,7 +155,7 @@ void Model::render(QOpenGLFunctions_3_2_Core *f, Camera &camera)
     f->glUniform1f(uniLayer, layer);
     f->glUniform1i(uniMRIView, view);
 
-    glDrawElements(GL_TRIANGLES, triangles.size(), GL_UNSIGNED_INT, 0);
+    f->glDrawElements(GL_TRIANGLES, triangles.size(), GL_UNSIGNED_INT, 0);
 }
 
 void Model::render(QOpenGLFunctions_3_2_Core *f, Camera &camera, float r, float g, float b, float a)
