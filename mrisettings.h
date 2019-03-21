@@ -15,6 +15,9 @@ class MriSettings : public QMainWindow
 public:
     explicit MriSettings(QWidget *parent = nullptr);
     ~MriSettings();
+
+    void refresh();
+
     MTransform coronal;
     MTransform axial;
 private slots:

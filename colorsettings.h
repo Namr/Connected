@@ -24,6 +24,8 @@ public:
     explicit colorSettings(QWidget *parent = nullptr);
     ~colorSettings();
 
+    void refresh();
+
     NColor colors[9];
 private slots:
     void on_horizontalSlider_sliderMoved(int position);

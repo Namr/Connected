@@ -254,6 +254,7 @@ void Connected::on_actionLoad_Project_triggered()
     }
 
     ui.screen->colors = CSettings->colors;
+    CSettings->refresh();
 
     NSettings->nodeSize = settings.value("nodeSize", 1.0).toFloat();
     NSettings->connectionSize = settings.value("connectionSize", 1.0).toFloat();
@@ -261,6 +262,8 @@ void Connected::on_actionLoad_Project_triggered()
     NSettings->threshold = settings.value("threshold", 1.0).toFloat();
     NSettings->textThreshold = settings.value("textThreshold", 1.0).toFloat();
     NSettings->textSize = settings.value("textSize", 1.0).toInt();
+
+    NSettings->refresh();
 
     //unpack MTransform and put its components into
 
@@ -316,5 +319,6 @@ void Connected::on_actionLoad_Project_triggered()
         }
     }
 
+    MSettings->refresh();
     settings.sync();
 }

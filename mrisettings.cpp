@@ -23,12 +23,12 @@ MriSettings::MriSettings(QWidget *parent) :
     axial.sy = 1.0f;
     axial.sz = 257;
 
-    ui->XPos->setValue(coronal.x);
-    ui->YPos->setValue(coronal.y);
-    ui->ZPos->setValue(coronal.z);
-    ui->XScale->setValue(coronal.sx);
-    ui->YScale->setValue(coronal.sy);
-    ui->ZScale->setValue(coronal.sz);
+    ui->XPos->setValue((int) coronal.x);
+    ui->YPos->setValue((int) coronal.y);
+    ui->ZPos->setValue((int) coronal.z);
+    ui->XScale->setValue((int) coronal.sx);
+    ui->YScale->setValue((int) coronal.sy);
+    ui->ZScale->setValue((int) coronal.sz);
 }
 
 MriSettings::~MriSettings()
@@ -40,26 +40,47 @@ MriSettings::~MriSettings()
 void MriSettings::on_radioButton_clicked()
 {
     curSlice = 0;
-    ui->XPos->setValue(coronal.x);
-    ui->YPos->setValue(coronal.y);
-    ui->ZPos->setValue(coronal.z);
-    ui->XScale->setValue(coronal.sx);
-    ui->YScale->setValue(coronal.sy);
-    ui->ZScale->setValue(coronal.sz);
+    ui->XPos->setValue((int) coronal.x);
+    ui->YPos->setValue((int) coronal.y);
+    ui->ZPos->setValue((int) coronal.z);
+    ui->XScale->setValue((int) coronal.sx);
+    ui->YScale->setValue((int) coronal.sy);
+    ui->ZScale->setValue((int) coronal.sz);
 }
 
 //axial
 void MriSettings::on_radioButton_2_clicked()
 {
     curSlice = 1;
-    ui->XPos->setValue(axial.x);
-    ui->YPos->setValue(axial.y);
-    ui->ZPos->setValue(axial.z);
-    ui->XScale->setValue(axial.sx);
-    ui->YScale->setValue(axial.sy);
-    ui->ZScale->setValue(axial.sz);
+    ui->XPos->setValue((int) axial.x);
+    ui->YPos->setValue((int) axial.y);
+    ui->ZPos->setValue((int) axial.z);
+    ui->XScale->setValue((int) axial.sx);
+    ui->YScale->setValue((int) axial.sy);
+    ui->ZScale->setValue((int) axial.sz);
 }
 
+void MriSettings::refresh()
+{
+    if(curSlice == 0)
+    {
+        ui->XPos->setValue((int) coronal.x);
+        ui->YPos->setValue((int) coronal.y);
+        ui->ZPos->setValue((int) coronal.z);
+        ui->XScale->setValue((int) coronal.sx);
+        ui->YScale->setValue((int) coronal.sy);
+        ui->ZScale->setValue((int) coronal.sz);
+    }
+    else
+    {
+        ui->XPos->setValue((int) axial.x);
+        ui->YPos->setValue((int) axial.y);
+        ui->ZPos->setValue((int) axial.z);
+        ui->XScale->setValue((int) axial.sx);
+        ui->YScale->setValue((int) axial.sy);
+        ui->ZScale->setValue((int) axial.sz);
+    }
+}
 void MriSettings::on_XPos_valueChanged(int arg1)
 {
     if(curSlice == 0)

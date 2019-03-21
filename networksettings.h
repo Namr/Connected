@@ -14,6 +14,8 @@ class NetworkSettings : public QMainWindow
 public:
     explicit NetworkSettings(QWidget *parent = nullptr);
     ~NetworkSettings();
+    void refresh();
+
     float nodeSize = 1.5f;
     float connectionSize = 0.3f;
     float graphSignalSize = 20.0f;
