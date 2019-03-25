@@ -31,7 +31,9 @@ class Brain
     Model connector;
     std::vector<glm::mat4> nodePositions;
     std::vector<int> nodeColors;
+    std::vector<int> nodeSizes;
     std::vector<std::vector<float>> connections;
+
     glm::mat4 position;
 
     std::vector<float> appendedNodeData;
@@ -53,6 +55,7 @@ public:
 
     NColor *colors;
     float nodeSize = 1.5f;
+    bool isScaling = false;
     float connectionSize = 0.3f;
     float graphSignalSize = 20.0f;
 

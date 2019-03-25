@@ -69,6 +69,8 @@ public:
     float *threshold;
     float *textThreshold;
     int *textSize;
+    bool *isScaling;
+
     MTransform *coronal;
     MTransform *axial;
 private:

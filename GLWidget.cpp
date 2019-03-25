@@ -159,6 +159,9 @@ void GLWidget::paintGL()
     secondaryBrain.mri.axialTrans = *axial;
     secondaryBrain.mri.coronalTrans = *coronal;
 
+    primaryBrain.isScaling = *isScaling;
+    secondaryBrain.isScaling = *isScaling;
+
     if (primaryShouldReload == 1)
     {
         primaryBrain.reloadBrain(primaryNodeName, primaryEdgeName);

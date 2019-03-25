@@ -17,6 +17,7 @@ Connected::Connected(QWidget *parent)
     ui.screen->colors = CSettings->colors;
 
     ui.screen->nodeSize = &NSettings->nodeSize;
+    ui.screen->isScaling = &NSettings->isScaling;
     ui.screen->connectionSize = &NSettings->connectionSize;
     ui.screen->graphSignalSize = &NSettings->graphSignalSize;
     ui.screen->threshold = &NSettings->threshold;
@@ -193,6 +194,7 @@ void Connected::on_actionSave_Settings_triggered()
     }
 
     settings.setValue("nodeSize", NSettings->nodeSize);
+    settings.setValue("isScaling", NSettings->isScaling);
     settings.setValue("connectionSize", NSettings->connectionSize);
     settings.setValue("graphSignalSize", NSettings->graphSignalSize);
     settings.setValue("threshold", NSettings->threshold);
@@ -281,6 +283,7 @@ void Connected::on_actionLoad_Project_triggered()
     CSettings->refresh();
 
     NSettings->nodeSize = settings.value("nodeSize", 1.0).toFloat();
+    NSettings->isScaling = settings.value("isScaling", 0.0).toBool();
     NSettings->connectionSize = settings.value("connectionSize", 1.0).toFloat();
     NSettings->graphSignalSize = settings.value("graphSignalSize", 1.0).toFloat();
     NSettings->threshold = settings.value("threshold", 1.0).toFloat();
