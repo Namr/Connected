@@ -68,12 +68,10 @@ public:
     int *textSize;
     MTransform *coronal;
     MTransform *axial;
-
 private:
     int WIDTH;
     int HEIGHT;
 
-    int dispFramebuffer = 2;
     GLuint screenFramebuffer = 0;
     GLuint renderedTexture;
     GLuint depthrenderbuffer;

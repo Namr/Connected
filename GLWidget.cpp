@@ -241,11 +241,11 @@ void GLWidget::paintGL()
         secondaryBrain.update(f, cam, xpos, ypos, selectedNode, leftMouseDown);
     }
     f->glBindFramebuffer(GL_READ_FRAMEBUFFER, screenFramebuffer);
-    f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dispFramebuffer);
+    f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->defaultFramebufferObject());
     f->glBlitFramebuffer(0, HEIGHT, WIDTH, 0,
         0, 0, WIDTH, HEIGHT,
         GL_COLOR_BUFFER_BIT, GL_NEAREST);
-    f->glBindFramebuffer(GL_READ_FRAMEBUFFER, dispFramebuffer);
+    f->glBindFramebuffer(GL_READ_FRAMEBUFFER, this->defaultFramebufferObject());
 
     //do anything related to QPainter now
     // Render text
