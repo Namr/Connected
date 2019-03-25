@@ -58,10 +58,8 @@ void GLWidget::initializeGL()
 
     //set background color
     f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    primaryBrain = Brain(f, "assets/Node_AAL116.node",
-        "assets/connect.edge");
-    secondaryBrain = Brain(f, "assets/Node_AAL116.node",
-        "assets/connect2.edge");
+    primaryBrain = Brain(f, primaryNodeName, primaryEdgeName);
+    secondaryBrain = Brain(f, secondaryNodeName, secondaryEdgeName);
 
     primaryBrain.screen = this;
     secondaryBrain.screen = this;
@@ -164,11 +162,15 @@ void GLWidget::paintGL()
     if (primaryShouldReload == 1)
     {
         primaryBrain.reloadBrain(primaryNodeName, primaryEdgeName);
+        primaryBrain.mesh = Model();
+        primaryBrain.mesh.loadFromNV(f, primaryMeshName);
         primaryShouldReload = 0;
     }
     else if (secondaryShouldReload == 1)
     {
         secondaryBrain.reloadBrain(secondaryNodeName, secondaryEdgeName);
+        secondaryBrain.mesh = Model();
+        secondaryBrain.mesh.loadFromNV(f, secondaryMeshName);
         secondaryShouldReload = 0;
     }
 

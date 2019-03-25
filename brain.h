@@ -28,7 +28,6 @@ class GLWidget;
 class Brain
 {
     Model sphere;
-    Model mesh;
     Model connector;
     std::vector<glm::mat4> nodePositions;
     std::vector<int> nodeColors;
@@ -44,6 +43,8 @@ public:
     void update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown);
     void setPosition(glm::vec3 position);
     void loadAppendedNodeData(std::string filepath);
+
+    Model mesh;
 
     GLWidget *screen;
     std::vector<std::string> nodeNames;

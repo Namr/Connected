@@ -62,9 +62,33 @@ void Connected::on_actionLoad_Secondary_Connectome_triggered()
     }
 }
 
+void Connected::on_actionLoad_Primary_Brain_Mesh_triggered()
+{
+    QString meshName = QFileDialog::getOpenFileName(this, "Select Mesh File");
+
+    if (!meshName.isEmpty() && !meshName.isNull())
+    {
+        ui.screen->primaryMeshName = meshName.toStdString();
+        ui.screen->primaryShouldReload = 1;
+        ui.screen->update();
+    }
+}
+
+void Connected::on_actionLoad_Secondary_Brain_Mesh_triggered()
+{
+    QString meshName = QFileDialog::getOpenFileName(this, "Select Mesh File");
+
+    if (!meshName.isEmpty() && !meshName.isNull())
+    {
+        ui.screen->secondaryMeshName = meshName.toStdString();
+        ui.screen->secondaryShouldReload = 1;
+        ui.screen->update();
+    }
+}
+
 void Connected::on_actionLoad_Primary_Node_Data_triggered()
 {
-    QString nodeName = QFileDialog::getOpenFileName(this, "Select Node Data File");
+    QString nodeName = QFileDialog::getOpenFileName(this, "Select Graph Signal File");
 
     if (!nodeName.isEmpty() && !nodeName.isNull())
     {
@@ -75,7 +99,7 @@ void Connected::on_actionLoad_Primary_Node_Data_triggered()
 
 void Connected::on_actionLoad_Secondary_Node_Data_triggered()
 {
-    QString nodeName = QFileDialog::getOpenFileName(this, "Select Node Data File");
+    QString nodeName = QFileDialog::getOpenFileName(this, "Select Graph Signal File");
 
     if (!nodeName.isEmpty() && !nodeName.isNull())
     {

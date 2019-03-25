@@ -175,7 +175,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>21</height>
+     <height>33</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -186,6 +186,8 @@
     <addaction name="actionLoad_Project"/>
     <addaction name="actionLoad_Connectome"/>
     <addaction name="actionLoad_Secondary_Connectome"/>
+    <addaction name="actionLoad_Primary_Brain_Mesh"/>
+    <addaction name="actionLoad_Secondary_Brain_Mesh"/>
     <addaction name="actionLoad_Primary_Node_Data"/>
     <addaction name="actionLoad_Secondary_Node_Data"/>
    </widget>
@@ -244,6 +246,16 @@
   <action name="actionLoad_Project">
    <property name="text">
     <string>Load Project</string>
+   </property>
+  </action>
+  <action name="actionLoad_Primary_Brain_Mesh">
+   <property name="text">
+    <string>Load Primary Brain Mesh</string>
+   </property>
+  </action>
+  <action name="actionLoad_Secondary_Brain_Mesh">
+   <property name="text">
+    <string>Load Secondary Brain Mesh</string>
    </property>
   </action>
  </widget>
