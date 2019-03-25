@@ -18,7 +18,7 @@ Brain::Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, std::string con
     mesh = Model();
     connector = Model();
     sphere.loadFromObj(f, "assets/sphere.obj", 0);
-    mesh.loadFromObj(f, "assets/brain.obj", 0);
+    mesh.loadFromNV(f, "assets/BrainMesh_ICBM152_smoothed.nv");
     connector.loadFromObj(f, "assets/connector.obj", 0);
 }
 
