@@ -31,7 +31,7 @@ class Brain
     Model connector;
     std::vector<glm::mat4> nodePositions;
     std::vector<int> nodeColors;
-    std::vector<int> nodeSizes;
+    std::vector<float> nodeSizes;
     std::vector<std::vector<float>> connections;
 
     glm::mat4 position;
