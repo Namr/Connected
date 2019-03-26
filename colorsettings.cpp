@@ -33,18 +33,38 @@ colorSettings::colorSettings(QWidget *parent) :
     colors[5].G = 127;
     colors[5].B = 0;
 
-    colors[6].R = 0;
-    colors[6].G = 0;
-    colors[6].B = 0;
+    colors[6].R = 255;
+    colors[6].G = 127;
+    colors[6].B = 127;
 
-    colors[7].R = 230;
-    colors[7].G = 230;
-    colors[7].B = 230;
-    colors[7].A = 69;
+    colors[6].R = 127;
+    colors[6].G = 127;
+    colors[6].B = 255;
 
-    colors[8].R = 255;
+    colors[7].R = 127;
+    colors[7].G = 255;
+    colors[7].B = 127;
+
+    colors[8].R = 127;
     colors[8].G = 255;
-    colors[8].B = 0;
+    colors[8].B = 127;
+
+    colors[9].R = 127;
+    colors[9].G = 0;
+    colors[9].B = 255;
+
+    colors[10].R = 0;
+    colors[10].G = 0;
+    colors[10].B = 0;
+
+    colors[11].R = 230;
+    colors[11].G = 230;
+    colors[11].B = 230;
+    colors[11].A = 69;
+
+    colors[12].R = 255;
+    colors[12].G = 255;
+    colors[12].B = 0;
 
     ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }
@@ -122,24 +142,52 @@ void colorSettings::on_radioButton_6_clicked()
     refresh();
 }
 
+//node 7
+void colorSettings::on_radioButton_10_clicked()
+{
+    selectedColor = 6;
+    refresh();
+}
+
+//node 8
+void colorSettings::on_radioButton_11_clicked()
+{
+    selectedColor = 7;
+    refresh();
+}
+
+//node 9
+void colorSettings::on_radioButton_12_clicked()
+{
+    selectedColor = 8;
+    refresh();
+}
+
+//node 10
+void colorSettings::on_radioButton_13_clicked()
+{
+    selectedColor = 9;
+    refresh();
+}
+
 //background
 void colorSettings::on_radioButton_7_clicked()
 {
-    selectedColor = 6;
+    selectedColor = 10;
     refresh();
 }
 
 //brain mesh
 void colorSettings::on_radioButton_8_clicked()
 {
-    selectedColor = 7;
+    selectedColor = 11;
     refresh();
 }
 
 //text
 void colorSettings::on_radioButton_9_clicked()
 {
-    selectedColor = 8;
+    selectedColor = 12;
     refresh();
 }
 

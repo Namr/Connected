@@ -26,7 +26,7 @@ public:
 
     void refresh();
 
-    NColor colors[9];
+    NColor colors[13];
 private slots:
     void on_horizontalSlider_sliderMoved(int position);
 
@@ -53,6 +53,14 @@ private slots:
     void on_radioButton_9_clicked();
 
     void on_horizontalSlider_4_sliderMoved(int position);
+
+    void on_radioButton_10_clicked();
+
+    void on_radioButton_11_clicked();
+
+    void on_radioButton_12_clicked();
+
+    void on_radioButton_13_clicked();
 
 private:
     Ui::colorSettings *ui;

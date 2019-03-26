@@ -288,7 +288,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
     if (displayShell == 1)
     {
         f->glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        mesh.render(f, camera, colors[7].R / 255.0f, colors[7].G / 255.0f, colors[7].B / 255.0f, colors[7].A / 255.0f);
+        mesh.render(f, camera, colors[11].R / 255.0f, colors[11].G / 255.0f, colors[11].B / 255.0f, colors[11].A / 255.0f);
         f->glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 }

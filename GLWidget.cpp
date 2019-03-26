@@ -211,7 +211,7 @@ void GLWidget::paintGL()
     );
 
     f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, screenFramebuffer);
-    f->glClearColor(colors[6].R / 255.0f, colors[6].G / 255.0f, colors[6].B / 255.0f, 1.0f);
+    f->glClearColor(colors[10].R / 255.0f, colors[10].G / 255.0f, colors[10].B / 255.0f, 1.0f);
     f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     f->glEnable(GL_FRAMEBUFFER_SRGB);
 
@@ -255,7 +255,7 @@ void GLWidget::paintGL()
     //do anything related to QPainter now
     // Render text
     painter.begin(this);
-    painter.setPen(QColor(colors[8].R, colors[8].G, colors[8].B, colors[8].A));
+    painter.setPen(QColor(colors[12].R, colors[12].G, colors[12].B, colors[12].A));
     painter.setFont(QFont("Times", *textSize, QFont::Bold));
     for(NText text: nodeTexts)
     {

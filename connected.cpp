@@ -178,7 +178,7 @@ void Connected::on_actionSave_Settings_triggered()
     QSettings settings(settingsFile, QSettings::IniFormat);
 
     //loop through colors
-    for(int i = 0; i < 9; i++)
+    for(int i = 0; i < 13; i++)
     {
         //loop through color components
         for(int c = 0; c < 3; c++)
@@ -264,7 +264,7 @@ void Connected::on_actionLoad_Project_triggered()
     QSettings settings(settingsFile, QSettings::IniFormat);
 
     //loop through colors
-    for(int i = 0; i < 9; i++)
+    for(int i = 0; i < 13; i++)
     {
         //loop through color components
         for(int c = 0; c < 3; c++)
