@@ -13,9 +13,8 @@ A modern, fast, and feature-rich human brain connectome viewer
 ## Planned Features
 * Support for 4D (over time) datasets
 * Allow user inputed MRI data
-* Allow user inputed brain mesh
 * Brain mesh slicing
-* Mac OS and Linux support
+* Mac OS support
 * Support for a wider range of file formats
 
 ## Known Issues
@@ -31,6 +30,7 @@ A modern, fast, and feature-rich human brain connectome viewer
 * The edge files should have one number per line (and be nodeSize * nodeSize in length where nodeSize is the number of nodes in your .node file)
 * Edge files can also be in the format where each line has nodeSize many data points, and the file has nodeSize number of lines
 * graph signal data should be in a plaintext file, with one number per line, and it should have nodeSize number of lines
+* Brain Mesh Files should be in the .nv format
 
 ## Usage Guide
 ### Navigation and Camera Controls
