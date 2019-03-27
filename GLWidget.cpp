@@ -58,10 +58,8 @@ void GLWidget::initializeGL()
 
     //set background color
     f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    primaryBrain = Brain(f, "assets/Node_AAL116.node",
-        "assets/connect.edge");
-    secondaryBrain = Brain(f, "assets/Node_AAL116.node",
-        "assets/connect2.edge");
+    primaryBrain = Brain(f, primaryNodeName, primaryEdgeName);
+    secondaryBrain = Brain(f, secondaryNodeName, secondaryEdgeName);
 
     primaryBrain.screen = this;
     secondaryBrain.screen = this;
@@ -161,14 +159,21 @@ void GLWidget::paintGL()
     secondaryBrain.mri.axialTrans = *axial;
     secondaryBrain.mri.coronalTrans = *coronal;
 
+    primaryBrain.isScaling = *isScaling;
+    secondaryBrain.isScaling = *isScaling;
+
     if (primaryShouldReload == 1)
     {
         primaryBrain.reloadBrain(primaryNodeName, primaryEdgeName);
+        primaryBrain.mesh = Model();
+        primaryBrain.mesh.loadFromNV(f, primaryMeshName);
         primaryShouldReload = 0;
     }
     else if (secondaryShouldReload == 1)
     {
         secondaryBrain.reloadBrain(secondaryNodeName, secondaryEdgeName);
+        secondaryBrain.mesh = Model();
+        secondaryBrain.mesh.loadFromNV(f, secondaryMeshName);
         secondaryShouldReload = 0;
     }
 
@@ -206,7 +211,7 @@ void GLWidget::paintGL()
     );
 
     f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, screenFramebuffer);
-    f->glClearColor(colors[6].R / 255.0f, colors[6].G / 255.0f, colors[6].B / 255.0f, 1.0f);
+    f->glClearColor(colors[10].R / 255.0f, colors[10].G / 255.0f, colors[10].B / 255.0f, 1.0f);
     f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     f->glEnable(GL_FRAMEBUFFER_SRGB);
 
@@ -241,16 +246,16 @@ void GLWidget::paintGL()
         secondaryBrain.update(f, cam, xpos, ypos, selectedNode, leftMouseDown);
     }
     f->glBindFramebuffer(GL_READ_FRAMEBUFFER, screenFramebuffer);
-    f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dispFramebuffer);
+    f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->defaultFramebufferObject());
     f->glBlitFramebuffer(0, HEIGHT, WIDTH, 0,
         0, 0, WIDTH, HEIGHT,
         GL_COLOR_BUFFER_BIT, GL_NEAREST);
-    f->glBindFramebuffer(GL_READ_FRAMEBUFFER, dispFramebuffer);
+    f->glBindFramebuffer(GL_READ_FRAMEBUFFER, this->defaultFramebufferObject());
 
     //do anything related to QPainter now
     // Render text
     painter.begin(this);
-    painter.setPen(QColor(colors[8].R, colors[8].G, colors[8].B, colors[8].A));
+    painter.setPen(QColor(colors[12].R, colors[12].G, colors[12].B, colors[12].A));
     painter.setFont(QFont("Times", *textSize, QFont::Bold));
     for(NText text: nodeTexts)
     {

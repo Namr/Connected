@@ -18,7 +18,7 @@ Brain::Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, std::string con
     mesh = Model();
     connector = Model();
     sphere.loadFromObj(f, "assets/sphere.obj", 0);
-    mesh.loadFromObj(f, "assets/brain.obj", 0);
+    mesh.loadFromNV(f, "assets/BrainMesh_ICBM152_smoothed.nv");
     connector.loadFromObj(f, "assets/connector.obj", 0);
 }
 
@@ -27,6 +27,7 @@ void Brain::reloadBrain(std::string nodePath, std::string connectionPath)
     nodePositions.clear();
     nodeNames.clear();
     nodeColors.clear();
+    nodeSizes.clear();
     connections.clear();
 
     std::ifstream nodeFile;
@@ -49,6 +50,7 @@ void Brain::reloadBrain(std::string nodePath, std::string connectionPath)
                 float y = stof(tokenized[1]);
                 float z = stof(tokenized[2]);
                 int colorID = std::stoi(tokenized[3]) - 1;  //subtract one so that way instead of going from 1-6 its 0-5 and fits array notations
+                float size = std::stof(tokenized[4]);
                 std::string name = tokenized[5];
 
                 glm::mat4 pos = glm::mat4(1.0f);
@@ -56,6 +58,7 @@ void Brain::reloadBrain(std::string nodePath, std::string connectionPath)
                 nodePositions.push_back(pos);
                 nodeNames.push_back(name);
                 nodeColors.push_back(colorID);
+                nodeSizes.push_back(size);
             }
         }
         nodeFile.close();
@@ -191,7 +194,11 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
     {
         //move sphere to position and then render it
         sphere.model = pos;
-        sphere.model = glm::scale(sphere.model, glm::vec3(nodeSize, nodeSize, nodeSize));
+        if(isScaling)
+            sphere.model = glm::scale(sphere.model, glm::vec3(nodeSize * nodeSizes[node], nodeSize * nodeSizes[node], nodeSize * nodeSizes[node]));
+        else
+            sphere.model = glm::scale(sphere.model, glm::vec3(nodeSize, nodeSize, nodeSize));
+
         glm::vec3 v0 = glm::unProject(glm::vec3(xpos, ypos, 0.0f), camera.view, camera.proj, viewport);
         glm::vec3 v1 = glm::unProject(glm::vec3(xpos, ypos, 1.0f), camera.view, camera.proj, viewport);
         glm::vec3 dir = glm::normalize((v1 - v0));
@@ -281,7 +288,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
     if (displayShell == 1)
     {
         f->glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        mesh.render(f, camera, colors[7].R / 255.0f, colors[7].G / 255.0f, colors[7].B / 255.0f, colors[7].A / 255.0f);
+        mesh.render(f, camera, colors[11].R / 255.0f, colors[11].G / 255.0f, colors[11].B / 255.0f, colors[11].A / 255.0f);
         f->glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 }

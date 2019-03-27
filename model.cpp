@@ -43,6 +43,7 @@ void Model::loadFromObj(QOpenGLFunctions_3_2_Core *f, std::string path, int hasT
             }
             else
             {
+                //add blank texture coordinates
                 vertices.push_back(0.0f);
                 vertices.push_back(0.0f);
             }
@@ -51,6 +52,65 @@ void Model::loadFromObj(QOpenGLFunctions_3_2_Core *f, std::string path, int hasT
             triangles.push_back(triangles.size());
         }
     }
+    GLInit(f);
+}
+
+void Model::loadFromNV(QOpenGLFunctions_3_2_Core *f, std::string path)
+{
+    std::ifstream modelFile;
+    modelFile.open(path);
+    std::string line;
+
+    //iterate over each line in the node file if it is found, store it in line, and operate on it
+    if (modelFile.is_open())
+    {
+        getline(modelFile, line);
+        //go down lines until one thats not a comment shows up
+        while(line.find('#') != std::string::npos)
+        {
+            getline(modelFile, line);
+        }
+        //unpack verticies into array
+        int numVerts = std::stoi(line);
+        for(int i = 0; i < numVerts;i++)
+        {
+            getline(modelFile, line);
+            if(line.find('#') == std::string::npos)
+            {
+                std::vector<std::string> tokenized;
+                boost::split(tokenized, line, [](char c) { return c == ' ' || c == '	'; });
+                vertices.push_back(std::stof(tokenized[0]));
+                vertices.push_back(std::stof(tokenized[1]));
+                vertices.push_back(std::stof(tokenized[2]));
+                //add blank texCoords
+                vertices.push_back(0.0f);
+                vertices.push_back(0.0f);
+            }
+        }
+
+        //unpack triangles into array
+        getline(modelFile, line);
+        int numTris = std::stoi(line);
+        for(int i = 0; i < numTris;i++)
+        {
+            getline(modelFile, line);
+            if(line.find('#') == std::string::npos)
+            {
+                std::vector<std::string> tokenized;
+                boost::split(tokenized, line, [](char c) { return c == ' ' || c == '	'; });
+                triangles.push_back(std::stoi(tokenized[0]) - 1);
+                triangles.push_back(std::stoi(tokenized[1]) - 1);
+                triangles.push_back(std::stoi(tokenized[2]) - 1);
+            }
+        }
+    }
+    else
+    {
+        QMessageBox messageBox;
+        messageBox.critical(0, "Error", "Mesh File not found! Check your paths");
+        messageBox.setFixedSize(500, 200);
+    }
+
     GLInit(f);
 }
 

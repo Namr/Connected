@@ -35,6 +35,7 @@ class Model
 public:
     Model();
     void loadFromObj(QOpenGLFunctions_3_2_Core *f, std::string path, int hasTextures);
+    void loadFromNV(QOpenGLFunctions_3_2_Core *f, std::string path);
     void addTexture(QOpenGLFunctions_3_2_Core *f, int id);
     void render(QOpenGLFunctions_3_2_Core *f, Camera &camera);
     void render(QOpenGLFunctions_3_2_Core *f, Camera &camera, float r, float g, float b, float a);

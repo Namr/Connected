@@ -43,6 +43,10 @@ private slots:
 
     void on_actionLoad_Project_triggered();
 
+    void on_actionLoad_Primary_Brain_Mesh_triggered();
+
+    void on_actionLoad_Secondary_Brain_Mesh_triggered();
+
 private:
     Ui::ConnectedClass ui;
     colorSettings *CSettings;

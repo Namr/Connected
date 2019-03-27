@@ -17,6 +17,7 @@ Connected::Connected(QWidget *parent)
     ui.screen->colors = CSettings->colors;
 
     ui.screen->nodeSize = &NSettings->nodeSize;
+    ui.screen->isScaling = &NSettings->isScaling;
     ui.screen->connectionSize = &NSettings->connectionSize;
     ui.screen->graphSignalSize = &NSettings->graphSignalSize;
     ui.screen->threshold = &NSettings->threshold;
@@ -62,9 +63,33 @@ void Connected::on_actionLoad_Secondary_Connectome_triggered()
     }
 }
 
+void Connected::on_actionLoad_Primary_Brain_Mesh_triggered()
+{
+    QString meshName = QFileDialog::getOpenFileName(this, "Select Mesh File");
+
+    if (!meshName.isEmpty() && !meshName.isNull())
+    {
+        ui.screen->primaryMeshName = meshName.toStdString();
+        ui.screen->primaryShouldReload = 1;
+        ui.screen->update();
+    }
+}
+
+void Connected::on_actionLoad_Secondary_Brain_Mesh_triggered()
+{
+    QString meshName = QFileDialog::getOpenFileName(this, "Select Mesh File");
+
+    if (!meshName.isEmpty() && !meshName.isNull())
+    {
+        ui.screen->secondaryMeshName = meshName.toStdString();
+        ui.screen->secondaryShouldReload = 1;
+        ui.screen->update();
+    }
+}
+
 void Connected::on_actionLoad_Primary_Node_Data_triggered()
 {
-    QString nodeName = QFileDialog::getOpenFileName(this, "Select Node Data File");
+    QString nodeName = QFileDialog::getOpenFileName(this, "Select Graph Signal File");
 
     if (!nodeName.isEmpty() && !nodeName.isNull())
     {
@@ -75,7 +100,7 @@ void Connected::on_actionLoad_Primary_Node_Data_triggered()
 
 void Connected::on_actionLoad_Secondary_Node_Data_triggered()
 {
-    QString nodeName = QFileDialog::getOpenFileName(this, "Select Node Data File");
+    QString nodeName = QFileDialog::getOpenFileName(this, "Select Graph Signal File");
 
     if (!nodeName.isEmpty() && !nodeName.isNull())
     {
@@ -153,7 +178,7 @@ void Connected::on_actionSave_Settings_triggered()
     QSettings settings(settingsFile, QSettings::IniFormat);
 
     //loop through colors
-    for(int i = 0; i < 9; i++)
+    for(int i = 0; i < 13; i++)
     {
         //loop through color components
         for(int c = 0; c < 3; c++)
@@ -169,6 +194,7 @@ void Connected::on_actionSave_Settings_triggered()
     }
 
     settings.setValue("nodeSize", NSettings->nodeSize);
+    settings.setValue("isScaling", NSettings->isScaling);
     settings.setValue("connectionSize", NSettings->connectionSize);
     settings.setValue("graphSignalSize", NSettings->graphSignalSize);
     settings.setValue("threshold", NSettings->threshold);
@@ -238,7 +264,7 @@ void Connected::on_actionLoad_Project_triggered()
     QSettings settings(settingsFile, QSettings::IniFormat);
 
     //loop through colors
-    for(int i = 0; i < 9; i++)
+    for(int i = 0; i < 13; i++)
     {
         //loop through color components
         for(int c = 0; c < 3; c++)
@@ -257,6 +283,7 @@ void Connected::on_actionLoad_Project_triggered()
     CSettings->refresh();
 
     NSettings->nodeSize = settings.value("nodeSize", 1.0).toFloat();
+    NSettings->isScaling = settings.value("isScaling", 0.0).toBool();
     NSettings->connectionSize = settings.value("connectionSize", 1.0).toFloat();
     NSettings->graphSignalSize = settings.value("graphSignalSize", 1.0).toFloat();
     NSettings->threshold = settings.value("threshold", 1.0).toFloat();

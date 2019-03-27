@@ -21,6 +21,10 @@ void NetworkSettings::refresh()
     ui->horizontalSlider->setValue((int) threshold * 100);
     ui->horizontalSlider_2->setValue((int)textThreshold * 100);
     ui->horizontalSlider_3->setValue(textSize);
+    if(isScaling)
+        ui->checkBox->setCheckState(Qt::CheckState::Checked);
+    else
+        ui->checkBox->setCheckState(Qt::CheckState::Unchecked);
 }
 
 void NetworkSettings::on_nodeSizeSlider_sliderMoved(int position)
@@ -51,4 +55,9 @@ void NetworkSettings::on_horizontalSlider_2_sliderMoved(int position)
 void NetworkSettings::on_horizontalSlider_3_sliderMoved(int position)
 {
     textSize = position;
+}
+
+void NetworkSettings::on_checkBox_toggled(bool checked)
+{
+    isScaling = checked;
 }
