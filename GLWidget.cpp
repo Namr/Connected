@@ -123,6 +123,12 @@ void GLWidget::paintGL()
     float xpos = this->mapFromGlobal(QCursor::pos()).x();
     float ypos = this->mapFromGlobal(QCursor::pos()).y();
 
+    float deltaX = lastXPos - xpos;
+    float deltaY = lastYPos - ypos;
+
+    lastXPos = xpos;
+    lastYPos = ypos;
+
     float deltaTime = 0.01f;
 
     if (nodeName != nullptr)
@@ -194,6 +200,11 @@ void GLWidget::paintGL()
     {
         yaw += turnSpeed * deltaTime;
     }
+    if(leftMouseDown == 1)
+    {
+        yaw += deltaX * deltaTime * mouseSensitivity;
+        pitch += deltaY * deltaTime * mouseSensitivity;
+    }
 
     cam.position.x = 1.52f + (cos(yaw)  * sin(pitch) * 220);
     cam.position.y = -33.28f + (sin(yaw) * sin(pitch) * 220);
@@ -221,29 +232,29 @@ void GLWidget::paintGL()
     if (viewingMode == 1)
     {
         f->glViewport(0, 0, WIDTH / 2, HEIGHT / 2);
-        primaryBrain.update(f, front, xpos, ypos, selectedNode, leftMouseDown);
+        primaryBrain.update(f, front, xpos, ypos, selectedNode, rightMouseDown);
 
         f->glViewport(WIDTH / 2, 0, WIDTH / 2, HEIGHT / 2);
-        primaryBrain.update(f, top, xpos, ypos, selectedNode, leftMouseDown);
+        primaryBrain.update(f, top, xpos, ypos, selectedNode, rightMouseDown);
 
         f->glViewport(0, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
-        primaryBrain.update(f, side, xpos, ypos, selectedNode, leftMouseDown);
+        primaryBrain.update(f, side, xpos, ypos, selectedNode, rightMouseDown);
 
         f->glViewport(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT / 2);
-        primaryBrain.update(f, cam, xpos, ypos, selectedNode, leftMouseDown);
+        primaryBrain.update(f, cam, xpos, ypos, selectedNode, rightMouseDown);
     }
     else if (viewingMode == 2)
     {
         f->glViewport(0, 0, WIDTH, HEIGHT);
-        primaryBrain.update(f, cam, xpos, ypos, selectedNode, leftMouseDown);
+        primaryBrain.update(f, cam, xpos, ypos, selectedNode, rightMouseDown);
     }
     else if (viewingMode == 3)
     {
         f->glViewport(0, 0, WIDTH / 2, HEIGHT);
-        primaryBrain.update(f, cam, xpos, ypos, selectedNode, leftMouseDown);
+        primaryBrain.update(f, cam, xpos, ypos, selectedNode, rightMouseDown);
 
         f->glViewport(WIDTH / 2, 0, WIDTH / 2, HEIGHT);
-        secondaryBrain.update(f, cam, xpos, ypos, selectedNode, leftMouseDown);
+        secondaryBrain.update(f, cam, xpos, ypos, selectedNode, rightMouseDown);
     }
     f->glBindFramebuffer(GL_READ_FRAMEBUFFER, screenFramebuffer);
     f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->defaultFramebufferObject());
