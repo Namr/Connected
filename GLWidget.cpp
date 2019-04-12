@@ -92,6 +92,8 @@ void GLWidget::initializeGL()
     );
 
     cam.position = front.position;
+
+    frameTimer.start();
 }
 
 void GLWidget::resizeGL(int w, int h)
@@ -129,7 +131,8 @@ void GLWidget::paintGL()
     lastXPos = xpos;
     lastYPos = ypos;
 
-    float deltaTime = 0.01f;
+    float deltaTime = frameTimer.elapsed() / 1000.0f;
+    frameTimer.restart();
 
     if (nodeName != nullptr)
     {

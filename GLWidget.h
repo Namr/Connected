@@ -10,6 +10,7 @@
 #include <qevent.h>
 #include <qmessagebox.h>
 #include <qlabel.h>
+#include <qelapsedtimer.h>
 
 #include "camera.h"
 #include "mri.h"
@@ -86,7 +87,7 @@ private:
     Camera side;
     Camera front;
 
-    time_t lastTime;
+    QElapsedTimer frameTimer;
     float lastXPos = 0.0f;
     float lastYPos = 0.0f;
 
