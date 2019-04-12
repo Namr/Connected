@@ -91,8 +91,8 @@ private:
     float lastXPos = 0.0f;
     float lastYPos = 0.0f;
 
-    float turnSpeed = 0.8f;
-    float mouseSensitivity = 0.3f;
+    float turnSpeed = 0.7f;
+    float mouseSensitivity = 0.10f;
     float yaw = -30.0f;
     float pitch = 90.0f;
     int selectedNode = 0;
