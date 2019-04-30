@@ -10,6 +10,7 @@
 #include <qevent.h>
 #include <qmessagebox.h>
 #include <qlabel.h>
+#include <qelapsedtimer.h>
 
 #include "camera.h"
 #include "mri.h"
@@ -59,6 +60,7 @@ public:
     int rightKeyDown = 0;
     int upKeyDown = 0;
     int downKeyDown = 0;
+    int rightMouseDown = 0;
     int leftMouseDown = 0;
 
     NColor *colors;
@@ -84,8 +86,13 @@ private:
     Camera top;
     Camera side;
     Camera front;
-    time_t lastTime;
-    float turnSpeed = 0.8f;
+
+    QElapsedTimer frameTimer;
+    float lastXPos = 0.0f;
+    float lastYPos = 0.0f;
+
+    float turnSpeed = 0.7f;
+    float mouseSensitivity = 0.10f;
     float yaw = -30.0f;
     float pitch = 90.0f;
     int selectedNode = 0;

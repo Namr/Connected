@@ -57,6 +57,10 @@ bool KeyListener::eventFilter(QObject* obj, QEvent* event)
         QMouseEvent* key = static_cast<QMouseEvent*>(event);
         if (key->button() == Qt::MouseButton::RightButton)
         {
+            gl->rightMouseDown = 1;
+        }
+        if(key->button() == Qt::MouseButton::LeftButton)
+        {
             gl->leftMouseDown = 1;
         }
         if (key->button() == Qt::MouseButton::MiddleButton)
@@ -68,6 +72,10 @@ bool KeyListener::eventFilter(QObject* obj, QEvent* event)
     {
         QMouseEvent* key = static_cast<QMouseEvent*>(event);
         if (key->button() == Qt::MouseButton::RightButton)
+        {
+            gl->rightMouseDown = 0;
+        }
+        if(key->button() == Qt::MouseButton::LeftButton)
         {
             gl->leftMouseDown = 0;
         }

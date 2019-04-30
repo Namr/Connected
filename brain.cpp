@@ -106,7 +106,7 @@ void Brain::reloadBrain(std::string nodePath, std::string connectionPath)
                 //turn the string data into float data
                 for (std::string str : tokenized)
                 {
-                    if (str.find('#') == std::string::npos && str.find_first_not_of("0123456789.") == std::string::npos && str.find_first_of("0123456789.") != std::string::npos) //ignore comments
+                    if (str.find('#') == std::string::npos && str.find_first_not_of("-0123456789.") == std::string::npos && str.find_first_of("-0123456789.") != std::string::npos) //ignore comments
                         tokenizedNums.push_back(std::stof(str));
                 }
 
@@ -154,10 +154,18 @@ void Brain::loadAppendedNodeData(std::string filepath)
         int nodeNum = 0;
         while (getline(nodeFile, line))
         {
-            if (line.find('#') == std::string::npos) //ignore comments
+            std::vector<std::string> tokenized;
+            std::vector<float> tokenizedNums;
+            boost::split(tokenized, line, [](char c) { return c == ' ' || c == '	' || c == '\r'; });
+            //turn the string data into float data
+            for (std::string str : tokenized)
             {
-                appendedNodeData.push_back(std::stod(line));
+                //ignore comments and ensure its only numbers
+                if (str.find('#') == std::string::npos && str.find_first_not_of("-0123456789.") == std::string::npos && str.find_first_of("-0123456789.") != std::string::npos)
+                    tokenizedNums.push_back(std::stof(str));
             }
+            numAppendedFrames = (int) tokenizedNums.size();
+            appendedNodeData.push_back(tokenizedNums);
         }
         nodeFile.close();
 
@@ -253,7 +261,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
             connector.model = glm::translate(connector.model, glm::vec3(sphere.model[3]));
             glm::quat rot = glm::quat(glm::vec3(1.5708f, 0.0f, 1.5708f));
             connector.model = connector.model * glm::mat4_cast(rot);
-            connector.model = glm::scale(connector.model, glm::vec3(0.7f, -appendedNodeData[node] * graphSignalSize, 0.7));
+            connector.model = glm::scale(connector.model, glm::vec3(0.7f, -appendedNodeData[node][currentAppendedFrame] * graphSignalSize, 0.7));
 
             //this line ensures the scale occurs from the BASE of the model
             connector.model *= glm::mat4(1, 0, 0, 0,
@@ -261,7 +269,8 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
                 0, 0, 1, 0,
                 0, 0, -1, 1);
 
-            if(appendedNodeData[node] >= 0)
+            //color change depending on negative/positive values
+            if(appendedNodeData[node][currentAppendedFrame] >= 0)
                 connector.render(f, camera, 0.0f, 0.0f, 1.0f, 1.0f);
             else
                 connector.render(f, camera, 0.8f, 0.8f, 0.8f, 1.0f);
