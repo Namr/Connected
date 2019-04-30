@@ -275,6 +275,11 @@ void GLWidget::paintGL()
     {
         painter.drawText(text.x, text.y, text.str);
     }
+    if(primaryBrain.hasAppendedData)
+    {
+        painter.drawText(50.0f, HEIGHT - 50.0f, QString("Graph Signal: ") +
+                         QString::fromStdString(boost::lexical_cast<std::string>(primaryBrain.currentAppendedFrame)));
+    }
     nodeTexts.clear();
     painter.end();
 }

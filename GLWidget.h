@@ -18,6 +18,7 @@
 #include "colorsettings.h"
 #include "model.h"
 #include <ctime>
+#include <boost/lexical_cast.hpp>
 
 struct NText
 {
