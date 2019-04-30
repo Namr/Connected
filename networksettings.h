@@ -24,6 +24,7 @@ public:
     int textSize = 10;
     bool isScaling = false;
     bool displayFrame = false;
+    int milisecsPerFrame = 220;
 private slots:
     void on_nodeSizeSlider_sliderMoved(int position);
 
@@ -40,6 +41,8 @@ private slots:
     void on_checkBox_toggled(bool checked);
 
     void on_checkBox_2_clicked(bool checked);
+
+    void on_horizontalSlider_4_sliderMoved(int position);
 
 private:
     Ui::NetworkSettings *ui;

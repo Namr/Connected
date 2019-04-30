@@ -170,7 +170,7 @@ void Brain::loadAppendedNodeData(std::string filepath)
         nodeFile.close();
 
         hasAppendedData = 1;
-        nextAppendedFrameTime = QDateTime::currentMSecsSinceEpoch() + milisecondsPerAppendedFrame;
+        nextAppendedFrameTime = QDateTime::currentMSecsSinceEpoch() + *milisecondsPerAppendedFrame;
     }
     else
     {
@@ -310,7 +310,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
           {
             currentAppendedFrame = 0;
           }
-          nextAppendedFrameTime = currentTime + milisecondsPerAppendedFrame;
+          nextAppendedFrameTime = currentTime + *milisecondsPerAppendedFrame;
         }
     }
 }

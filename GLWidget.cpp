@@ -171,6 +171,9 @@ void GLWidget::paintGL()
     primaryBrain.isScaling = *isScaling;
     secondaryBrain.isScaling = *isScaling;
 
+    primaryBrain.milisecondsPerAppendedFrame = msPerFrame;
+    secondaryBrain.milisecondsPerAppendedFrame = msPerFrame;
+
     if (primaryShouldReload == 1)
     {
         primaryBrain.reloadBrain(primaryNodeName, primaryEdgeName);

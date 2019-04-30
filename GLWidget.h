@@ -74,6 +74,7 @@ public:
     int *textSize;
     bool *isScaling;
     bool *displayFrame;
+    int *msPerFrame;
 
     MTransform *coronal;
     MTransform *axial;

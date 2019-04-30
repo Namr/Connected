@@ -37,9 +37,6 @@ class Brain
     glm::mat4 position;
 
     std::vector<std::vector<float>> appendedNodeData;
-    int milisecondsPerAppendedFrame = 220;
-    quint64 nextAppendedFrameTime = 0;
-
 public:
     Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, std::string connectionPath);
     Brain();
@@ -68,6 +65,8 @@ public:
     int hasAppendedData = 0;
     int currentAppendedFrame = 0;
     int numAppendedFrames = 0;
+    int *milisecondsPerAppendedFrame;
+    quint64 nextAppendedFrameTime = 0;
 };
 
 
