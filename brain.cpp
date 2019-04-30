@@ -170,6 +170,7 @@ void Brain::loadAppendedNodeData(std::string filepath)
         nodeFile.close();
 
         hasAppendedData = 1;
+        nextAppendedFrameTime = QDateTime::currentMSecsSinceEpoch() + milisecondsPerAppendedFrame;
     }
     else
     {
@@ -192,7 +193,6 @@ void Brain::setPosition(glm::vec3 pos)
 
 void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown)
 {
-
     GLint viewportraw[4];
     f->glGetIntegerv(GL_VIEWPORT, viewportraw);
 
@@ -299,5 +299,18 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
         f->glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         mesh.render(f, camera, colors[11].R / 255.0f, colors[11].G / 255.0f, colors[11].B / 255.0f, colors[11].A / 255.0f);
         f->glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+    if(hasAppendedData)
+    {
+        quint64 currentTime = QDateTime::currentMSecsSinceEpoch();
+        if(currentTime >= nextAppendedFrameTime)
+        {
+          currentAppendedFrame++;
+          if(currentAppendedFrame >= numAppendedFrames)
+          {
+            currentAppendedFrame = 0;
+          }
+          nextAppendedFrameTime = currentTime + milisecondsPerAppendedFrame;
+        }
     }
 }

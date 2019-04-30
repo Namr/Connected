@@ -10,7 +10,7 @@
 #include <qopenglfunctions_3_2_core.h>
 #include <qopenglwidget.h>
 #include <qmessagebox.h>
-
+#include <qdatetime.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -39,7 +39,9 @@ class Brain
     std::vector<std::vector<float>> appendedNodeData;
     int numAppendedFrames = 0;
     int currentAppendedFrame = 0;
+    int milisecondsPerAppendedFrame = 220;
     int hasAppendedData = 0;
+    quint64 nextAppendedFrameTime = 0;
 public:
     Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, std::string connectionPath);
     Brain();

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>491</width>
-    <height>596</height>
+    <height>642</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -117,7 +117,7 @@
       <item>
        <widget class="QSlider" name="ConnectionSizeSlider">
         <property name="minimum">
-         <number>20</number>
+         <number>5</number>
         </property>
         <property name="maximum">
          <number>100</number>
