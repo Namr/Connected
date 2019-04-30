@@ -23,6 +23,7 @@ public:
     float textThreshold = 1.0f;
     int textSize = 10;
     bool isScaling = false;
+    bool displayFrame = false;
 private slots:
     void on_nodeSizeSlider_sliderMoved(int position);
 
@@ -37,6 +38,8 @@ private slots:
     void on_horizontalSlider_3_sliderMoved(int position);
 
     void on_checkBox_toggled(bool checked);
+
+    void on_checkBox_2_clicked(bool checked);
 
 private:
     Ui::NetworkSettings *ui;

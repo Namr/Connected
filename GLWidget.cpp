@@ -275,7 +275,7 @@ void GLWidget::paintGL()
     {
         painter.drawText(text.x, text.y, text.str);
     }
-    if(primaryBrain.hasAppendedData)
+    if(primaryBrain.hasAppendedData && primaryBrain.numAppendedFrames > 1 && *displayFrame)
     {
         painter.drawText(50.0f, HEIGHT - 50.0f, QString("Graph Signal: ") +
                          QString::fromStdString(boost::lexical_cast<std::string>(primaryBrain.currentAppendedFrame)));

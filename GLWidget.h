@@ -73,6 +73,7 @@ public:
     float *textThreshold;
     int *textSize;
     bool *isScaling;
+    bool *displayFrame;
 
     MTransform *coronal;
     MTransform *axial;

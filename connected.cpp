@@ -23,6 +23,7 @@ Connected::Connected(QWidget *parent)
     ui.screen->threshold = &NSettings->threshold;
     ui.screen->textThreshold = &NSettings->textThreshold;
     ui.screen->textSize = &NSettings->textSize;
+    ui.screen->displayFrame = &NSettings->displayFrame;
 
     ui.screen->coronal = &MSettings->coronal;
     ui.screen->axial = &MSettings->axial;
@@ -200,6 +201,7 @@ void Connected::on_actionSave_Settings_triggered()
     settings.setValue("threshold", NSettings->threshold);
     settings.setValue("textThreshold", NSettings->textThreshold);
     settings.setValue("textSize", NSettings->textSize);
+    settings.setValue("displayFrame", NSettings->displayFrame);
 
     //unpack MTransform and put its components into
 
@@ -289,6 +291,7 @@ void Connected::on_actionLoad_Project_triggered()
     NSettings->threshold = settings.value("threshold", 1.0).toFloat();
     NSettings->textThreshold = settings.value("textThreshold", 1.0).toFloat();
     NSettings->textSize = settings.value("textSize", 1.0).toInt();
+    NSettings->displayFrame = settings.value("displayFrame", 0.0).toBool();
 
     NSettings->refresh();
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>491</width>
-    <height>642</height>
+    <height>678</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -151,6 +151,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="checkBox_2">
+        <property name="text">
+         <string>Display Frame Number</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -173,7 +180,7 @@
      <x>0</x>
      <y>0</y>
      <width>491</width>
-     <height>33</height>
+     <height>37</height>
     </rect>
    </property>
   </widget>
