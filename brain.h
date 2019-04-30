@@ -36,7 +36,9 @@ class Brain
 
     glm::mat4 position;
 
-    std::vector<float> appendedNodeData;
+    std::vector<std::vector<float>> appendedNodeData;
+    int numAppendedFrames = 0;
+    int currentAppendedFrame = 0;
     int hasAppendedData = 0;
 public:
     Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, std::string connectionPath);
