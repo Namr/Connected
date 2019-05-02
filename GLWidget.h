@@ -46,13 +46,13 @@ public:
     Brain primaryBrain;
     int primaryShouldReload = 0;
     std::string primaryNodeName = "assets/Node_AAL116.node";
-    std::string primaryEdgeName = "assets/connect.edge";
+    QStringList primaryEdgeName = QStringList("assets/connect.edge");
     std::string primaryMeshName = "assets/BrainMesh_ICBM152_smoothed.nv";
 
     Brain secondaryBrain;
     int secondaryShouldReload = 0;
     std::string secondaryNodeName = "assets/Node_AAL116.node";
-    std::string secondaryEdgeName = "assets/connect2.edge";
+    QStringList secondaryEdgeName = QStringList("assets/connect2.edge");
     std::string secondaryMeshName = "assets/BrainMesh_ICBM152_smoothed.nv";
 
     QLabel *nodeName;
