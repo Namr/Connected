@@ -23,6 +23,8 @@ Connected::Connected(QWidget *parent)
     ui.screen->threshold = &NSettings->threshold;
     ui.screen->textThreshold = &NSettings->textThreshold;
     ui.screen->textSize = &NSettings->textSize;
+    ui.screen->displayFrame = &NSettings->displayFrame;
+    ui.screen->msPerFrame = &NSettings->milisecsPerFrame;
 
     ui.screen->coronal = &MSettings->coronal;
     ui.screen->axial = &MSettings->axial;
@@ -38,12 +40,12 @@ Connected::Connected(QWidget *parent)
 void Connected::on_actionLoad_Connectome_triggered()
 {
     QString nodeName = QFileDialog::getOpenFileName(this, "Select Node File");
-    QString edgeName = QFileDialog::getOpenFileName(this, "Select Edge File");
+    QStringList edgeNames = QFileDialog::getOpenFileNames(this, "Select Edge File");
 
-    if (!nodeName.isEmpty() && !nodeName.isNull() && !edgeName.isEmpty() && !edgeName.isNull())
+    if (!nodeName.isEmpty() && !nodeName.isNull() && !edgeNames.isEmpty())
     {
         ui.screen->primaryNodeName = nodeName.toStdString().c_str();
-        ui.screen->primaryEdgeName = edgeName.toStdString().c_str();
+        ui.screen->primaryEdgeName = edgeNames;
         ui.screen->primaryShouldReload = 1;
         ui.screen->update();
     }
@@ -52,12 +54,12 @@ void Connected::on_actionLoad_Connectome_triggered()
 void Connected::on_actionLoad_Secondary_Connectome_triggered()
 {
     QString nodeName = QFileDialog::getOpenFileName(this, "Select Node File");
-    QString edgeName = QFileDialog::getOpenFileName(this, "Select Edge File");
+    QStringList edgeNames = QFileDialog::getOpenFileNames(this, "Select Edge File");
 
-    if (!nodeName.isEmpty() && !nodeName.isNull() && !edgeName.isEmpty() && !edgeName.isNull())
+    if (!nodeName.isEmpty() && !nodeName.isNull() && !edgeNames.isEmpty())
     {
         ui.screen->secondaryNodeName = nodeName.toStdString().c_str();
-        ui.screen->secondaryEdgeName = edgeName.toStdString().c_str();
+        ui.screen->secondaryEdgeName = edgeNames;
         ui.screen->secondaryShouldReload = 1;
         ui.screen->update();
     }
@@ -200,6 +202,8 @@ void Connected::on_actionSave_Settings_triggered()
     settings.setValue("threshold", NSettings->threshold);
     settings.setValue("textThreshold", NSettings->textThreshold);
     settings.setValue("textSize", NSettings->textSize);
+    settings.setValue("displayFrame", NSettings->displayFrame);
+    settings.setValue("msPerFrame", NSettings->milisecsPerFrame);
 
     //unpack MTransform and put its components into
 
@@ -289,7 +293,8 @@ void Connected::on_actionLoad_Project_triggered()
     NSettings->threshold = settings.value("threshold", 1.0).toFloat();
     NSettings->textThreshold = settings.value("textThreshold", 1.0).toFloat();
     NSettings->textSize = settings.value("textSize", 1.0).toInt();
-
+    NSettings->displayFrame = settings.value("displayFrame", 0.0).toBool();
+    NSettings->milisecsPerFrame = settings.value("msPerFrame", 220).toInt();
     NSettings->refresh();
 
     //unpack MTransform and put its components into

@@ -21,10 +21,17 @@ void NetworkSettings::refresh()
     ui->horizontalSlider->setValue((int) threshold * 100);
     ui->horizontalSlider_2->setValue((int)textThreshold * 100);
     ui->horizontalSlider_3->setValue(textSize);
+    ui->horizontalSlider_4->setValue(milisecsPerFrame);
+
     if(isScaling)
         ui->checkBox->setCheckState(Qt::CheckState::Checked);
     else
         ui->checkBox->setCheckState(Qt::CheckState::Unchecked);
+
+    if(displayFrame)
+        ui->checkBox_2->setCheckState(Qt::CheckState::Checked);
+    else
+        ui->checkBox_2->setCheckState(Qt::CheckState::Unchecked);
 }
 
 void NetworkSettings::on_nodeSizeSlider_sliderMoved(int position)
@@ -60,4 +67,14 @@ void NetworkSettings::on_horizontalSlider_3_sliderMoved(int position)
 void NetworkSettings::on_checkBox_toggled(bool checked)
 {
     isScaling = checked;
+}
+
+void NetworkSettings::on_checkBox_2_clicked(bool checked)
+{
+    displayFrame = checked;
+}
+
+void NetworkSettings::on_horizontalSlider_4_sliderMoved(int position)
+{
+    milisecsPerFrame = position;
 }

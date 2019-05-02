@@ -6,7 +6,7 @@ Brain::Brain()
 
 }
 
-Brain::Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, std::string connectionPath)
+Brain::Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, QStringList connectionPath)
 {
 
     reloadBrain(nodePath, connectionPath);
@@ -22,17 +22,22 @@ Brain::Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, std::string con
     connector.loadFromObj(f, "assets/connector.obj", 0);
 }
 
-void Brain::reloadBrain(std::string nodePath, std::string connectionPath)
+void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
 {
     nodePositions.clear();
     nodeNames.clear();
     nodeColors.clear();
     nodeSizes.clear();
     connections.clear();
+    currentFrame = 0;
 
     std::ifstream nodeFile;
     nodeFile.open(nodePath);
     std::string line;
+
+    //make sure numFrames is at the local minimum number it can be
+    numFrames = (numFrames > connectionPaths.size() || !hasTime) ? connectionPaths.size() : numFrames;
+    hasTime = numFrames > 1 ? true : false;
 
     //iterate over each line in the node file if it is found, store it in line, and operate on it
     if (nodeFile.is_open())
@@ -70,79 +75,89 @@ void Brain::reloadBrain(std::string nodePath, std::string connectionPath)
         messageBox.setFixedSize(500, 200);
     }
 
-    //load in connection data
-    std::ifstream connectionFile;
-    connectionFile.open(connectionPath);
-
-    //check if edge file is single data points per line, or whole node data per line
-    if (connectionFile.is_open())
+    //iterate over all selected connection files, we pop the front one every loop, so go until its empty
+    while(!connectionPaths.isEmpty())
     {
-        //get a sample line (thats not a comment) and see how many data points are on it, and read accordingly
-        getline(connectionFile, line);
-        while (line.find('#') != std::string::npos)
+        //load in connection data
+        std::ifstream connectionFile;
+        connectionFile.open(connectionPaths.front().toStdString());
+        connectionPaths.pop_front();
+
+        //check if edge file is single data points per line, or whole node data per line
+        if (connectionFile.is_open())
         {
+            //get a sample line (thats not a comment) and see how many data points are on it, and read accordingly
             getline(connectionFile, line);
-        }
-
-        std::vector<std::string> tokenTest;
-        boost::split(tokenTest, line, [](char c) { return c == ' ' || c == '	'; });
-        connectionFile.clear();
-        connectionFile.seekg(0, std::ios::beg);
-
-        //iterate over each line in the connections file (which is a connection) organizes it into a list of lists
-        //it is a list of a list of all the nodes connections
-        //i.e connections[1] is a list of all the connections to node 1 and connections[1][2] is the strength of the connection between nodes 1 and 2
-        if (tokenTest.size() > 1)
-        {
-            int nodeNum = 0;
-            for (int n = 0; n < nodePositions.size(); n++)
+            while (line.find('#') != std::string::npos)
             {
-                std::vector<float> nodesConnections;
-                //get each line of the file, if its in a matrix format, split it each data point stands on its own
                 getline(connectionFile, line);
-                std::vector<std::string> tokenized;
-                std::vector<float> tokenizedNums;
-                boost::split(tokenized, line, [](char c) { return c == ' ' || c == '	'; });
-                //turn the string data into float data
-                for (std::string str : tokenized)
-                {
-                    if (str.find('#') == std::string::npos && str.find_first_not_of("-0123456789.") == std::string::npos && str.find_first_of("-0123456789.") != std::string::npos) //ignore comments
-                        tokenizedNums.push_back(std::stof(str));
-                }
-
-                //concatenate that line of data into the final datastructure
-                nodesConnections.insert(nodesConnections.end(), tokenizedNums.begin(), tokenizedNums.end());
-                connections.push_back(nodesConnections);
             }
-            nodeFile.close();
+
+            std::vector<std::string> tokenTest;
+            boost::split(tokenTest, line, [](char c) { return c == ' ' || c == '	'; });
+            connectionFile.clear();
+            connectionFile.seekg(0, std::ios::beg);
+
+            //stores this time stamps connections
+            std::vector<std::vector<float>> localConnections;
+
+            //iterate over each line in the connections file (which is a connection) organizes it into a list of lists
+            //it is a list of a list of all the nodes connections
+            //i.e connections[1] is a list of all the connections to node 1 and connections[1][2] is the strength of the connection between nodes 1 and 2
+            if (tokenTest.size() > 1)
+            {
+                int nodeNum = 0;
+                for (int n = 0; n < nodePositions.size(); n++)
+                {
+                    std::vector<float> nodesConnections;
+                    //get each line of the file, if its in a matrix format, split it each data point stands on its own
+                    getline(connectionFile, line);
+                    std::vector<std::string> tokenized;
+                    std::vector<float> tokenizedNums;
+                    boost::split(tokenized, line, [](char c) { return c == ' ' || c == '	'; });
+                    //turn the string data into float data
+                    for (std::string str : tokenized)
+                    {
+                        if (str.find('#') == std::string::npos && str.find_first_not_of("-0123456789.") == std::string::npos && str.find_first_of("-0123456789.") != std::string::npos) //ignore comments
+                            tokenizedNums.push_back(std::stof(str));
+                    }
+
+                    //concatenate that line of data into the final datastructure
+                    nodesConnections.insert(nodesConnections.end(), tokenizedNums.begin(), tokenizedNums.end());
+                    localConnections.push_back(nodesConnections);
+                }
+                nodeFile.close();
+            }
+            else
+            {
+                int nodeNum = 0;
+                for (int n = 0; n < nodePositions.size(); n++)
+                {
+                    std::vector<float> nodesConnections;
+                    for (int c = 0; c < nodePositions.size(); c++)
+                    {
+                        getline(connectionFile, line);
+                        nodesConnections.push_back(stof(line));
+                    }
+                    localConnections.push_back(nodesConnections);
+                }
+                nodeFile.close();
+            }
+            connections.push_back(localConnections);
         }
         else
         {
-            int nodeNum = 0;
-            for (int n = 0; n < nodePositions.size(); n++)
-            {
-                std::vector<float> nodesConnections;
-                for (int c = 0; c < nodePositions.size(); c++)
-                {
-                    getline(connectionFile, line);
-                    nodesConnections.push_back(stof(line));
-                }
-                connections.push_back(nodesConnections);
-            }
-            nodeFile.close();
+            QMessageBox messageBox;
+            messageBox.critical(0, "Error", "Edge File not found! Check your paths");
+            messageBox.setFixedSize(500, 200);
         }
-    }
-    else
-    {
-        QMessageBox messageBox;
-        messageBox.critical(0, "Error", "Edge File not found! Check your paths");
-        messageBox.setFixedSize(500, 200);
     }
 }
 
 void Brain::loadAppendedNodeData(std::string filepath)
 {
     appendedNodeData.clear();
+    currentFrame = 0;
 
     std::ifstream nodeFile;
     nodeFile.open(filepath);
@@ -164,12 +179,15 @@ void Brain::loadAppendedNodeData(std::string filepath)
                 if (str.find('#') == std::string::npos && str.find_first_not_of("-0123456789.") == std::string::npos && str.find_first_of("-0123456789.") != std::string::npos)
                     tokenizedNums.push_back(std::stof(str));
             }
-            numAppendedFrames = (int) tokenizedNums.size();
+            //make sure numFrames is at the local minimum number it can be
+            numFrames = (numFrames > tokenizedNums.size() || !hasTime) ?  tokenizedNums.size() : numFrames;
             appendedNodeData.push_back(tokenizedNums);
         }
         nodeFile.close();
 
-        hasAppendedData = 1;
+        hasAppendedData = true;
+        hasTime = numFrames > 1 ? true : false;
+        nextFrameTime = QDateTime::currentMSecsSinceEpoch() + *milisecondsPerFrame;
     }
     else
     {
@@ -192,7 +210,6 @@ void Brain::setPosition(glm::vec3 pos)
 
 void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown)
 {
-
     GLint viewportraw[4];
     f->glGetIntegerv(GL_VIEWPORT, viewportraw);
 
@@ -222,7 +239,9 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
         //for each node that this node is connected to, draw a connection
         int connectedNode = 0;
         bool shouldRenderText = false;
-        for (float connection : connections[node])
+
+        int brainFrame = currentFrame > (connections.size() - 1) ? (connections.size() - 1) : currentFrame;
+        for (float connection : connections[brainFrame][node])
         {
             //if this statisfies rendering text, change the flag
             if(connection > textThreshold && connectedNode != node)
@@ -261,7 +280,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
             connector.model = glm::translate(connector.model, glm::vec3(sphere.model[3]));
             glm::quat rot = glm::quat(glm::vec3(1.5708f, 0.0f, 1.5708f));
             connector.model = connector.model * glm::mat4_cast(rot);
-            connector.model = glm::scale(connector.model, glm::vec3(0.7f, -appendedNodeData[node][currentAppendedFrame] * graphSignalSize, 0.7));
+            connector.model = glm::scale(connector.model, glm::vec3(0.7f, -appendedNodeData[node][currentFrame] * graphSignalSize, 0.7));
 
             //this line ensures the scale occurs from the BASE of the model
             connector.model *= glm::mat4(1, 0, 0, 0,
@@ -270,7 +289,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
                 0, 0, -1, 1);
 
             //color change depending on negative/positive values
-            if(appendedNodeData[node][currentAppendedFrame] >= 0)
+            if(appendedNodeData[node][currentFrame] >= 0)
                 connector.render(f, camera, 0.0f, 0.0f, 1.0f, 1.0f);
             else
                 connector.render(f, camera, 0.8f, 0.8f, 0.8f, 1.0f);
@@ -299,5 +318,18 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
         f->glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         mesh.render(f, camera, colors[11].R / 255.0f, colors[11].G / 255.0f, colors[11].B / 255.0f, colors[11].A / 255.0f);
         f->glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+    if(hasTime)
+    {
+        quint64 currentTime = QDateTime::currentMSecsSinceEpoch();
+        if(currentTime >= nextFrameTime)
+        {
+          currentFrame++;
+          if(currentFrame >= numFrames)
+          {
+            currentFrame = 0;
+          }
+          nextFrameTime = currentTime + *milisecondsPerFrame;
+        }
     }
 }

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>491</width>
-    <height>596</height>
+    <height>814</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -117,10 +117,13 @@
       <item>
        <widget class="QSlider" name="ConnectionSizeSlider">
         <property name="minimum">
-         <number>20</number>
+         <number>5</number>
         </property>
         <property name="maximum">
          <number>100</number>
+        </property>
+        <property name="value">
+         <number>20</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -151,6 +154,36 @@
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="checkBox_2">
+        <property name="text">
+         <string>Display Frame Number</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Delay Per Frame</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="horizontalSlider_4">
+        <property name="minimum">
+         <number>150</number>
+        </property>
+        <property name="maximum">
+         <number>600</number>
+        </property>
+        <property name="value">
+         <number>220</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -173,7 +206,7 @@
      <x>0</x>
      <y>0</y>
      <width>491</width>
-     <height>33</height>
+     <height>37</height>
     </rect>
    </property>
   </widget>

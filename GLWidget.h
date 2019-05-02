@@ -18,6 +18,7 @@
 #include "colorsettings.h"
 #include "model.h"
 #include <ctime>
+#include <boost/lexical_cast.hpp>
 
 struct NText
 {
@@ -45,13 +46,13 @@ public:
     Brain primaryBrain;
     int primaryShouldReload = 0;
     std::string primaryNodeName = "assets/Node_AAL116.node";
-    std::string primaryEdgeName = "assets/connect.edge";
+    QStringList primaryEdgeName = QStringList("assets/connect.edge");
     std::string primaryMeshName = "assets/BrainMesh_ICBM152_smoothed.nv";
 
     Brain secondaryBrain;
     int secondaryShouldReload = 0;
     std::string secondaryNodeName = "assets/Node_AAL116.node";
-    std::string secondaryEdgeName = "assets/connect2.edge";
+    QStringList secondaryEdgeName = QStringList("assets/connect2.edge");
     std::string secondaryMeshName = "assets/BrainMesh_ICBM152_smoothed.nv";
 
     QLabel *nodeName;
@@ -72,6 +73,8 @@ public:
     float *textThreshold;
     int *textSize;
     bool *isScaling;
+    bool *displayFrame;
+    int *msPerFrame;
 
     MTransform *coronal;
     MTransform *axial;
