@@ -11,7 +11,6 @@ A modern, fast, and feature-rich human brain connectome viewer
 * Circlegraph view of conncetome data (Work in Progress)
 
 ## Planned Features
-* Support for 4D (over time) datasets
 * Allow user inputed MRI data
 * Brain mesh slicing
 * Mac OS support
@@ -19,6 +18,7 @@ A modern, fast, and feature-rich human brain connectome viewer
 
 ## Known Issues
 * Mismatching node and edge files results in a crash
+* If the number of nodes in your graph signal file and node file differ, it will result in a crash
 
 ## Supported File Formats
 * Node position and name data should be in a plaintext format whose filenames end with .node
@@ -42,7 +42,7 @@ node appears on the left under "Node Name:". To isolate this node, click and hol
 and **Secondary Brain** side by side, click the "Compare" button on the left. Data for the **Primary Brain** and **Secondary Brain** have to be loaded seperately using their respective prompts in the **File** menu at the top of the screen.
 
 ### Loading Data
-To display your own connectome data, look in the top right corner and click File->Load Primary/Secondary Connectome.
+To display your own connectome data, look in the top right corner and click File->Load Primary/Secondary Connectome. Multiple edge files can be selected in this menu to play them over time.
 You will be prompted to select the node and then the edge file for your data, and it should instantly update in the viewer. The same can be done for loading in a new Brain Mesh or Graph signal using their respective prompts in the File menu.
 
 ### Customizing the network
