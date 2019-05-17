@@ -78,7 +78,7 @@ void GLWidget::initializeGL()
     secondaryBrain.screen = this;
 
 #ifdef LOOKINGGLASS
-    glm::quat brainRot = glm::quat(glm::vec3(1.5708f, 0, 0.0f));
+    glm::quat brainRot = glm::quat(glm::vec3(-1.5708f, 1.5708f * 2, 0.0f));
     primaryBrain.position = primaryBrain.position * glm::mat4_cast(brainRot);
     primaryBrain.updatePosition();
 #endif
@@ -311,14 +311,10 @@ void GLWidget::paintGL()
 
 #ifdef LOOKINGGLASS
     f->glViewport(0, 0, WIDTH, HEIGHT);
-    cam.view = glm::mat4(1.0f);
-    cam.proj = glm::mat4(1.0f);
-    float cameraSize = 80.0f;
+    float cameraSize = 60.0f;
     float cameraDistance = -cameraSize / tan(glm::radians(14.0f) / 2.0f);
-
     //camera center
-    glm::vec3 focalPosition = glm::vec3(-30.52f, -13.28f, -80.23f);
-    cam.view = glm::translate(cam.view, focalPosition);
+    glm::vec3 focalPosition = glm::vec3(1.52f, -15.28f, -30.23f);
 
     int totalViews = 45;
     for(int currentView = 0; currentView < totalViews; currentView++)
@@ -327,6 +323,10 @@ void GLWidget::paintGL()
         f->glEnable(GL_DEPTH_TEST);
         f->glDepthFunc(GL_LESS);
         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        cam.view = glm::mat4(1.0f);
+        cam.proj = glm::mat4(1.0f);
+        cam.view = glm::translate(cam.view, focalPosition);
 
         // derived from the quilt settings
         float viewCone = glm::radians(40.0f); // 40° in radians
