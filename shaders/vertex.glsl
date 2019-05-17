@@ -13,6 +13,6 @@ out vec2 TexCoords;
 
 void main()
 {
-    gl_Position = proj * view * model * parentPos * vec4(position, 1.0);
+    gl_Position = proj * view * parentPos * model * vec4(position, 1.0);
 	TexCoords = texCoords;
 }

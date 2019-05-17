@@ -185,10 +185,14 @@ void Brain::setPosition(glm::vec3 pos)
     position = glm::mat4(1.0f);
     position = glm::translate(position, pos);
 
+    updatePosition();
+}
+
+void Brain::updatePosition()
+{
     sphere.parentPosition = position;
     mesh.parentPosition = position;
     connector.parentPosition = position;
-    //mri.parentPosition = position;
 }
 
 void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown)

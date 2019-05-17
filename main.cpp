@@ -1,5 +1,7 @@
 #include "connected.h"
 #include <QApplication>
+#include <QWindow>
+#define LOOKINGGLASS
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +17,11 @@ int main(int argc, char *argv[])
 
     Connected w;
     w.show();
-
+#ifdef LOOKINGGLASS
+    w.windowHandle()->setScreen(qApp->screens()[1]);
+    w.windowHandle()->setFlag(Qt::FramelessWindowHint);
+    w.setAttribute(Qt::WA_NoSystemBackground, true);
+    w.showFullScreen();
+#endif
     return a.exec();
 }

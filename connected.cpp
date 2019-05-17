@@ -1,4 +1,5 @@
 #include "connected.h"
+#define LOOKINGGLASS
 
 Connected::Connected(QWidget *parent)
     : QMainWindow(parent)
@@ -34,7 +35,10 @@ Connected::Connected(QWidget *parent)
     {
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
     }
-
+#ifdef LOOKINGGLASS
+    ui.verticalLayout_2->deleteLater();
+    ui.menuBar->deleteLater();
+#endif
 }
 
 void Connected::on_actionLoad_Connectome_triggered()

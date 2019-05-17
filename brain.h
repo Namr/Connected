@@ -34,8 +34,6 @@ class Brain
     std::vector<float> nodeSizes;
     std::vector<std::vector<float>> connections;
 
-    glm::mat4 position;
-
     std::vector<std::vector<float>> appendedNodeData;
 public:
     Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, std::string connectionPath);
@@ -43,9 +41,11 @@ public:
     void reloadBrain(std::string nodePath, std::string connectionPath);
     void update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown);
     void setPosition(glm::vec3 position);
+    void updatePosition();
     void loadAppendedNodeData(std::string filepath);
 
     Model mesh;
+    glm::mat4 position;
 
     GLWidget *screen;
     std::vector<std::string> nodeNames;
