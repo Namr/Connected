@@ -32,6 +32,9 @@ void GLWidget::initializeGL()
 #ifdef LOOKINGGLASS
     hp_loadLibrary();
     hp_initialize();
+    hp_setupQuiltSettings(0);
+    hp_setupQuiltTexture();
+    hp_setupBuffers();
     WIDTH = 2560;
     HEIGHT = 1600;
 #endif
@@ -80,6 +83,7 @@ void GLWidget::initializeGL()
 #ifdef LOOKINGGLASS
     glm::quat brainRot = glm::quat(glm::vec3(-1.5708f, 1.5708f * 2, 0.0f));
     primaryBrain.position = primaryBrain.position * glm::mat4_cast(brainRot);
+    //primaryBrain.position = glm::scale(primaryBrain.position, glm::vec3(0.1, 0.1, 0.1));
     primaryBrain.updatePosition();
 #endif
 
@@ -310,13 +314,18 @@ void GLWidget::paintGL()
 #endif
 
 #ifdef LOOKINGGLASS
+
+    glm::quat brainRot = glm::quat(glm::vec3(0.0f, 0.0f, (1.5708f / 5) * deltaTime));
+    primaryBrain.position = primaryBrain.position * glm::mat4_cast(brainRot);
+    primaryBrain.updatePosition();
+
     f->glViewport(0, 0, WIDTH, HEIGHT);
-    float cameraSize = 60.0f;
+    float cameraSize = 80.0f;
     float cameraDistance = -cameraSize / tan(glm::radians(14.0f) / 2.0f);
     //camera center
-    glm::vec3 focalPosition = glm::vec3(1.52f, -15.28f, -30.23f);
+    glm::vec3 focalPosition = glm::vec3(1.52f, -15.28f, 40.23f);
 
-    int totalViews = 45;
+    int totalViews = 32;
     for(int currentView = 0; currentView < totalViews; currentView++)
     {
         f->glBindFramebuffer(GL_FRAMEBUFFER, screenFramebuffer);
@@ -333,14 +342,15 @@ void GLWidget::paintGL()
         float offsetAngle = (currentView / (totalViews - 1.0f) - 0.5f) * viewCone;// start at -viewCone * 0.5 and go up to viewCone * 0.5
         // calculate the offset that the camera should move
         float offset = cameraDistance * tan(offsetAngle);
+
         // modify the view matrix (position)
-        cam.view  = glm::translate(cam.view, glm::vec3(offset, 0.0f, cameraDistance));
+        cam.view = glm::translate(cam.view, glm::vec3(offset, 0.0f, cameraDistance));
 
         float fov = glm::radians(14.0f); // field of view
-        float aspectRatio = 1.6f;
+        float aspectRatio = WIDTH / (float) HEIGHT;
         //The standard model Looking Glass screen is roughly 4.75" vertically. If we assume the average viewing distance for a user sitting at their desk is about 36", our field of view should be about 14°. There is no correct answer, as it all depends on your expected user's distance from the Looking Glass, but we've found the most success using this figure.
                                           // fov, aspect ratio, near, far
-        cam.proj = glm::perspective(fov, aspectRatio, 0.1f, 10000.0f);
+        cam.proj = glm::perspective(fov, aspectRatio, 0.1f, 1000.0f);
         // modify the projection matrix, relative to the camera size and aspect ratio
         cam.proj[2][0] += offset / (cameraSize * aspectRatio);
 
@@ -351,7 +361,11 @@ void GLWidget::paintGL()
         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         f->glBindTexture(GL_TEXTURE_2D, renderedTexture);
-        hp_copyViewToQuilt(currentView);
+
+        int view2send = currentView - (totalViews / 2);
+        if(view2send < 0)
+            view2send = (totalViews - 1) + view2send;
+        hp_copyViewToQuilt(view2send);
     }
 
     f->glBindFramebuffer(GL_FRAMEBUFFER, this->defaultFramebufferObject());
