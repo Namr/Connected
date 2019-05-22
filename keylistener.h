@@ -2,6 +2,8 @@
 #define KEYLISTENER_H
 
 #include <qwidget.h>
+#include <qfiledialog.h>
+
 #include "GLWidget.h"
 class KeyListener : public QObject
 {
