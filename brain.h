@@ -32,13 +32,13 @@ class Brain
     std::vector<glm::mat4> nodePositions;
     std::vector<int> nodeColors;
     std::vector<float> nodeSizes;
-    std::vector<std::vector<float>> connections;
+    std::vector<std::vector<std::vector<float>>> connections;
 
     std::vector<std::vector<float>> appendedNodeData;
 public:
-    Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, std::string connectionPath);
+    Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, QStringList connectionPath);
     Brain();
-    void reloadBrain(std::string nodePath, std::string connectionPath);
+    void reloadBrain(std::string nodePath, QStringList connectionPath);
     void update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown);
     void setPosition(glm::vec3 position);
     void updatePosition();
@@ -62,11 +62,12 @@ public:
     int displayMri = -1;
     MRI mri;
 
-    int hasAppendedData = 0;
-    int currentAppendedFrame = 0;
-    int numAppendedFrames = 0;
-    int *milisecondsPerAppendedFrame;
-    quint64 nextAppendedFrameTime = 0;
+    bool hasAppendedData = false;
+    bool hasTime = false;
+    int currentFrame = 0;
+    int numFrames = 0;
+    int *milisecondsPerFrame;
+    quint64 nextFrameTime = 0;
 };
 
 

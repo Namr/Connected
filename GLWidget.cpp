@@ -198,8 +198,8 @@ void GLWidget::paintGL()
     primaryBrain.isScaling = *isScaling;
     secondaryBrain.isScaling = *isScaling;
 
-    primaryBrain.milisecondsPerAppendedFrame = msPerFrame;
-    secondaryBrain.milisecondsPerAppendedFrame = msPerFrame;
+    primaryBrain.milisecondsPerFrame = msPerFrame;
+    secondaryBrain.milisecondsPerFrame = msPerFrame;
 
     if (primaryShouldReload == 1)
     {
@@ -304,10 +304,10 @@ void GLWidget::paintGL()
     {
         painter.drawText(text.x, text.y, text.str);
     }
-    if(primaryBrain.hasAppendedData && primaryBrain.numAppendedFrames > 1 && *displayFrame)
+    if(primaryBrain.hasTime && *displayFrame)
     {
         painter.drawText(50.0f, HEIGHT - 50.0f, QString("Graph Signal: ") +
-                         QString::fromStdString(boost::lexical_cast<std::string>(primaryBrain.currentAppendedFrame)));
+                         QString::fromStdString(boost::lexical_cast<std::string>(primaryBrain.currentFrame)));
     }
     nodeTexts.clear();
     painter.end();
