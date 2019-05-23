@@ -166,7 +166,6 @@ void Brain::loadAppendedNodeData(std::string filepath)
     //iterate over each line in the graph signal file if it is found, store it in line, and operate on it
     if (nodeFile.is_open())
     {
-        int nodeNum = 0;
         while (getline(nodeFile, line))
         {
             std::vector<std::string> tokenized;
@@ -185,9 +184,31 @@ void Brain::loadAppendedNodeData(std::string filepath)
         }
         nodeFile.close();
 
+        //normalize data, first find min and max values
+        float largestValue = -100000;
+        float smallestValue = 100000;
+        for(unsigned int i = 0; i < appendedNodeData.size(); i++)
+        {
+            for(unsigned int w = 0; w < appendedNodeData[0].size(); w++)
+            {
+                if(appendedNodeData[i][w] > largestValue)
+                    largestValue = appendedNodeData[i][w];
+                else if(appendedNodeData[i][w] < smallestValue)
+                    smallestValue = appendedNodeData[i][w];
+            }
+        }
+        //now interpolate linearly between these two min and max values
+        for(unsigned int i = 0; i < appendedNodeData.size(); i++)
+        {
+            for(unsigned int w = 0; w < appendedNodeData[0].size(); w++)
+            {
+                appendedNodeData[i][w] = map(appendedNodeData[i][w], smallestValue, largestValue, -1.0, 1.0);
+            }
+        }
+
         hasAppendedData = true;
         hasTime = numFrames > 1 ? true : false;
-        nextFrameTime = QDateTime::currentMSecsSinceEpoch() + *milisecondsPerFrame;
+        nextFrameTime = QDateTime::currentMSecsSinceEpoch() + (*milisecondsPerFrame / 10);
     }
     else
     {
@@ -280,11 +301,14 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
         }
         if (hasAppendedData) //if we have appended data, render it
         {
+            //linear interpolation between the current singal size and the next frames size
+            float signalSize = lerp(appendedNodeData[node][floor(currentFrame)], appendedNodeData[node][ceil(currentFrame)], currentFrame - floor(currentFrame)) ;
+
             connector.model = glm::mat4(1);
             connector.model = glm::translate(connector.model, glm::vec3(sphere.model[3]));
             glm::quat rot = glm::quat(glm::vec3(1.5708f, 0.0f, 1.5708f));
             connector.model = connector.model * glm::mat4_cast(rot);
-            connector.model = glm::scale(connector.model, glm::vec3(0.7f, -appendedNodeData[node][currentFrame] * graphSignalSize, 0.7));
+            connector.model = glm::scale(connector.model, glm::vec3(0.7f, -signalSize * graphSignalSize, 0.7));
 
             //this line ensures the scale occurs from the BASE of the model
             connector.model *= glm::mat4(1, 0, 0, 0,
@@ -293,10 +317,10 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
                 0, 0, -1, 1);
 
             //color change depending on negative/positive values
-            if(appendedNodeData[node][currentFrame] >= 0)
-                connector.render(f, camera, 0.0f, 0.0f, 1.0f, 1.0f);
+            if(signalSize >= 0)
+                connector.render(f, camera, 1.0f - abs(signalSize * 2), 1.0f - abs(signalSize * 2), 1.0f, 1.0f);
             else
-                connector.render(f, camera, 0.8f, 0.8f, 0.8f, 1.0f);
+                connector.render(f, camera, 1.0f, 1.0f - abs(signalSize * 2), 1.0f - abs(signalSize * 2), 1.0f);
         }
         if (hit)
         {
@@ -328,12 +352,22 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
         quint64 currentTime = QDateTime::currentMSecsSinceEpoch();
         if(currentTime >= nextFrameTime)
         {
-          currentFrame++;
+          currentFrame += 0.1f;
           if(currentFrame >= numFrames)
           {
             currentFrame = 0;
           }
-          nextFrameTime = currentTime + *milisecondsPerFrame;
+          nextFrameTime = currentTime + (*milisecondsPerFrame / 10);
         }
     }
+}
+
+float Brain::lerp(float a, float b, float f)
+{
+    return a + f * (b - a);
+}
+
+float Brain::map(float s, float a1, float a2, float b1, float b2)
+{
+    return b1 + (s - a1) * (b2 - b1) / (a2 - a1);
 }

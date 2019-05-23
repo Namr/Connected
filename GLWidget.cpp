@@ -1,7 +1,7 @@
 #include "GLWidget.h"
 
-#define LOOKINGGLASS
-#define HP_LOAD_LIBRARY
+//#define LOOKINGGLASS
+//#define HP_LOAD_LIBRARY
 
 #ifdef LOOKINGGLASS
 #include <holoplay.h>

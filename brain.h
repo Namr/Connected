@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <math.h>
 
 #include <qopenglfunctions_3_2_core.h>
 #include <qopenglwidget.h>
@@ -35,6 +36,9 @@ class Brain
     std::vector<std::vector<std::vector<float>>> connections;
 
     std::vector<std::vector<float>> appendedNodeData;
+
+    float lerp(float a, float b, float f);
+    float map(float s, float a1, float a2, float b1, float b2);
 public:
     Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, QStringList connectionPath);
     Brain();
@@ -64,7 +68,7 @@ public:
 
     bool hasAppendedData = false;
     bool hasTime = false;
-    int currentFrame = 0;
+    float currentFrame = 0.0f;
     int numFrames = 0;
     int *milisecondsPerFrame;
     quint64 nextFrameTime = 0;

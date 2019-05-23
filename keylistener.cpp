@@ -54,12 +54,12 @@ bool KeyListener::eventFilter(QObject* obj, QEvent* event)
         if(key->key() == Qt::Key_K)
         {
             QString nodeName = QFileDialog::getOpenFileName(gl, "Select Node File");
-            QString edgeName = QFileDialog::getOpenFileName(gl, "Select Edge File");
+            QStringList edgeNames = QFileDialog::getOpenFileNames(gl, "Select Edge File");
 
-            if (!nodeName.isEmpty() && !nodeName.isNull() && !edgeName.isEmpty() && !edgeName.isNull())
+            if (!nodeName.isEmpty() && !nodeName.isNull() && !edgeNames.isEmpty())
             {
                 gl->primaryNodeName = nodeName.toStdString().c_str();
-                gl->primaryEdgeName = edgeName.toStdString().c_str();
+                gl->primaryEdgeName = edgeNames;
                 gl->primaryShouldReload = 1;
                 gl->update();
             }

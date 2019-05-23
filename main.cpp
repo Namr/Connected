@@ -1,7 +1,7 @@
 #include "connected.h"
 #include <QApplication>
 #include <QWindow>
-#define LOOKINGGLASS
+//#define LOOKINGGLASS
 
 int main(int argc, char *argv[])
 {

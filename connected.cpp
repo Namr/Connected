@@ -1,5 +1,5 @@
 #include "connected.h"
-#define LOOKINGGLASS
+//#define LOOKINGGLASS
 
 Connected::Connected(QWidget *parent)
     : QMainWindow(parent)
