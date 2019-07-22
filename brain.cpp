@@ -94,7 +94,7 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
             }
 
             std::vector<std::string> tokenTest;
-            boost::split(tokenTest, line, [](char c) { return c == ' ' || c == '	'; });
+            boost::split(tokenTest, line, [](char c) { return c == ' ' || c == '	';});
             connectionFile.clear();
             connectionFile.seekg(0, std::ios::beg);
 
@@ -118,7 +118,7 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
                     //turn the string data into float data
                     for (std::string str : tokenized)
                     {
-                        if (str.find('#') == std::string::npos && str.find_first_not_of("-0123456789.") == std::string::npos && str.find_first_of("-0123456789.") != std::string::npos) //ignore comments
+                        if (str.find('#') == std::string::npos && str.find_first_not_of("-0123456789.e") == std::string::npos && str.find_first_of("-0123456789.e") != std::string::npos) //ignore comments
                             tokenizedNums.push_back(std::stof(str));
                     }
 
@@ -299,7 +299,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
             }
             connectedNode++;
         }
-        if (hasAppendedData) //if we have appended data, render it
+        if (hasAppendedData && !displayHeatMap) //if we have appended data, render it
         {
             //linear interpolation between the current singal size and the next frames size
             float signalSize = lerp(appendedNodeData[node][floor(currentFrame)], appendedNodeData[node][ceil(currentFrame)], currentFrame - floor(currentFrame)) ;
@@ -328,7 +328,19 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
             selectedNode = node;
         }
         else
-            sphere.render(f, camera, colors[nodeColors[node]].R / 255.0f, colors[nodeColors[node]].G / 255.0f, colors[nodeColors[node]].B / 255.0f, colors[nodeColors[node]].A / 255.0f);
+        {
+            if(hasAppendedData && displayHeatMap)
+            {
+                //linear interpolation between the current singal size and the next frames size
+                float signalSize = lerp(appendedNodeData[node][floor(currentFrame)], appendedNodeData[node][ceil(currentFrame)], currentFrame - floor(currentFrame)) ;
+                if(signalSize >= 0)
+                    sphere.render(f, camera, 1.0f - abs(signalSize * 2), 1.0f - abs(signalSize * 2), 1.0f, 1.0f);
+                else
+                    sphere.render(f, camera, 1.0f, 1.0f - abs(signalSize * 2), 1.0f - abs(signalSize * 2), 1.0f);
+            }
+            else
+                sphere.render(f, camera, colors[nodeColors[node]].R / 255.0f, colors[nodeColors[node]].G / 255.0f, colors[nodeColors[node]].B / 255.0f, colors[nodeColors[node]].A / 255.0f);
+        }
         //render text if applicable
         if(shouldRenderText == true)
         {

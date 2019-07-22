@@ -37,7 +37,7 @@ Connected::Connected(QWidget *parent)
     }
 #ifdef LOOKINGGLASS
     ui.verticalLayout_2->deleteLater();
-    ui.menuBar->deleteLater();
+    //ui.menuBar->deleteLater();
 #endif
 }
 
@@ -268,6 +268,7 @@ void Connected::on_actionSave_Settings_triggered()
 
 void Connected::on_actionLoad_Project_triggered()
 {
+    ui.menuBar->hide();
     QString settingsFile = QFileDialog::getOpenFileName(this, "Select Project File");
     QSettings settings(settingsFile, QSettings::IniFormat);
 

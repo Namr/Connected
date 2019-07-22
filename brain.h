@@ -67,6 +67,7 @@ public:
     MRI mri;
 
     bool hasAppendedData = false;
+    bool displayHeatMap = false;
     bool hasTime = false;
     float currentFrame = 0.0f;
     int numFrames = 0;
