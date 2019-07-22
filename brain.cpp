@@ -94,7 +94,7 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
             }
 
             std::vector<std::string> tokenTest;
-            boost::split(tokenTest, line, [](char c) { return c == ' ' || c == '	'; });
+            boost::split(tokenTest, line, [](char c) { return c == ' ' || c == '	';});
             connectionFile.clear();
             connectionFile.seekg(0, std::ios::beg);
 
@@ -118,7 +118,7 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
                     //turn the string data into float data
                     for (std::string str : tokenized)
                     {
-                        if (str.find('#') == std::string::npos && str.find_first_not_of("-0123456789.") == std::string::npos && str.find_first_of("-0123456789.") != std::string::npos) //ignore comments
+                        if (str.find('#') == std::string::npos && str.find_first_not_of("-0123456789.e") == std::string::npos && str.find_first_of("-0123456789.e") != std::string::npos) //ignore comments
                             tokenizedNums.push_back(std::stof(str));
                     }
 
@@ -166,7 +166,6 @@ void Brain::loadAppendedNodeData(std::string filepath)
     //iterate over each line in the graph signal file if it is found, store it in line, and operate on it
     if (nodeFile.is_open())
     {
-        int nodeNum = 0;
         while (getline(nodeFile, line))
         {
             std::vector<std::string> tokenized;
@@ -185,9 +184,31 @@ void Brain::loadAppendedNodeData(std::string filepath)
         }
         nodeFile.close();
 
+        //normalize data, first find min and max values
+        float largestValue = -100000;
+        float smallestValue = 100000;
+        for(unsigned int i = 0; i < appendedNodeData.size(); i++)
+        {
+            for(unsigned int w = 0; w < appendedNodeData[0].size(); w++)
+            {
+                if(appendedNodeData[i][w] > largestValue)
+                    largestValue = appendedNodeData[i][w];
+                else if(appendedNodeData[i][w] < smallestValue)
+                    smallestValue = appendedNodeData[i][w];
+            }
+        }
+        //now interpolate linearly between these two min and max values
+        for(unsigned int i = 0; i < appendedNodeData.size(); i++)
+        {
+            for(unsigned int w = 0; w < appendedNodeData[0].size(); w++)
+            {
+                appendedNodeData[i][w] = map(appendedNodeData[i][w], smallestValue, largestValue, -1.0, 1.0);
+            }
+        }
+
         hasAppendedData = true;
         hasTime = numFrames > 1 ? true : false;
-        nextFrameTime = QDateTime::currentMSecsSinceEpoch() + *milisecondsPerFrame;
+        nextFrameTime = QDateTime::currentMSecsSinceEpoch() + (*milisecondsPerFrame / 10);
     }
     else
     {
@@ -202,10 +223,14 @@ void Brain::setPosition(glm::vec3 pos)
     position = glm::mat4(1.0f);
     position = glm::translate(position, pos);
 
+    updatePosition();
+}
+
+void Brain::updatePosition()
+{
     sphere.parentPosition = position;
     mesh.parentPosition = position;
     connector.parentPosition = position;
-    //mri.parentPosition = position;
 }
 
 void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown)
@@ -274,13 +299,16 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
             }
             connectedNode++;
         }
-        if (hasAppendedData) //if we have appended data, render it
+        if (hasAppendedData && !displayHeatMap) //if we have appended data, render it
         {
+            //linear interpolation between the current singal size and the next frames size
+            float signalSize = lerp(appendedNodeData[node][floor(currentFrame)], appendedNodeData[node][ceil(currentFrame)], currentFrame - floor(currentFrame)) ;
+
             connector.model = glm::mat4(1);
             connector.model = glm::translate(connector.model, glm::vec3(sphere.model[3]));
             glm::quat rot = glm::quat(glm::vec3(1.5708f, 0.0f, 1.5708f));
             connector.model = connector.model * glm::mat4_cast(rot);
-            connector.model = glm::scale(connector.model, glm::vec3(0.7f, -appendedNodeData[node][currentFrame] * graphSignalSize, 0.7));
+            connector.model = glm::scale(connector.model, glm::vec3(0.7f, -signalSize * graphSignalSize, 0.7));
 
             //this line ensures the scale occurs from the BASE of the model
             connector.model *= glm::mat4(1, 0, 0, 0,
@@ -289,10 +317,10 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
                 0, 0, -1, 1);
 
             //color change depending on negative/positive values
-            if(appendedNodeData[node][currentFrame] >= 0)
-                connector.render(f, camera, 0.0f, 0.0f, 1.0f, 1.0f);
+            if(signalSize >= 0)
+                connector.render(f, camera, 1.0f - abs(signalSize * 2), 1.0f - abs(signalSize * 2), 1.0f, 1.0f);
             else
-                connector.render(f, camera, 0.8f, 0.8f, 0.8f, 1.0f);
+                connector.render(f, camera, 1.0f, 1.0f - abs(signalSize * 2), 1.0f - abs(signalSize * 2), 1.0f);
         }
         if (hit)
         {
@@ -300,7 +328,19 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
             selectedNode = node;
         }
         else
-            sphere.render(f, camera, colors[nodeColors[node]].R / 255.0f, colors[nodeColors[node]].G / 255.0f, colors[nodeColors[node]].B / 255.0f, colors[nodeColors[node]].A / 255.0f);
+        {
+            if(hasAppendedData && displayHeatMap)
+            {
+                //linear interpolation between the current singal size and the next frames size
+                float signalSize = lerp(appendedNodeData[node][floor(currentFrame)], appendedNodeData[node][ceil(currentFrame)], currentFrame - floor(currentFrame)) ;
+                if(signalSize >= 0)
+                    sphere.render(f, camera, 1.0f - abs(signalSize * 2), 1.0f - abs(signalSize * 2), 1.0f, 1.0f);
+                else
+                    sphere.render(f, camera, 1.0f, 1.0f - abs(signalSize * 2), 1.0f - abs(signalSize * 2), 1.0f);
+            }
+            else
+                sphere.render(f, camera, colors[nodeColors[node]].R / 255.0f, colors[nodeColors[node]].G / 255.0f, colors[nodeColors[node]].B / 255.0f, colors[nodeColors[node]].A / 255.0f);
+        }
         //render text if applicable
         if(shouldRenderText == true)
         {
@@ -324,12 +364,22 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
         quint64 currentTime = QDateTime::currentMSecsSinceEpoch();
         if(currentTime >= nextFrameTime)
         {
-          currentFrame++;
+          currentFrame += 0.1f;
           if(currentFrame >= numFrames)
           {
             currentFrame = 0;
           }
-          nextFrameTime = currentTime + *milisecondsPerFrame;
+          nextFrameTime = currentTime + (*milisecondsPerFrame / 10);
         }
     }
+}
+
+float Brain::lerp(float a, float b, float f)
+{
+    return a + f * (b - a);
+}
+
+float Brain::map(float s, float a1, float a2, float b1, float b2)
+{
+    return b1 + (s - a1) * (b2 - b1) / (a2 - a1);
 }

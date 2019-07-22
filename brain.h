@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <math.h>
 
 #include <qopenglfunctions_3_2_core.h>
 #include <qopenglwidget.h>
@@ -34,18 +35,21 @@ class Brain
     std::vector<float> nodeSizes;
     std::vector<std::vector<std::vector<float>>> connections;
 
-    glm::mat4 position;
-
     std::vector<std::vector<float>> appendedNodeData;
+
+    float lerp(float a, float b, float f);
+    float map(float s, float a1, float a2, float b1, float b2);
 public:
     Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, QStringList connectionPath);
     Brain();
     void reloadBrain(std::string nodePath, QStringList connectionPath);
     void update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown);
     void setPosition(glm::vec3 position);
+    void updatePosition();
     void loadAppendedNodeData(std::string filepath);
 
     Model mesh;
+    glm::mat4 position;
 
     GLWidget *screen;
     std::vector<std::string> nodeNames;
@@ -63,8 +67,9 @@ public:
     MRI mri;
 
     bool hasAppendedData = false;
+    bool displayHeatMap = false;
     bool hasTime = false;
-    int currentFrame = 0;
+    float currentFrame = 0.0f;
     int numFrames = 0;
     int *milisecondsPerFrame;
     quint64 nextFrameTime = 0;

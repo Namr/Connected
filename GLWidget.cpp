@@ -1,5 +1,12 @@
 #include "GLWidget.h"
 
+//#define LOOKINGGLASS
+//#define HP_LOAD_LIBRARY
+
+#ifdef LOOKINGGLASS
+#include <holoplay.h>
+#endif
+
 GLWidget::GLWidget(QWidget *parent):
     QOpenGLWidget(parent)
 {
@@ -21,6 +28,16 @@ void GLWidget::initializeGL()
     }
 
     f->initializeOpenGLFunctions();
+
+#ifdef LOOKINGGLASS
+    hp_loadLibrary();
+    hp_initialize();
+    hp_setupQuiltSettings(0);
+    hp_setupQuiltTexture();
+    hp_setupBuffers();
+    WIDTH = 2560;
+    HEIGHT = 1600;
+#endif
 
     f->glEnable(GL_BLEND);
     f->glEnable(GL_DEPTH_TEST);
@@ -55,7 +72,6 @@ void GLWidget::initializeGL()
     GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
     f->glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
 
-
     //set background color
     f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     primaryBrain = Brain(f, primaryNodeName, primaryEdgeName);
@@ -63,6 +79,13 @@ void GLWidget::initializeGL()
 
     primaryBrain.screen = this;
     secondaryBrain.screen = this;
+
+#ifdef LOOKINGGLASS
+    glm::quat brainRot = glm::quat(glm::vec3(-1.5708f, 1.5708f * 2, 0.0f));
+    primaryBrain.position = primaryBrain.position * glm::mat4_cast(brainRot);
+    //primaryBrain.position = glm::scale(primaryBrain.position, glm::vec3(0.1, 0.1, 0.1));
+    primaryBrain.updatePosition();
+#endif
 
     cam = Camera(WIDTH, HEIGHT);;
     top = Camera(WIDTH / 2, HEIGHT / 2);
@@ -103,6 +126,10 @@ void GLWidget::resizeGL(int w, int h)
     WIDTH = w;
     HEIGHT = h;
 
+#ifdef LOOKINGGLASS
+    WIDTH = 2560;
+    HEIGHT = 1600;
+#endif
     //bind to our framebuffer and change the texture size
     f->glBindTexture(GL_TEXTURE_2D, renderedTexture);
     f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
@@ -216,6 +243,7 @@ void GLWidget::paintGL()
     cam.position.y = -33.28f + (sin(yaw) * sin(pitch) * 220);
     cam.position.z = 6.23f * (cos(pitch) * 50);
 
+
     if (viewingMode == 3)
         cam.proj = glm::perspective(glm::radians(45.0f), (float)(WIDTH / 2) / HEIGHT, 1.0f, 2000.0f);
     else
@@ -232,9 +260,7 @@ void GLWidget::paintGL()
     f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     f->glEnable(GL_FRAMEBUFFER_SRGB);
 
-    // Render to our framebuffer
-    f->glBindFramebuffer(GL_FRAMEBUFFER, screenFramebuffer);
-
+#ifndef LOOKINGGLASS
     if (viewingMode == 1)
     {
         f->glViewport(0, 0, WIDTH / 2, HEIGHT / 2);
@@ -285,6 +311,66 @@ void GLWidget::paintGL()
     }
     nodeTexts.clear();
     painter.end();
+#endif
+
+#ifdef LOOKINGGLASS
+
+    glm::quat brainRot = glm::quat(glm::vec3(0.0f, 0.0f, (1.5708f / 5) * deltaTime));
+    primaryBrain.position = primaryBrain.position * glm::mat4_cast(brainRot);
+    primaryBrain.updatePosition();
+
+    f->glViewport(0, 0, WIDTH, HEIGHT);
+    float cameraSize = 80.0f;
+    float cameraDistance = -cameraSize / tan(glm::radians(14.0f) / 2.0f);
+    //camera center
+    glm::vec3 focalPosition = glm::vec3(1.52f, -15.28f, 40.23f);
+
+    int totalViews = 32;
+    for(int currentView = 0; currentView < totalViews; currentView++)
+    {
+        f->glBindFramebuffer(GL_FRAMEBUFFER, screenFramebuffer);
+        f->glEnable(GL_DEPTH_TEST);
+        f->glDepthFunc(GL_LESS);
+        f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        cam.view = glm::mat4(1.0f);
+        cam.proj = glm::mat4(1.0f);
+        cam.view = glm::translate(cam.view, focalPosition);
+
+        // derived from the quilt settings
+        float viewCone = glm::radians(40.0f); // 40° in radians
+        float offsetAngle = (currentView / (totalViews - 1.0f) - 0.5f) * viewCone;// start at -viewCone * 0.5 and go up to viewCone * 0.5
+        // calculate the offset that the camera should move
+        float offset = cameraDistance * tan(offsetAngle);
+
+        // modify the view matrix (position)
+        cam.view = glm::translate(cam.view, glm::vec3(offset, 0.0f, cameraDistance));
+
+        float fov = glm::radians(14.0f); // field of view
+        float aspectRatio = WIDTH / (float) HEIGHT;
+        //The standard model Looking Glass screen is roughly 4.75" vertically. If we assume the average viewing distance for a user sitting at their desk is about 36", our field of view should be about 14°. There is no correct answer, as it all depends on your expected user's distance from the Looking Glass, but we've found the most success using this figure.
+                                          // fov, aspect ratio, near, far
+        cam.proj = glm::perspective(fov, aspectRatio, 0.1f, 1000.0f);
+        // modify the projection matrix, relative to the camera size and aspect ratio
+        cam.proj[2][0] += offset / (cameraSize * aspectRatio);
+
+        primaryBrain.update(f, cam, xpos, ypos, selectedNode, rightMouseDown);
+
+        f->glBindFramebuffer(GL_FRAMEBUFFER, this->defaultFramebufferObject());
+        f->glDisable(GL_DEPTH_TEST);
+        f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        f->glBindTexture(GL_TEXTURE_2D, renderedTexture);
+
+        int view2send = currentView - (totalViews / 2);
+        if(view2send < 0)
+            view2send = (totalViews - 1) + view2send;
+        hp_copyViewToQuilt(view2send);
+    }
+
+    f->glBindFramebuffer(GL_FRAMEBUFFER, this->defaultFramebufferObject());
+    hp_drawLightfield();
+#endif
 }
 
 void GLWidget::flipView()

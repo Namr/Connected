@@ -51,6 +51,29 @@ bool KeyListener::eventFilter(QObject* obj, QEvent* event)
         {
             gl->downKeyDown = 0;
         }
+        if(key->key() == Qt::Key_K)
+        {
+            QString nodeName = QFileDialog::getOpenFileName(gl, "Select Node File");
+            QStringList edgeNames = QFileDialog::getOpenFileNames(gl, "Select Edge File");
+
+            if (!nodeName.isEmpty() && !nodeName.isNull() && !edgeNames.isEmpty())
+            {
+                gl->primaryNodeName = nodeName.toStdString().c_str();
+                gl->primaryEdgeName = edgeNames;
+                gl->primaryShouldReload = 1;
+                gl->update();
+            }
+        }
+        if(key->key() == Qt::Key_L)
+        {
+            QString nodeName = QFileDialog::getOpenFileName(gl, "Select Graph Signal File");
+
+            if (!nodeName.isEmpty() && !nodeName.isNull())
+            {
+                gl->primaryBrain.loadAppendedNodeData(nodeName.toStdString());
+                gl->update();
+            }
+        }
     }
     else if (event->type() == QEvent::MouseButtonPress)
     {

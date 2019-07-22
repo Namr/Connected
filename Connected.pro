@@ -65,6 +65,8 @@ unix:!macx: LIBS += -ltiff -lGL
 
 win32:INCLUDEPATH += "C:/Program Files (x86)/glm/include/" \
                      "C:/Program Files/boost/boost_1_67_0/" \
-                     "C:/Program Files (x86)/tiff/include"
+                     "C:/Program Files (x86)/tiff/include/" \
+                     "C:/Program Files (x86)/HoloPlayAPI/include/"
 
-win32: LIBS += "-LC:/Program Files (x86)/tiff/lib/" -ltiff
+win32: LIBS += "-LC:/Program Files (x86)/tiff/lib/" -ltiff \
+               "-LC:/Program Files (x86)/HoloPlayAPI/lib/win32" -lHoloPlayAPI
