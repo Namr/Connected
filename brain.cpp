@@ -152,6 +152,54 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
             messageBox.setFixedSize(500, 200);
         }
     }
+
+    int mostConnected = -1;
+    for(int x = 0; x < connections[0].size(); x++)
+    {
+        int numConnected = 0;
+        for(int y = 0; y < connections[0][x].size(); y++)
+        {
+            if(connections[0][x][y] > 0.0f)
+            {
+                numConnected++;
+            }
+        }
+        if(numConnected > mostConnected)
+            mostConnected = numConnected;
+    }
+
+    std::cout << mostConnected << std::endl;
+    if(mostConnected == 2)
+    {
+        //load in connection data
+        std::ifstream connectionFile;
+        connectionFile.open("assets/paths.txt");
+        if (connectionFile.is_open())
+        {
+            while (getline(connectionFile, line))
+            {
+                std::vector<int> path;
+                std::vector<std::string> tokens;
+                boost::split(tokens, line, [](char c) { return c == ' ';});
+                for(std::string token : tokens)
+                {
+                    if (token.find('#') == std::string::npos && token.find_first_not_of("-0123456789.e") == std::string::npos && token.find_first_of("-0123456789.e") != std::string::npos)
+                        path.push_back(std::stoi(token));
+                }
+                paths.push_back(path);
+            }
+            connectionFile.close();
+        }
+        else
+        {
+            std::cout << "missing paths, contact ymir fritz" << std::endl;
+        }
+    }
+    for ( const auto &row : paths)
+    {
+       for ( const auto &s : row ) std::cout << s << ' ';
+       std::cout << std::endl;
+    }
 }
 
 void Brain::loadAppendedNodeData(std::string filepath)
@@ -266,6 +314,10 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
         bool shouldRenderText = false;
 
         int brainFrame = currentFrame > (connections.size() - 1) ? (connections.size() - 1) : currentFrame;
+        if(paths.size() > 0)
+        {
+        }
+        else{
         for (float connection : connections[brainFrame][node])
         {
             //if this statisfies rendering text, change the flag
@@ -298,7 +350,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
                 connector.render(f, camera, connection, 0.0f, 1.0 - connection, 0.8f);
             }
             connectedNode++;
-        }
+        }}
         if (hasAppendedData && !displayHeatMap) //if we have appended data, render it
         {
             //linear interpolation between the current singal size and the next frames size
@@ -348,6 +400,39 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
             shouldRenderText = false;
         }
         node++;
+    }
+    if(paths.size() > 0)
+    {
+        int pnum = 1;
+        for(std::vector<int> path : paths)
+        {
+            for(int p = 0; p < path.size() - 1; p++)
+            {
+                //move connector to the spheres location, and then aim it at the connected node
+                connector.model = glm::mat4(1);
+                glm::vec3 nodePos = glm::vec3(nodePositions[path[p]][3]);
+                glm::vec3 conNode = glm::vec3(nodePositions[path[p+1]][3]);
+                glm::mat4 look = glm::lookAt(
+                    nodePos,                 // position
+                    conNode, // looking at
+                    glm::vec3(0.0f, 0.0f, 1.0f)                 // up axis
+                );
+                connector.model *= glm::inverse(look); //apply the lookat trasnformation
+
+
+                //now scale it so it actually reaches that node
+                float dist = glm::distance(nodePos, conNode);
+                connector.model = glm::scale(connector.model, glm::vec3(0.5 * connectionSize, 0.5 * connectionSize, dist * 0.5));
+                //this line ensures the scale occurs from the BASE of the model
+                connector.model *= glm::mat4(1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, -1, 1);
+                if((mouseDown == 1 && pnum == 3) || mouseDown == 0)
+                    connector.render(f, camera, colors[pnum].R, colors[pnum].G, colors[pnum].B, 0.8f);
+            }
+            pnum++;
+        }
     }
     if (displayMri == 1)
     {

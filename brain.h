@@ -34,6 +34,7 @@ class Brain
     std::vector<int> nodeColors;
     std::vector<float> nodeSizes;
     std::vector<std::vector<std::vector<float>>> connections;
+    std::vector<std::vector<int>> paths;
 
     std::vector<std::vector<float>> appendedNodeData;
 
