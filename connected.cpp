@@ -25,6 +25,7 @@ Connected::Connected(QWidget *parent)
     ui.screen->textThreshold = &NSettings->textThreshold;
     ui.screen->textSize = &NSettings->textSize;
     ui.screen->displayFrame = &NSettings->displayFrame;
+    ui.screen->displayHeatMap = &NSettings->displayHeatMap;
     ui.screen->msPerFrame = &NSettings->milisecsPerFrame;
 
     ui.screen->coronal = &MSettings->coronal;

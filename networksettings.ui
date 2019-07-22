@@ -184,6 +184,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="checkBox_3">
+        <property name="text">
+         <string>Show Signals As Heatmap</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -206,7 +213,7 @@
      <x>0</x>
      <y>0</y>
      <width>491</width>
-     <height>37</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
