@@ -53,18 +53,28 @@ colorSettings::colorSettings(QWidget *parent) :
     colors[9].G = 0;
     colors[9].B = 255;
 
-    colors[10].R = 0;
-    colors[10].G = 0;
-    colors[10].B = 0;
+    colors[10].R = 85;
+    colors[10].G = 190;
+    colors[10].B = 179;
 
-    colors[11].R = 230;
-    colors[11].G = 230;
-    colors[11].B = 230;
-    colors[11].A = 69;
+    colors[11].R = 115;
+    colors[11].G = 145;
+    colors[11].B = 27;
 
-    colors[12].R = 255;
-    colors[12].G = 255;
+    //end of node colors
+
+    colors[12].R = 0;
+    colors[12].G = 0;
     colors[12].B = 0;
+
+    colors[13].R = 230;
+    colors[13].G = 230;
+    colors[13].B = 230;
+    colors[13].A = 69;
+
+    colors[14].R = 255;
+    colors[14].G = 255;
+    colors[14].B = 0;
 
     ui->graphicsView->setBackgroundBrush(QBrush(QColor(colors[selectedColor].R, colors[selectedColor].G, colors[selectedColor].B, colors[selectedColor].A), Qt::SolidPattern));
 }

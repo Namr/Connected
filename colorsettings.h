@@ -26,7 +26,7 @@ public:
 
     void refresh();
 
-    NColor colors[13];
+    NColor colors[15];
 private slots:
     void on_horizontalSlider_sliderMoved(int position);
 
