@@ -435,8 +435,8 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
                     0, 1, 0, 0,
                     0, 0, 1, 0,
                     0, 0, -1, 1);
-                if((mouseDown == 1 && pnum == 3) || mouseDown == 0)
-                    connector.render(f, camera, colors[pnum].R, colors[pnum].G, colors[pnum].B, 0.8f);
+                if((mouseDown == 1 && pnum == 2) || mouseDown == 0)
+                    connector.render(f, camera, colors[1].R, colors[1].G, colors[1].B, 0.8f);
             }
             pnum++;
         }
