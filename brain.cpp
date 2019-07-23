@@ -195,10 +195,17 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
             std::cout << "missing paths, contact ymir fritz" << std::endl;
         }
     }
-    for ( const auto &row : paths)
+
+    for(std::vector<int> path : paths)
     {
-       for ( const auto &s : row ) std::cout << s << ' ';
-       std::cout << std::endl;
+        Curve* pathCurve = new CatmullRom();
+        pathCurve->set_steps(50);
+        for(int p = 0; p < path.size(); p++)
+        {
+            glm::vec3 posVec = glm::vec3(nodePositions[path[p]][3]);
+            pathCurve->add_way_point(Vector(posVec.x, posVec.y, posVec.z));
+        }
+        smoothPaths.push_back(pathCurve);
     }
 }
 
@@ -404,14 +411,14 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
     if(paths.size() > 0)
     {
         int pnum = 1;
-        for(std::vector<int> path : paths)
+        for(Curve* spath : smoothPaths)
         {
-            for(int p = 0; p < path.size() - 1; p++)
+            for (int i = 0; i < spath->node_count() - 1; ++i)
             {
                 //move connector to the spheres location, and then aim it at the connected node
                 connector.model = glm::mat4(1);
-                glm::vec3 nodePos = glm::vec3(nodePositions[path[p]][3]);
-                glm::vec3 conNode = glm::vec3(nodePositions[path[p+1]][3]);
+                glm::vec3 nodePos = glm::vec3(spath->node(i).x, spath->node(i).y, spath->node(i).z);
+                glm::vec3 conNode = glm::vec3(spath->node(i+1).x, spath->node(i+1).y, spath->node(i+1).z);
                 glm::mat4 look = glm::lookAt(
                     nodePos,                 // position
                     conNode, // looking at

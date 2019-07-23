@@ -22,6 +22,9 @@
 #include "camera.h"
 #include "mri.h"
 #include "colorsettings.h"
+#include "catmullrom.h"
+#include "vector.h"
+#include "curve.h"
 #include <boost/algorithm/string.hpp>
 
 class GLWidget;
@@ -35,6 +38,7 @@ class Brain
     std::vector<float> nodeSizes;
     std::vector<std::vector<std::vector<float>>> connections;
     std::vector<std::vector<int>> paths;
+    std::vector<Curve*> smoothPaths;
 
     std::vector<std::vector<float>> appendedNodeData;
 
