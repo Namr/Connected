@@ -190,6 +190,9 @@ void GLWidget::paintGL()
     primaryBrain.graphSignalSize = *graphSignalSize;
     secondaryBrain.graphSignalSize = *graphSignalSize;
 
+    primaryBrain.displayHeatMap = *displayHeatmap;
+    secondaryBrain.displayHeatMap = *displayHeatmap;
+
     primaryBrain.mri.axialTrans = *axial;
     primaryBrain.mri.coronalTrans = *coronal;
     secondaryBrain.mri.axialTrans = *axial;

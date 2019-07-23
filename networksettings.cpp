@@ -78,3 +78,8 @@ void NetworkSettings::on_horizontalSlider_4_sliderMoved(int position)
 {
     milisecsPerFrame = position;
 }
+
+void NetworkSettings::on_checkBox_3_toggled(bool checked)
+{
+    displayHeatmap = checked;
+}

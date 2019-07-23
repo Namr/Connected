@@ -74,6 +74,7 @@ public:
     int *textSize;
     bool *isScaling;
     bool *displayFrame;
+    bool *displayHeatmap;
     int *msPerFrame;
 
     MTransform *coronal;
