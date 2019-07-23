@@ -34,7 +34,11 @@ SOURCES += \
     nifti.cpp \
     colorsettings.cpp \
     networksettings.cpp \
-    mrisettings.cpp
+    mrisettings.cpp \
+    curve.cpp \
+    vector.cpp \
+    bezier.cpp \
+    catmullrom.cpp
 
 HEADERS += \
         connected.h \
@@ -48,7 +52,11 @@ HEADERS += \
     tiny_obj_loader.h \
     colorsettings.h \
     networksettings.h \
-    mrisettings.h
+    mrisettings.h \
+    curve.h \
+    vector.h \
+    bezier.h \
+    catmullrom.h
 
 FORMS += \
         connected.ui \
