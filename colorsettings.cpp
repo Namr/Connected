@@ -180,6 +180,20 @@ void colorSettings::on_radioButton_13_clicked()
     refresh();
 }
 
+//node 11
+void colorSettings::on_radioButton_14_clicked()
+{
+    selectedColor = 10;
+    refresh();
+}
+
+//node 12
+void colorSettings::on_radioButton_15_clicked()
+{
+    selectedColor = 11;
+    refresh();
+}
+
 //background
 void colorSettings::on_radioButton_7_clicked()
 {

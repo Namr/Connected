@@ -93,6 +93,20 @@
          </widget>
         </item>
         <item>
+         <widget class="QRadioButton" name="radioButton_14">
+          <property name="text">
+           <string>Node Color 11</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_15">
+          <property name="text">
+           <string>Node Color 12</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QRadioButton" name="radioButton_9">
           <property name="text">
            <string>Text Color</string>
@@ -225,7 +239,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>33</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

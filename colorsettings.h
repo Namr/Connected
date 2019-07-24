@@ -62,6 +62,10 @@ private slots:
 
     void on_radioButton_13_clicked();
 
+    void on_radioButton_14_clicked();
+
+    void on_radioButton_15_clicked();
+
 private:
     Ui::colorSettings *ui;
     QGraphicsScene *scene;

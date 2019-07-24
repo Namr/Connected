@@ -186,7 +186,7 @@ void Connected::on_actionSave_Settings_triggered()
     QSettings settings(settingsFile, QSettings::IniFormat);
 
     //loop through colors
-    for(int i = 0; i < 13; i++)
+    for(int i = 0; i < 15; i++)
     {
         //loop through color components
         for(int c = 0; c < 3; c++)
@@ -209,6 +209,8 @@ void Connected::on_actionSave_Settings_triggered()
     settings.setValue("textThreshold", NSettings->textThreshold);
     settings.setValue("textSize", NSettings->textSize);
     settings.setValue("displayFrame", NSettings->displayFrame);
+    settings.setValue("Heatmap", NSettings->displayHeatmap);
+    settings.setValue("ConnectionStrengthColors", NSettings->connectionStrengthColor);
     settings.setValue("msPerFrame", NSettings->milisecsPerFrame);
 
     //unpack MTransform and put its components into
@@ -270,12 +272,11 @@ void Connected::on_actionSave_Settings_triggered()
 
 void Connected::on_actionLoad_Project_triggered()
 {
-    ui.menuBar->hide();
     QString settingsFile = QFileDialog::getOpenFileName(this, "Select Project File");
     QSettings settings(settingsFile, QSettings::IniFormat);
 
     //loop through colors
-    for(int i = 0; i < 13; i++)
+    for(int i = 0; i < 15; i++)
     {
         //loop through color components
         for(int c = 0; c < 3; c++)
@@ -301,6 +302,8 @@ void Connected::on_actionLoad_Project_triggered()
     NSettings->textThreshold = settings.value("textThreshold", 1.0).toFloat();
     NSettings->textSize = settings.value("textSize", 1.0).toInt();
     NSettings->displayFrame = settings.value("displayFrame", 0.0).toBool();
+    NSettings->displayHeatmap = settings.value("Heatmap", 0.0).toBool();
+    NSettings->connectionStrengthColor = settings.value("ConnectionStrengthColors", 0.0).toBool();
     NSettings->milisecsPerFrame = settings.value("msPerFrame", 220).toInt();
     NSettings->refresh();
 
