@@ -75,6 +75,7 @@ public:
     bool *isScaling;
     bool *displayFrame;
     bool *displayHeatmap;
+    bool *connectionStrengthColor;
     int *msPerFrame;
 
     MTransform *coronal;

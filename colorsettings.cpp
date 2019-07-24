@@ -45,9 +45,9 @@ colorSettings::colorSettings(QWidget *parent) :
     colors[7].G = 255;
     colors[7].B = 127;
 
-    colors[8].R = 127;
-    colors[8].G = 255;
-    colors[8].B = 127;
+    colors[8].R = 91;
+    colors[8].G = 128;
+    colors[8].B = 118;
 
     colors[9].R = 127;
     colors[9].G = 0;
@@ -183,21 +183,21 @@ void colorSettings::on_radioButton_13_clicked()
 //background
 void colorSettings::on_radioButton_7_clicked()
 {
-    selectedColor = 10;
+    selectedColor = 12;
     refresh();
 }
 
 //brain mesh
 void colorSettings::on_radioButton_8_clicked()
 {
-    selectedColor = 11;
+    selectedColor = 13;
     refresh();
 }
 
 //text
 void colorSettings::on_radioButton_9_clicked()
 {
-    selectedColor = 12;
+    selectedColor = 14;
     refresh();
 }
 

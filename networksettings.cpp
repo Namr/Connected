@@ -83,3 +83,8 @@ void NetworkSettings::on_checkBox_3_toggled(bool checked)
 {
     displayHeatmap = checked;
 }
+
+void NetworkSettings::on_checkBox_4_toggled(bool checked)
+{
+    connectionStrengthColor = checked;
+}

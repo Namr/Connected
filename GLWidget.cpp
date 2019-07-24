@@ -193,6 +193,9 @@ void GLWidget::paintGL()
     primaryBrain.displayHeatMap = *displayHeatmap;
     secondaryBrain.displayHeatMap = *displayHeatmap;
 
+    primaryBrain.connectionStrengthColor = *connectionStrengthColor;
+    secondaryBrain.connectionStrengthColor = *connectionStrengthColor;
+
     primaryBrain.mri.axialTrans = *axial;
     primaryBrain.mri.coronalTrans = *coronal;
     secondaryBrain.mri.axialTrans = *axial;

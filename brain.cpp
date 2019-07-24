@@ -295,7 +295,14 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
                     0, 0, 1, 0,
                     0, 0, -1, 1);
 
-                connector.render(f, camera, connection, 0.0f, 1.0 - connection, 0.8f);
+                if(connectionStrengthColor)
+                {
+                    connector.render(f, camera, connection, 0.0, 1 - connection, 0.8f);
+                }
+                else
+                {
+                    connector.render(f, camera, colors[nodeColors[node]].R / 255.0f, colors[nodeColors[node]].G / 255.0f, colors[nodeColors[node]].B / 255.0f, 0.8f);
+                }
             }
             connectedNode++;
         }

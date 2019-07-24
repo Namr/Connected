@@ -131,6 +131,16 @@
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="checkBox_4">
+        <property name="text">
+         <string>Connection Color Based on Strength</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QLabel" name="label_3">
         <property name="text">
          <string>Graph Signal Size</string>

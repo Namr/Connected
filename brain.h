@@ -68,6 +68,7 @@ public:
 
     bool hasAppendedData = false;
     bool displayHeatMap = false;
+    bool connectionStrengthColor = true;
     bool hasTime = false;
     float currentFrame = 0.0f;
     int numFrames = 0;

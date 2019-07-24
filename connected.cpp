@@ -26,6 +26,7 @@ Connected::Connected(QWidget *parent)
     ui.screen->textSize = &NSettings->textSize;
     ui.screen->displayFrame = &NSettings->displayFrame;
     ui.screen->displayHeatmap = &NSettings->displayHeatmap;
+    ui.screen->connectionStrengthColor = &NSettings->connectionStrengthColor;
     ui.screen->msPerFrame = &NSettings->milisecsPerFrame;
 
     ui.screen->coronal = &MSettings->coronal;
