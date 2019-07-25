@@ -175,7 +175,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -213,6 +213,9 @@
    <property name="text">
     <string>Load Primary Connectome</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
   </action>
   <action name="actionLoad_Secondary_Connectome">
    <property name="text">
@@ -238,6 +241,9 @@
    <property name="text">
     <string>Network Settings</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="actionMRI_Settings">
    <property name="text">
@@ -247,6 +253,9 @@
   <action name="actionSave_Settings">
    <property name="text">
     <string>Save Project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionLoad_Project">

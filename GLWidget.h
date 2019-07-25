@@ -88,6 +88,7 @@ private:
     GLuint renderedTexture;
     GLuint depthrenderbuffer;
     Camera cam;
+    Camera holoCam[32];
     Camera top;
     Camera side;
     Camera front;

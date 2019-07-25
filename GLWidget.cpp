@@ -1,7 +1,7 @@
 #include "GLWidget.h"
 
 //#define LOOKINGGLASS
-//#define HP_LOAD_LIBRARY
+#define HP_LOAD_LIBRARY
 
 #ifdef LOOKINGGLASS
 #include <holoplay.h>
@@ -85,6 +85,38 @@ void GLWidget::initializeGL()
     primaryBrain.position = primaryBrain.position * glm::mat4_cast(brainRot);
     //primaryBrain.position = glm::scale(primaryBrain.position, glm::vec3(0.1, 0.1, 0.1));
     primaryBrain.updatePosition();
+
+
+    int totalViews = 32;
+    float cameraSize = 80.0f;
+    float cameraDistance = -cameraSize / std::tan(glm::radians(14.0f) / 2.0f);
+    float fov = glm::radians(14.0f); // field of view
+    float aspectRatio = (float)WIDTH / (float)HEIGHT;
+    float viewCone = glm::radians(40.0f); // 40° in radians
+
+    //camera center
+    glm::vec3 focalPosition = glm::vec3(1.52f, -15.28f, 40.23f);
+
+    //init all cameras needed
+    for (int currentView = 0; currentView < totalViews; currentView++)
+    {
+        holoCam[currentView].view = glm::mat4(1.0f);
+        holoCam[currentView].proj = glm::mat4(1.0f);
+        holoCam[currentView].view = glm::translate(holoCam[currentView].view, focalPosition);
+        float offsetAngle = (currentView / (totalViews - 1.0f) - 0.5f) * viewCone;// start at -viewCone * 0.5 and go up to viewCone * 0.5
+        // calculate the offset that the camera should move
+        float offset = cameraDistance * std::tan(offsetAngle);
+
+        // modify the view matrix (position)
+        holoCam[currentView].view = glm::translate(holoCam[currentView].view, glm::vec3(offset, 0.0f, cameraDistance));
+
+        //The standard model Looking Glass screen is roughly 4.75" vertically. If we assume the average viewing distance for a user sitting at their desk is about 36", our field of view should be about 14°. There is no correct answer, as it all depends on your expected user's distance from the Looking Glass, but we've found the most success using this figure.
+                                          // fov, aspect ratio, near, far
+        holoCam[currentView].proj = glm::perspective(fov, aspectRatio, 20.0f, 700.0f);
+        // modify the projection matrix, relative to the camera size and aspect ratio
+        holoCam[currentView].proj[2][0] += offset / (cameraSize * aspectRatio);
+        holoCam[currentView].position = glm::vec3(holoCam[currentView].view[3]);
+    }
 #endif
 
     cam = Camera(WIDTH, HEIGHT);;
@@ -326,48 +358,23 @@ void GLWidget::paintGL()
     primaryBrain.updatePosition();
 
     f->glViewport(0, 0, WIDTH, HEIGHT);
-    float cameraSize = 80.0f;
-    float cameraDistance = -cameraSize / tan(glm::radians(14.0f) / 2.0f);
-    //camera center
-    glm::vec3 focalPosition = glm::vec3(1.52f, -15.28f, 40.23f);
 
-    int totalViews = 32;
-    for(int currentView = 0; currentView < totalViews; currentView++)
+
+    unsigned int totalViews = 32;
+    for(unsigned int currentView = 0; currentView < totalViews; currentView++)
     {
         f->glBindFramebuffer(GL_FRAMEBUFFER, screenFramebuffer);
         f->glEnable(GL_DEPTH_TEST);
         f->glDepthFunc(GL_LESS);
         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        cam.view = glm::mat4(1.0f);
-        cam.proj = glm::mat4(1.0f);
-        cam.view = glm::translate(cam.view, focalPosition);
-
-        // derived from the quilt settings
-        float viewCone = glm::radians(40.0f); // 40° in radians
-        float offsetAngle = (currentView / (totalViews - 1.0f) - 0.5f) * viewCone;// start at -viewCone * 0.5 and go up to viewCone * 0.5
-        // calculate the offset that the camera should move
-        float offset = cameraDistance * tan(offsetAngle);
-
-        // modify the view matrix (position)
-        cam.view = glm::translate(cam.view, glm::vec3(offset, 0.0f, cameraDistance));
-
-        float fov = glm::radians(14.0f); // field of view
-        float aspectRatio = WIDTH / (float) HEIGHT;
-        //The standard model Looking Glass screen is roughly 4.75" vertically. If we assume the average viewing distance for a user sitting at their desk is about 36", our field of view should be about 14°. There is no correct answer, as it all depends on your expected user's distance from the Looking Glass, but we've found the most success using this figure.
-                                          // fov, aspect ratio, near, far
-        cam.proj = glm::perspective(fov, aspectRatio, 0.1f, 1000.0f);
-        // modify the projection matrix, relative to the camera size and aspect ratio
-        cam.proj[2][0] += offset / (cameraSize * aspectRatio);
-
-        primaryBrain.update(f, cam, xpos, ypos, selectedNode, rightMouseDown);
+        primaryBrain.update(f, holoCam[currentView], xpos, ypos, selectedNode, rightMouseDown);
 
         f->glBindFramebuffer(GL_FRAMEBUFFER, this->defaultFramebufferObject());
         f->glDisable(GL_DEPTH_TEST);
         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         f->glBindTexture(GL_TEXTURE_2D, renderedTexture);
-
         int view2send = currentView - (totalViews / 2);
         if(view2send < 0)
             view2send = (totalViews - 1) + view2send;
