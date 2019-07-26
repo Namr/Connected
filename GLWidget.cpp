@@ -375,7 +375,8 @@ void GLWidget::paintGL()
         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         f->glBindTexture(GL_TEXTURE_2D, renderedTexture);
-        int view2send = currentView - (totalViews / 2);
+        //this is a workaround for a bug in holoplay, where it sends the wrong view
+        int view2send = currentView - (totalViews / 2) + 8;
         if(view2send < 0)
             view2send = (totalViews - 1) + view2send;
         hp_copyViewToQuilt(view2send);

@@ -32,6 +32,16 @@ void NetworkSettings::refresh()
         ui->checkBox_2->setCheckState(Qt::CheckState::Checked);
     else
         ui->checkBox_2->setCheckState(Qt::CheckState::Unchecked);
+
+    if(displayHeatmap)
+        ui->checkBox_3->setCheckState(Qt::CheckState::Checked);
+    else
+        ui->checkBox_3->setCheckState(Qt::CheckState::Unchecked);
+
+    if(connectionStrengthColor)
+        ui->checkBox_4->setCheckState(Qt::CheckState::Checked);
+    else
+        ui->checkBox_4->setCheckState(Qt::CheckState::Unchecked);
 }
 
 void NetworkSettings::on_nodeSizeSlider_sliderMoved(int position)
