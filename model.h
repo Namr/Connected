@@ -1,6 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#define GLCheckError(id) (id != -1) ? static_cast<unsigned int>(id) : static_cast<unsigned int>(printf("ERROR: GL Data Location Error"));
 
 #include <qopenglfunctions_3_2_core.h>
 #include <qopenglwidget.h>

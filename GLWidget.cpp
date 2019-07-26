@@ -23,7 +23,7 @@ void GLWidget::initializeGL()
     QOpenGLFunctions_3_2_Core *f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_2_Core>();
     if (!f) {
         QMessageBox messageBox;
-        messageBox.critical(0, "Error", "This machine does not seem to support Modern OpenGL (>=3.2)");
+        messageBox.critical(nullptr, "Error", "This machine does not seem to support Modern OpenGL (>=3.2)");
         messageBox.setFixedSize(500, 200);
     }
 
@@ -54,7 +54,7 @@ void GLWidget::initializeGL()
     f->glBindTexture(GL_TEXTURE_2D, renderedTexture);
 
     // Give an empty image to OpenGL ( the last "0" )
-    f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
     // Poor filtering. Needed !
     f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -164,7 +164,7 @@ void GLWidget::resizeGL(int w, int h)
 #endif
     //bind to our framebuffer and change the texture size
     f->glBindTexture(GL_TEXTURE_2D, renderedTexture);
-    f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
     //do the same with the depth buffer
     f->glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
@@ -283,9 +283,9 @@ void GLWidget::paintGL()
 
 
     if (viewingMode == 3)
-        cam.proj = glm::perspective(glm::radians(45.0f), (float)(WIDTH / 2) / HEIGHT, 1.0f, 2000.0f);
+        cam.proj = glm::perspective(glm::radians(45.0f), static_cast<float>(WIDTH / 2) / HEIGHT, 1.0f, 2000.0f);
     else
-        cam.proj = glm::perspective(glm::radians(45.0f), (float)WIDTH / HEIGHT, 1.0f, 2000.0f);
+        cam.proj = glm::perspective(glm::radians(45.0f), static_cast<float>(WIDTH) / HEIGHT, 1.0f, 2000.0f);
 
     cam.view = glm::lookAt(
         cam.position,             // position
@@ -376,6 +376,8 @@ void GLWidget::paintGL()
 
         f->glBindTexture(GL_TEXTURE_2D, renderedTexture);
         //this is a workaround for a bug in holoplay, where it sends the wrong view
+        //In order to work around this, I shifted the views until they lined up inside of the looking glass
+        //hopefully this issue will be recognized by the holoplay devs soon
         int view2send = currentView - (totalViews / 2) + 8;
         if(view2send < 0)
             view2send = (totalViews - 1) + view2send;

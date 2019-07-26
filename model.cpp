@@ -107,7 +107,7 @@ void Model::loadFromNV(QOpenGLFunctions_3_2_Core *f, std::string path)
     else
     {
         QMessageBox messageBox;
-        messageBox.critical(0, "Error", "Mesh File not found! Check your paths");
+        messageBox.critical(nullptr, "Error", "Mesh File not found! Check your paths");
         messageBox.setFixedSize(500, 200);
     }
 
@@ -138,18 +138,18 @@ void Model::GLInit(QOpenGLFunctions_3_2_Core *f)
     f->glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
     if (!success)
     {
-        f->glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        f->glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
         QMessageBox messageBox;
-        messageBox.critical(0, "Error", "Vertex Shader Compile Fail");
+        messageBox.critical(nullptr, "Error", "Vertex Shader Compile Fail");
         messageBox.setFixedSize(500, 200);
     };
 
     f->glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success)
     {
-        f->glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        f->glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
         QMessageBox messageBox;
-        messageBox.critical(0, "Error", "Fragment Shader compile fail");
+        messageBox.critical(nullptr, "Error", "Fragment Shader compile fail");
         messageBox.setFixedSize(500, 200);
     };
 
@@ -178,11 +178,11 @@ void Model::GLInit(QOpenGLFunctions_3_2_Core *f)
         GL_STATIC_DRAW);
 
     // pass vertex positions to shader program
-    GLint posAttrib = f->glGetAttribLocation(shaderProgram, "position");
+    GLuint posAttrib = GLCheckError(f->glGetAttribLocation(shaderProgram, "position"));
     f->glEnableVertexAttribArray(posAttrib);
-    f->glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 0);
+    f->glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr);
 
-    GLint texcoordsAttrib = f->glGetAttribLocation(shaderProgram, "texCoords");
+    GLuint texcoordsAttrib = GLCheckError(f->glGetAttribLocation(shaderProgram, "texCoords"));
     f->glEnableVertexAttribArray(texcoordsAttrib);
     f->glVertexAttribPointer(texcoordsAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
 
@@ -215,7 +215,7 @@ void Model::render(QOpenGLFunctions_3_2_Core *f, Camera &camera)
     f->glUniform1f(uniLayer, layer);
     f->glUniform1i(uniMRIView, view);
 
-    f->glDrawElements(GL_TRIANGLES, triangles.size(), GL_UNSIGNED_INT, 0);
+    f->glDrawElements(GL_TRIANGLES, triangles.size(), GL_UNSIGNED_INT, nullptr);
 }
 
 void Model::render(QOpenGLFunctions_3_2_Core *f, Camera &camera, float r, float g, float b, float a)
@@ -233,7 +233,7 @@ void Model::render(QOpenGLFunctions_3_2_Core *f, Camera &camera, float r, float 
 
     f->glUniform4f(uniColor, r, g, b, a);
 
-    f->glDrawElements(GL_TRIANGLES, triangles.size(), GL_UNSIGNED_INT, 0);
+    f->glDrawElements(GL_TRIANGLES, triangles.size(), GL_UNSIGNED_INT, nullptr);
 }
 
 void Model::addTexture(QOpenGLFunctions_3_2_Core *f, int id)

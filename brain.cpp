@@ -42,7 +42,6 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
     //iterate over each line in the node file if it is found, store it in line, and operate on it
     if (nodeFile.is_open())
     {
-        int nodeNum = 0;
         while (getline(nodeFile, line))
         {
             if (line.find('#') == std::string::npos) //ignore comments
@@ -71,7 +70,7 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
     else
     {
         QMessageBox messageBox;
-        messageBox.critical(0, "Error", "Node File not found! Check your paths");
+        messageBox.critical(nullptr, "Error", "Node File not found! Check your paths");
         messageBox.setFixedSize(500, 200);
     }
 
@@ -106,8 +105,7 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
             //i.e connections[1] is a list of all the connections to node 1 and connections[1][2] is the strength of the connection between nodes 1 and 2
             if (tokenTest.size() > 1)
             {
-                int nodeNum = 0;
-                for (int n = 0; n < nodePositions.size(); n++)
+                for (unsigned int n = 0; n < nodePositions.size(); n++)
                 {
                     std::vector<float> nodesConnections;
                     //get each line of the file, if its in a matrix format, split it each data point stands on its own
@@ -130,11 +128,10 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
             }
             else
             {
-                int nodeNum = 0;
-                for (int n = 0; n < nodePositions.size(); n++)
+                for (unsigned int n = 0; n < nodePositions.size(); n++)
                 {
                     std::vector<float> nodesConnections;
-                    for (int c = 0; c < nodePositions.size(); c++)
+                    for (unsigned int c = 0; c < nodePositions.size(); c++)
                     {
                         getline(connectionFile, line);
                         nodesConnections.push_back(stof(line));
@@ -148,7 +145,7 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
         else
         {
             QMessageBox messageBox;
-            messageBox.critical(0, "Error", "Edge File not found! Check your paths");
+            messageBox.critical(nullptr, "Error", "Edge File not found! Check your paths");
             messageBox.setFixedSize(500, 200);
         }
     }
@@ -213,7 +210,7 @@ void Brain::loadAppendedNodeData(std::string filepath)
     else
     {
         QMessageBox messageBox;
-        messageBox.critical(0, "Error", "Graph Signal Data File not found! Check your paths");
+        messageBox.critical(nullptr, "Error", "Graph Signal Data File not found! Check your paths");
         messageBox.setFixedSize(500, 200);
     }
 }
