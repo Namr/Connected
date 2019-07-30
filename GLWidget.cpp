@@ -76,6 +76,7 @@ void GLWidget::initializeGL()
     f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     primaryBrain = Brain(f, primaryNodeName, primaryEdgeName);
     secondaryBrain = Brain(f, secondaryNodeName, secondaryEdgeName);
+    fullscreenquad.init(f);
 
     primaryBrain.screen = this;
     secondaryBrain.screen = this;
@@ -369,6 +370,10 @@ void GLWidget::paintGL()
         f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         primaryBrain.update(f, holoCam[currentView], xpos, ypos, selectedNode, rightMouseDown);
+
+        //render to full screen quad to do post processing effects
+        f->glBindTexture(GL_TEXTURE_2D, renderedTexture);
+        fullscreenquad.render(f);
 
         f->glBindFramebuffer(GL_FRAMEBUFFER, this->defaultFramebufferObject());
         f->glDisable(GL_DEPTH_TEST);

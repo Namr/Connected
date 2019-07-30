@@ -17,6 +17,8 @@
 #include "brain.h"
 #include "colorsettings.h"
 #include "model.h"
+#include "screenquad.h"
+
 #include <ctime>
 #include <boost/lexical_cast.hpp>
 
@@ -41,6 +43,9 @@ public:
     void renderText(glm::mat4 model, Camera cam, glm::vec4 viewport, const QString &str);
     ~GLWidget();
 
+#ifdef LOOKINGGLASS
+    screenQuad fullscreenquad;
+#endif
     QPainter painter;
 
     Brain primaryBrain;
