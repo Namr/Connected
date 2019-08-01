@@ -91,6 +91,7 @@ private:
 
     GLuint screenFramebuffer = 0;
     GLuint renderedTexture;
+    GLuint depthTexture;
     GLuint depthrenderbuffer;
     Camera cam;
     Camera holoCam[32];

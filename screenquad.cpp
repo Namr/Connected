@@ -60,14 +60,21 @@ void screenQuad::init(QOpenGLFunctions_3_2_Core *f)
     // pass a pointer to the vector containing them
     f->glBufferData(GL_ARRAY_BUFFER, 24 * sizeof(float),
         &quadVertices[0], GL_STATIC_DRAW);
+
+
     GLuint posAttrib = GLCheckError(f->glGetAttribLocation(shaderProgram, "position"));
     GLuint texcoordsAttrib = GLCheckError(f->glGetAttribLocation(shaderProgram, "texCoords"));
     f->glEnableVertexAttribArray(posAttrib);
     f->glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     f->glEnableVertexAttribArray(texcoordsAttrib);
     f->glVertexAttribPointer(texcoordsAttrib, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+
     uniTexture = f->glGetUniformLocation(shaderProgram, "screenTexture");
+    uniDepth = f->glGetUniformLocation(shaderProgram, "depthMap");
+
     f->glUniform1i(uniTexture, 0);
+    f->glUniform1i(uniDepth, 1);
 }
 
 void screenQuad::render(QOpenGLFunctions_3_2_Core *f)

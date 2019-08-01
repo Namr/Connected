@@ -49,24 +49,32 @@ void GLWidget::initializeGL()
 
     // The texture we're going to render to
     f->glGenTextures(1, &renderedTexture);
-
     // "Bind" the newly created texture : all future texture functions will modify this texture
     f->glBindTexture(GL_TEXTURE_2D, renderedTexture);
-
     // Give an empty image to OpenGL ( the last "0" )
     f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-
     // Poor filtering. Needed !
     f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    //depth texture setup
+    /*
+    f->glGenTextures(1, &depthTexture);
+    f->glBindTexture(GL_TEXTURE_2D, depthTexture);
+    f->glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, WIDTH, HEIGHT, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
+    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    */
 
     // The depth buffer
     f->glGenRenderbuffers(1, &depthrenderbuffer);
     f->glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
     f->glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
     f->glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
+
     // Set "renderedTexture" as our colour attachement #0
     f->glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
+    //f->glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0);
 
     // Set the list of draw buffers.
     GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
@@ -76,12 +84,12 @@ void GLWidget::initializeGL()
     f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     primaryBrain = Brain(f, primaryNodeName, primaryEdgeName);
     secondaryBrain = Brain(f, secondaryNodeName, secondaryEdgeName);
-    fullscreenquad.init(f);
 
     primaryBrain.screen = this;
     secondaryBrain.screen = this;
 
 #ifdef LOOKINGGLASS
+    fullscreenquad.init(f);
     glm::quat brainRot = glm::quat(glm::vec3(-1.5708f, 1.5708f * 2, 0.0f));
     primaryBrain.position = primaryBrain.position * glm::mat4_cast(brainRot);
     //primaryBrain.position = glm::scale(primaryBrain.position, glm::vec3(0.1, 0.1, 0.1));
@@ -373,6 +381,8 @@ void GLWidget::paintGL()
 
         //render to full screen quad to do post processing effects
         f->glBindTexture(GL_TEXTURE_2D, renderedTexture);
+        f->glActiveTexture(GL_TEXTURE1);
+        f->glBindTexture(GL_TEXTURE_2D, depthTexture);
         fullscreenquad.render(f);
 
         f->glBindFramebuffer(GL_FRAMEBUFFER, this->defaultFramebufferObject());

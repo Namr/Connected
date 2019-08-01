@@ -16,7 +16,7 @@ class screenQuad
     GLuint loadShader(QOpenGLFunctions_3_2_Core *f, const char *filepath, GLenum type);
 
     unsigned int VAO, VBO;
-    GLint uniTexture;
+    GLint uniTexture, uniDepth;
     GLuint shaderProgram;
     float quadVertices[24] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
         // positions   // texCoords
