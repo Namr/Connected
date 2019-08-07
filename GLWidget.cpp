@@ -10,16 +10,21 @@
 GLWidget::GLWidget(QWidget *parent):
     QOpenGLWidget(parent)
 {
+    //this timer will ensure that painGL() is called at 60fps
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(10);
 }
 
+//called once on init
 void GLWidget::initializeGL()
 {
+    //grab window details from Qt
     WIDTH = this->width();
     HEIGHT = this->height();
 
+
+    //get OpenGL Functions, init them and bind them to varible f
     QOpenGLFunctions_3_2_Core *f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_2_Core>();
     if (!f) {
         QMessageBox messageBox;
@@ -29,6 +34,7 @@ void GLWidget::initializeGL()
 
     f->initializeOpenGLFunctions();
 
+    //if looking glass mode is on, setup the holoplay library
 #ifdef LOOKINGGLASS
     hp_loadLibrary();
     hp_initialize();
@@ -39,6 +45,9 @@ void GLWidget::initializeGL()
     HEIGHT = 1600;
 #endif
 
+    //////////////////////////////////////////////////////
+    /// OpenGL Settings init, including framebuffer setup
+    //////////////////////////////////////////////////////
     f->glEnable(GL_BLEND);
     f->glEnable(GL_DEPTH_TEST);
     f->glDepthFunc(GL_LESS);
@@ -47,24 +56,12 @@ void GLWidget::initializeGL()
     f->glGenFramebuffers(1, &screenFramebuffer);
     f->glBindFramebuffer(GL_FRAMEBUFFER, screenFramebuffer);
 
-    // The texture we're going to render to
+    // Init The texture we're going to render to
     f->glGenTextures(1, &renderedTexture);
-    // "Bind" the newly created texture : all future texture functions will modify this texture
     f->glBindTexture(GL_TEXTURE_2D, renderedTexture);
-    // Give an empty image to OpenGL ( the last "0" )
     f->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-    // Poor filtering. Needed !
     f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-    //depth texture setup
-    /*
-    f->glGenTextures(1, &depthTexture);
-    f->glBindTexture(GL_TEXTURE_2D, depthTexture);
-    f->glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, WIDTH, HEIGHT, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
-    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    f->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    */
 
     // The depth buffer
     f->glGenRenderbuffers(1, &depthrenderbuffer);
@@ -74,13 +71,12 @@ void GLWidget::initializeGL()
 
     // Set "renderedTexture" as our colour attachement #0
     f->glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
-    //f->glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthTexture, 0);
 
     // Set the list of draw buffers.
     GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
     f->glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
 
-    //set background color
+    //set background color, and init our two brain objects, give them a refrence to this object
     f->glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     primaryBrain = Brain(f, primaryNodeName, primaryEdgeName);
     secondaryBrain = Brain(f, secondaryNodeName, secondaryEdgeName);
@@ -88,7 +84,15 @@ void GLWidget::initializeGL()
     primaryBrain.screen = this;
     secondaryBrain.screen = this;
 
+
+    ////////////////////////////////////////////////////////
+    ///                 CAMERA INIT CODE               //////
+    /// Different for looking glass and desktop version//////
+    /////////////////////////////////////////////////////////
 #ifdef LOOKINGGLASS
+    //the full screen quad makes post-proccessing possible, is currently bugged
+    //to understand how this section of code works refer to the link below
+    // https://docs.lookingglassfactory.com/HoloPlayCAPI/guides/camera/
     fullscreenquad.init(f);
     glm::quat brainRot = glm::quat(glm::vec3(-1.5708f, 1.5708f * 2, 0.0f));
     primaryBrain.position = primaryBrain.position * glm::mat4_cast(brainRot);
@@ -128,6 +132,7 @@ void GLWidget::initializeGL()
     }
 #endif
 
+    //make a camera for each of the possible views, set up their position and angle
     cam = Camera(WIDTH, HEIGHT);;
     top = Camera(WIDTH / 2, HEIGHT / 2);
     side = Camera(WIDTH / 2, HEIGHT / 2);
@@ -157,12 +162,15 @@ void GLWidget::initializeGL()
 
     cam.position = front.position;
 
+    //start the timer
     frameTimer.start();
 }
 
+//called on window resize
 void GLWidget::resizeGL(int w, int h)
 {
 
+    //get back the found OpenGL functions and get the new window details (for looking glass the window will not change)
     QOpenGLFunctions_3_2_Core *f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_2_Core>();
     WIDTH = w;
     HEIGHT = h;
@@ -179,40 +187,47 @@ void GLWidget::resizeGL(int w, int h)
     f->glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
     f->glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
 
+    //reset cameras aspect ratios
     cam.Resize(WIDTH, HEIGHT);;
     top.Resize(WIDTH / 2, HEIGHT / 2);
     side.Resize(WIDTH / 2, HEIGHT / 2);
     front.Resize(WIDTH / 2, HEIGHT / 2);
 }
 
+//called every frame
 void GLWidget::paintGL()
 {
+    //regrab openGL functions
     QOpenGLFunctions_3_2_Core *f = QOpenGLContext::currentContext()->versionFunctions<QOpenGLFunctions_3_2_Core>();
-    // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 
+    //get mouse coords and the change in the coords
     float xpos = this->mapFromGlobal(QCursor::pos()).x();
     float ypos = this->mapFromGlobal(QCursor::pos()).y();
-
     float deltaX = lastXPos - xpos;
     float deltaY = lastYPos - ypos;
-
     lastXPos = xpos;
     lastYPos = ypos;
 
+    //ensure timer is still going, and get deltaTime (this makes it so changes in framerate won't
+    //affect how fast things move in the viewer
     float deltaTime = frameTimer.elapsed() / 1000.0f;
     frameTimer.restart();
 
+    //set the node text in the sidebar
     if (nodeName != nullptr)
     {
         nodeName->setText(primaryBrain.nodeNames[selectedNode].c_str());
     }
 
+    //make sure GL settings haven't changed
     f->glEnable(GL_BLEND);
     f->glEnable(GL_DEPTH_TEST);
     f->glDepthFunc(GL_LESS);
     f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    //update varibles
+    //////////////////////////////////////////////////////////////
+    /// UPDATE BRAIN VARIBLES TO MATCH THE ONES IN THE SETTINGS///
+    /////////////////////////////////////////////////////////////
     primaryBrain.colors = colors;
     secondaryBrain.colors = colors;
 
@@ -264,6 +279,9 @@ void GLWidget::paintGL()
     }
 
 
+    ///////////////////////////////////////////////////////////
+    /// UPDATE CAMERA POSITION AND ANGLE BASED ON USER INPUT//
+    /////////////////////////////////////////////////////////
     if (upKeyDown == 1)
     {
         pitch -= turnSpeed * deltaTime;
@@ -286,11 +304,12 @@ void GLWidget::paintGL()
         pitch += deltaY * deltaTime * mouseSensitivity;
     }
 
+    //camera position is on a sphere that centers around the brain model
     cam.position.x = 1.52f + (cos(yaw)  * sin(pitch) * 220);
     cam.position.y = -33.28f + (sin(yaw) * sin(pitch) * 220);
     cam.position.z = 6.23f * (cos(pitch) * 50);
 
-
+    //if we're in side by side view the aspect ratio changes and the camera has to reflect that
     if (viewingMode == 3)
         cam.proj = glm::perspective(glm::radians(45.0f), static_cast<float>(WIDTH / 2) / HEIGHT, 1.0f, 2000.0f);
     else
@@ -302,12 +321,16 @@ void GLWidget::paintGL()
         glm::vec3(0.0f, 0.0f, -1.0f)                    // up axis
     );
 
+    //prepare framebuffer for render
     f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, screenFramebuffer);
     f->glClearColor(colors[12].R / 255.0f, colors[12].G / 255.0f, colors[12].B / 255.0f, 1.0f);
     f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     f->glEnable(GL_FRAMEBUFFER_SRGB);
 
 #ifndef LOOKINGGLASS
+    //////////////////////////////////////////////////////////////////////////////
+    /// DEPENDING ON VIEW MODE RENDER THE BRAIN IN THE DIFFERENT CAMERA VIEWS////
+    ////////////////////////////////////////////////////////////////////////////
     if (viewingMode == 1)
     {
         f->glViewport(0, 0, WIDTH / 2, HEIGHT / 2);
@@ -335,6 +358,8 @@ void GLWidget::paintGL()
         f->glViewport(WIDTH / 2, 0, WIDTH / 2, HEIGHT);
         secondaryBrain.update(f, cam, xpos, ypos, selectedNode, rightMouseDown);
     }
+
+    //blit the framebuffer to the one bound to the Qt window
     f->glBindFramebuffer(GL_READ_FRAMEBUFFER, screenFramebuffer);
     f->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->defaultFramebufferObject());
     f->glBlitFramebuffer(0, HEIGHT, WIDTH, 0,
@@ -342,8 +367,9 @@ void GLWidget::paintGL()
         GL_COLOR_BUFFER_BIT, GL_NEAREST);
     f->glBindFramebuffer(GL_READ_FRAMEBUFFER, this->defaultFramebufferObject());
 
-    //do anything related to QPainter now
-    // Render text
+    //do any QPainter Qt based rendering here (text rendering)
+    //texts that should be rendered are put into a list that this reads, renders, and then clears
+    //for the next frame
     painter.begin(this);
     painter.setPen(QColor(colors[14].R, colors[14].G, colors[14].B, colors[14].A));
     painter.setFont(QFont("Times", *textSize, QFont::Bold));
@@ -404,6 +430,8 @@ void GLWidget::paintGL()
 #endif
 }
 
+//this function finds which quadrent the cursor is in, and based on that will flip the camera
+//to its alternate view
 void GLWidget::flipView()
 {
     float xpos = this->mapFromGlobal(QCursor::pos()).x();
@@ -476,6 +504,7 @@ void GLWidget::flipView()
     }
 }
 
+//helper function that will render text at a 3D point using Qts text renderer
 void GLWidget::renderText(glm::mat4 model, Camera cam, glm::vec4 viewport, const QString &str)
 {
     // Identify x and y locations to render text within widget

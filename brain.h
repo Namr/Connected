@@ -38,6 +38,9 @@ class Brain
     std::vector<std::vector<float>> appendedNodeData;
 
     float lerp(float a, float b, float f);
+    NColor rgb2hsv(NColor in);
+    NColor hsv2rgb(NColor in);
+    NColor clerp(NColor a, NColor b, float f);
     float map(float s, float a1, float a2, float b1, float b2);
 public:
     Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, QStringList connectionPath);
@@ -57,6 +60,10 @@ public:
     float textThreshold = 1.0f;
 
     NColor *colors;
+    NColor blue;
+    NColor red;
+    NColor white;
+    NColor black;
     float nodeSize = 1.5f;
     bool isScaling = false;
     float connectionSize = 0.3f;

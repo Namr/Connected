@@ -7,6 +7,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    //set the GL Specs needed, prevents startup crash
     QSurfaceFormat format;
     format.setDepthBufferSize(24);
     format.setStencilBufferSize(8);
@@ -17,6 +18,7 @@ int main(int argc, char *argv[])
     Connected w;
     w.show();
 #ifdef LOOKINGGLASS
+    //make looking glass version have no borders and be fullscreen
     w.windowHandle()->setScreen(qApp->screens()[1]);
     w.windowHandle()->setFlag(Qt::FramelessWindowHint);
     w.setAttribute(Qt::WA_NoSystemBackground, true);

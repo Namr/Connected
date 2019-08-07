@@ -5,15 +5,20 @@ Connected::Connected(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
+    //init settings objects
     KeyListener* key = new KeyListener(ui.screen);
     CSettings = new colorSettings();
     NSettings = new NetworkSettings();
     MSettings = new MriSettings();
 
+    //get keylistner to actually listen to all keypresses across the whole window
     ui.centralWidget->installEventFilter(key);
     connect(ui.axialSlider, SIGNAL(valueChanged(int)), this, SLOT(on_axialSlider_valuechanged(int)));
     connect(ui.coronalSlider, SIGNAL(valueChanged(int)), this, SLOT(on_coronalSlider_valuechanged(int)));
 
+    /////////////////////////////////////////////////////////////////////////////
+    // move all settings into the screen widget so it can pass it to the brain///
+    ////////////////////////////////////////////////////////////////////////////
     ui.screen->nodeName = ui.nodeName;
     ui.screen->colors = CSettings->colors;
 
@@ -32,6 +37,8 @@ Connected::Connected(QWidget *parent)
     ui.screen->coronal = &MSettings->coronal;
     ui.screen->axial = &MSettings->axial;
 
+
+    //DONT REMOVE! This prevents a strange crash on startup
     QTime dieTime = QTime::currentTime().addMSecs(100);
     while (QTime::currentTime() < dieTime)
     {
@@ -43,6 +50,10 @@ Connected::Connected(QWidget *parent)
 #endif
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+// all of the functions below do the same thing, they call the appropriate brain or screen functions///
+//                                     for menu items                                               ///
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 void Connected::on_actionLoad_Connectome_triggered()
 {
     QString nodeName = QFileDialog::getOpenFileName(this, "Select Node File");
@@ -180,6 +191,9 @@ void Connected::on_actionMRI_Settings_triggered()
     MSettings->show();
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+/// Use the QSettings feature of Qt to save all the settings in the objects declared above//
+////////////////////////////////////////////////////////////////////////////////////////////
 void Connected::on_actionSave_Settings_triggered()
 {
     QString settingsFile = QFileDialog::getSaveFileName(this, "Select Project File");

@@ -11,6 +11,18 @@ Brain::Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, QStringList con
 
     reloadBrain(nodePath, connectionPath);
 
+    blue.R = 0;
+    blue.G = 0;
+    blue.B = 255;
+    red.R = 255;
+    red.G = 0;
+    red.B = 0;
+    white.R = 255;
+    white.G = 255;
+    white.B = 255;
+    black.R = 1;
+    black.G = 1;
+    black.B = 1;
     position = glm::mat4(1.0f);
 
     mri = MRI(f);
@@ -294,7 +306,8 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
 
                 if(connectionStrengthColor)
                 {
-                    connector.render(f, camera, connection, 0.0, 1 - connection, 0.8f);
+                    NColor cColor = clerp(blue, red, connection);
+                    connector.render(f, camera, cColor.R / 255.0f, cColor.B / 255.0f, cColor.G / 255.0f, 0.8f);
                 }
                 else
                 {
@@ -320,11 +333,14 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
                 0, 0, 1, 0,
                 0, 0, -1, 1);
 
+            NColor signalColor;
             //color change depending on negative/positive values
             if(signalSize >= 0)
-                connector.render(f, camera, 1.0f - abs(signalSize * 2), 1.0f - abs(signalSize * 2), 1.0f, 1.0f);
+                signalColor = clerp(white, red, signalSize);
             else
-                connector.render(f, camera, 1.0f, 1.0f - abs(signalSize * 2), 1.0f - abs(signalSize * 2), 1.0f);
+                signalColor = clerp(white, blue, -signalSize);
+
+            connector.render(f, camera, signalColor.R / 255.0f, signalColor.G / 255.0f, signalColor.B / 255.0f, 1.0f);
         }
         if (hit)
         {
@@ -376,6 +392,114 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
           nextFrameTime = currentTime + (*milisecondsPerFrame / 10);
         }
     }
+}
+
+NColor Brain::rgb2hsv(NColor in)
+{
+    NColor out;
+    float r = in.R / 255.0f;
+    float g = in.G / 255.0f;
+    float b = in.B / 255.0f;
+
+    float Cmax = std::max(r, std::max(g, b));
+    float Cmin = std::min(r, std::min(g, b));
+
+    float delta = Cmax - Cmin;
+
+    if(delta == 0.0f)
+    {
+        out.R = 0;
+    }
+    else if(Cmax == r)
+    {
+        out.R = 60 * (static_cast<int>((g - b)/delta) % 6);
+    }
+    else if (Cmax == g)
+    {
+        out.R = 60 * (static_cast<int>((b - r)/delta) + 2);
+    }
+    else if(Cmax == b)
+    {
+        out.R = 60 * (static_cast<int>((r - g)/delta) + 4);
+    }
+
+    if(Cmax == 0.0f)
+        out.G = 0;
+    else
+        out.G = static_cast<int>((delta/Cmax) * 255);
+
+    out.B = static_cast<int>(Cmax * 255);
+
+    return out;
+}
+
+NColor Brain::hsv2rgb(NColor in)
+{
+    NColor out;
+    int H = in.R;
+    float S = in.G / 255.0f;
+    float V = in.B / 255.0f;
+
+    float R,G,B;
+    float C = V * S;
+    float X = C * (1 - std::abs(static_cast<int>(H / 60) % 2 - 1));
+    float m = V - C;
+
+    if(0 <= H && H < 60)
+    {
+        R = C;
+        G = X;
+        B = 0;
+    }
+    if(60 <= H && H < 120)
+    {
+        R = X;
+        G = C;
+        B = 0;
+    }
+    if(120 <= H && H < 180)
+    {
+        R = 0;
+        G = C;
+        B = X;
+    }
+    if(180 <= H && H < 240)
+    {
+        R = 0;
+        G = X;
+        B = C;
+    }
+    if(240 <= H && H < 300)
+    {
+        R = X;
+        G = 0;
+        B = C;
+    }
+    if(300 <= H && H < 360)
+    {
+        R = C;
+        G = 0;
+        B = X;
+    }
+
+    out.R = static_cast<int>((R + m) * 255);
+    out.G = static_cast<int>((G + m) * 255);
+    out.B = static_cast<int>((B + m) * 255);
+    return out;
+}
+
+NColor Brain::clerp(NColor a, NColor b, float f)
+{
+    NColor out;
+    NColor ha = rgb2hsv(a);
+    NColor hb = rgb2hsv(b);
+
+    out.R = lerp(ha.R, hb.R, f);
+    out.G = lerp(ha.G, hb.G, f);
+    out.B = lerp(ha.B, hb.B, f);
+
+
+    return hsv2rgb(out);
 }
 
 float Brain::lerp(float a, float b, float f)
