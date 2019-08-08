@@ -11,6 +11,7 @@ Brain::Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, QStringList con
 
     reloadBrain(nodePath, connectionPath);
 
+    //color intitation for interpolation later on
     blue.R = 0;
     blue.G = 0;
     blue.B = 255;
@@ -25,6 +26,7 @@ Brain::Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, QStringList con
     black.B = 1;
     position = glm::mat4(1.0f);
 
+    //init all the models for each part of the brain model, these will be rendered many times over to create the brain
     mri = MRI(f);
     sphere = Model();
     mesh = Model();
@@ -34,8 +36,10 @@ Brain::Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, QStringList con
     connector.loadFromObj(f, "assets/connector.obj", 0);
 }
 
+//get new braindata from node and connection files
 void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
 {
+    //delete any previous brain data we had
     nodePositions.clear();
     nodeNames.clear();
     nodeColors.clear();
@@ -43,6 +47,9 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
     connections.clear();
     currentFrame = 0;
 
+    ///////////////////////////
+    ////    LOAD .NODE FILE //
+    /////////////////////////
     std::ifstream nodeFile;
     nodeFile.open(nodePath);
     std::string line;
@@ -86,6 +93,10 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
         messageBox.setFixedSize(500, 200);
     }
 
+    ////////////////////////////////
+    ////   LOAD CONNECTION FILE //
+    //////////////////////////////
+    ///
     //iterate over all selected connection files, we pop the front one every loop, so go until its empty
     while(!connectionPaths.isEmpty())
     {
@@ -140,6 +151,9 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
             }
             else
             {
+                //if there is only one datapoint per line, read the file line by line
+                //but every n lines start writing into the next nodes connections, since it is
+                //just a flattened matrix
                 for (unsigned int n = 0; n < nodePositions.size(); n++)
                 {
                     std::vector<float> nodesConnections;
@@ -163,6 +177,7 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
     }
 }
 
+//this function loads graph signal data, which just exists as a nx2 matrix of time and signal on node
 void Brain::loadAppendedNodeData(std::string filepath)
 {
     appendedNodeData.clear();
@@ -227,6 +242,7 @@ void Brain::loadAppendedNodeData(std::string filepath)
     }
 }
 
+//setter function for the brains overall position
 void Brain::setPosition(glm::vec3 pos)
 {
     position = glm::mat4(1.0f);
@@ -235,6 +251,7 @@ void Brain::setPosition(glm::vec3 pos)
     updatePosition();
 }
 
+//helper function that just updates the component meshes position to match the brains overall position
 void Brain::updatePosition()
 {
     sphere.parentPosition = position;
@@ -242,22 +259,30 @@ void Brain::updatePosition()
     connector.parentPosition = position;
 }
 
+//called every frame to update and render the brain
 void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, float ypos, int &selectedNode, int mouseDown)
 {
     GLint viewportraw[4];
     f->glGetIntegerv(GL_VIEWPORT, viewportraw);
 
     glm::vec4 viewport = glm::vec4(viewportraw[0], viewportraw[1], viewportraw[2], viewportraw[3]);
+
+    /////////////////////////////////////////
+    // loop through nodes and render them ///
+    /////////////////////////////////////////
     int node = 0;
     for (glm::mat4 pos : nodePositions)
     {
-        //move sphere to position and then render it
+        //move sphere to the position in the node file
         sphere.model = pos;
+        //check and apply scaling based on file values
         if(isScaling)
             sphere.model = glm::scale(sphere.model, glm::vec3(nodeSize * nodeSizes[node], nodeSize * nodeSizes[node], nodeSize * nodeSizes[node]));
         else
             sphere.model = glm::scale(sphere.model, glm::vec3(nodeSize, nodeSize, nodeSize));
 
+
+        //convert mouse position to a 3D ray and check if this node has been hit
         glm::vec3 v0 = glm::unProject(glm::vec3(xpos, ypos, 0.0f), camera.view, camera.proj, viewport);
         glm::vec3 v1 = glm::unProject(glm::vec3(xpos, ypos, 1.0f), camera.view, camera.proj, viewport);
         glm::vec3 dir = glm::normalize((v1 - v0));
@@ -270,7 +295,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
         else
             hit = glm::intersectRaySphere(camera.altPosition, dir, glm::vec3(sphere.model[3]), 2.25f, hitPos, hitNorm);
 
-        //for each node that this node is connected to, draw a connection
+        //for each node that this node is connected to (for this frame), draw a connection
         int connectedNode = 0;
         bool shouldRenderText = false;
 
@@ -304,6 +329,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
                     0, 0, 1, 0,
                     0, 0, -1, 1);
 
+                //change color based on settings file
                 if(connectionStrengthColor)
                 {
                     NColor cColor = clerp(blue, red, connection);
@@ -342,6 +368,8 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
 
             connector.render(f, camera, signalColor.R / 255.0f, signalColor.G / 255.0f, signalColor.B / 255.0f, 1.0f);
         }
+
+        // depending on if the node has been hit, or if heatmap rendering is enabled, change the sphere color on render
         if (hit)
         {
             sphere.render(f, camera, 1, 0.0, 0, 1);
@@ -379,6 +407,8 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
         mesh.render(f, camera, colors[13].R / 255.0f, colors[13].G / 255.0f, colors[13].B / 255.0f, colors[13].A / 255.0f);
         f->glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
+
+    //advance the currentFrame to continue the animation
     if(hasTime)
     {
         quint64 currentTime = QDateTime::currentMSecsSinceEpoch();
