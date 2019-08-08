@@ -1,5 +1,6 @@
 #include "nifti.h"
 
+//right now this loads in a tiff file and not a nifti file, needs to either be renamed or redone
 NIFTI::NIFTI() {}
 NIFTI::NIFTI(QOpenGLFunctions_3_2_Core *f, std::string filename)
 {
