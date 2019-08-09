@@ -1,7 +1,7 @@
 # Connected
 A modern, fast, and feature-rich human brain connectome viewer
 
-![Connected Brain Viewer](https://github.com/Namr/Connected/tree/master/shaders/connected.png)
+![Connected Brain Viewer](/shaders/connected.png)
 
 ## Features
 * Fast and flexible ball-and-stick render of connectome data
