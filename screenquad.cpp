@@ -74,7 +74,6 @@ void screenQuad::init(QOpenGLFunctions_3_2_Core *f)
     uniDepth = f->glGetUniformLocation(shaderProgram, "depthMap");
 
     f->glUniform1i(uniTexture, 0);
-    f->glUniform1i(uniDepth, 1);
 }
 
 void screenQuad::render(QOpenGLFunctions_3_2_Core *f)

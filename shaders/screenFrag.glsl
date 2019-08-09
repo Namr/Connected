@@ -35,10 +35,6 @@ void main()
     for(int i = 0; i < 9; i++)
         col += sampleTex[i] * kernel[i];
     
-    outColor = vec4(col, 1.0);
+	vec3 color = vec3(texture(screenTexture, TexCoords.st));
+    outColor = vec4(color, 1.0);
 } 
-
-void uniformDistribution()
-{
-
-}

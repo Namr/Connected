@@ -407,8 +407,6 @@ void GLWidget::paintGL()
 
         //render to full screen quad to do post processing effects
         f->glBindTexture(GL_TEXTURE_2D, renderedTexture);
-        f->glActiveTexture(GL_TEXTURE1);
-        f->glBindTexture(GL_TEXTURE_2D, depthTexture);
         fullscreenquad.render(f);
 
         f->glBindFramebuffer(GL_FRAMEBUFFER, this->defaultFramebufferObject());
