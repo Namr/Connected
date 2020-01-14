@@ -332,7 +332,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
                 //change color based on settings file
                 if(connectionStrengthColor)
                 {
-                    NColor cColor = clerp(blue, red, connection);
+                    NColor cColor = clerp(blue, red, (connection - threshold) / (1.0 - threshold));
                     connector.render(f, camera, cColor.R / 255.0f, cColor.B / 255.0f, cColor.G / 255.0f, 0.8f);
                 }
                 else
