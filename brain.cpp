@@ -208,17 +208,15 @@ void Brain::loadAppendedNodeData(std::string filepath)
         }
         nodeFile.close();
 
+
         //normalize data, first find min and max values
-        float largestValue = -100000;
-        float smallestValue = 100000;
+        float largestValue = 0;
         for(unsigned int i = 0; i < appendedNodeData.size(); i++)
         {
             for(unsigned int w = 0; w < appendedNodeData[0].size(); w++)
             {
-                if(appendedNodeData[i][w] > largestValue)
+                if(abs(appendedNodeData[i][w]) > largestValue)
                     largestValue = appendedNodeData[i][w];
-                else if(appendedNodeData[i][w] < smallestValue)
-                    smallestValue = appendedNodeData[i][w];
             }
         }
         //now interpolate linearly between these two min and max values
@@ -226,7 +224,7 @@ void Brain::loadAppendedNodeData(std::string filepath)
         {
             for(unsigned int w = 0; w < appendedNodeData[0].size(); w++)
             {
-                appendedNodeData[i][w] = map(appendedNodeData[i][w], smallestValue, largestValue, -1.0, 1.0);
+                appendedNodeData[i][w] /= largestValue;
             }
         }
 
@@ -351,7 +349,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
             connector.model = glm::translate(connector.model, glm::vec3(sphere.model[3]));
             glm::quat rot = glm::quat(glm::vec3(1.5708f, 0.0f, 1.5708f));
             connector.model = connector.model * glm::mat4_cast(rot);
-            connector.model = glm::scale(connector.model, glm::vec3(0.7f, -signalSize * graphSignalSize, 0.7));
+            connector.model = glm::scale(connector.model, glm::vec3(0.7f, signalSize * graphSignalSize, 0.7));
 
             //this line ensures the scale occurs from the BASE of the model
             connector.model *= glm::mat4(1, 0, 0, 0,
@@ -361,10 +359,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
 
             NColor signalColor;
             //color change depending on negative/positive values
-            if(signalSize >= 0)
-                signalColor = clerp(white, red, signalSize);
-            else
-                signalColor = clerp(white, blue, -signalSize);
+            signalColor = clerp(blue, red, (signalSize + 1.0) / 2.0);
 
             connector.render(f, camera, signalColor.R / 255.0f, signalColor.G / 255.0f, signalColor.B / 255.0f, 1.0f);
         }
@@ -380,11 +375,9 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
             if(hasAppendedData && displayHeatMap)
             {
                 //linear interpolation between the current singal size and the next frames size
-                float signalSize = lerp(appendedNodeData[node][floor(currentFrame)], appendedNodeData[node][ceil(currentFrame)], currentFrame - floor(currentFrame)) ;
-                if(signalSize >= 0)
-                    sphere.render(f, camera, 1.0f - abs(signalSize * 2), 1.0f - abs(signalSize * 2), 1.0f, 1.0f);
-                else
-                    sphere.render(f, camera, 1.0f, 1.0f - abs(signalSize * 2), 1.0f - abs(signalSize * 2), 1.0f);
+                float signalSize = lerp(appendedNodeData[node][floor(currentFrame)], appendedNodeData[node][ceil(currentFrame)], currentFrame - floor(currentFrame));
+                NColor signalColor = clerp(blue, red, (signalSize + 1.0f) / 2.0f);
+                sphere.render(f, camera, signalColor.R / 255.0f, signalColor.G / 255.0f, signalColor.B / 255.0f, 1.0f);
             }
             else
                 sphere.render(f, camera, colors[nodeColors[node]].R / 255.0f, colors[nodeColors[node]].G / 255.0f, colors[nodeColors[node]].B / 255.0f, colors[nodeColors[node]].A / 255.0f);
@@ -426,95 +419,105 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
 
 NColor Brain::rgb2hsv(NColor in)
 {
+    float fR = in.R / 255.0f;
+    float fG = in.G / 255.0f;
+    float fB = in.B / 255.0f;
+
+    float fCMax = fmax(fmax(fR, fG), fB);
+    float fCMin = fmin(fmin(fR, fG), fB);
+    float fDelta = fCMax - fCMin;
+
+    float fH = 0;
+    float fS = 0;
+    float fV = 0;
+
+    if(fDelta > 0) {
+      if(fCMax == fR) {
+        fH = 60 * (fmod(((fG - fB) / fDelta), 6));
+      } else if(fCMax == fG) {
+        fH = 60 * (((fB - fR) / fDelta) + 2);
+      } else if(fCMax == fB) {
+        fH = 60 * (((fR - fG) / fDelta) + 4);
+      }
+
+      if(fCMax > 0) {
+        fS = fDelta / fCMax;
+      } else {
+        fS = 0;
+      }
+
+      fV = fCMax;
+    } else {
+      fH = 0;
+      fS = 0;
+      fV = fCMax;
+    }
+
+    if(fH < 0) {
+      fH = 360 + fH;
+    }
+
     NColor out;
-    float r = in.R / 255.0f;
-    float g = in.G / 255.0f;
-    float b = in.B / 255.0f;
-
-    float Cmax = std::max(r, std::max(g, b));
-    float Cmin = std::min(r, std::min(g, b));
-
-    float delta = Cmax - Cmin;
-
-    if(delta == 0.0f)
-    {
-        out.R = 0;
-    }
-    else if(Cmax == r)
-    {
-        out.R = 60 * (static_cast<int>((g - b)/delta) % 6);
-    }
-    else if (Cmax == g)
-    {
-        out.R = 60 * (static_cast<int>((b - r)/delta) + 2);
-    }
-    else if(Cmax == b)
-    {
-        out.R = 60 * (static_cast<int>((r - g)/delta) + 4);
-    }
-
-    if(Cmax == 0.0f)
-        out.G = 0;
-    else
-        out.G = static_cast<int>((delta/Cmax) * 255);
-
-    out.B = static_cast<int>(Cmax * 255);
-
+    out.R = fH;
+    out.G = fS * 255.0f;
+    out.B = fV * 255.0f;
     return out;
 }
 
 NColor Brain::hsv2rgb(NColor in)
 {
+    float fH = in.R;
+    float fS = in.G / 255.0f;
+    float fV = in.B / 255.0f;
+
+    float fR = 0;
+    float fG = 0;
+    float fB = 0;
+
+    float fC = fV * fS; // Chroma
+    float fHPrime = fmod(fH / 60.0, 6);
+    float fX = fC * (1 - fabs(fmod(fHPrime, 2) - 1));
+    float fM = fV - fC;
+
+    if(0 <= fHPrime && fHPrime < 1) {
+      fR = fC;
+      fG = fX;
+      fB = 0;
+    } else if(1 <= fHPrime && fHPrime < 2) {
+      fR = fX;
+      fG = fC;
+      fB = 0;
+    } else if(2 <= fHPrime && fHPrime < 3) {
+      fR = 0;
+      fG = fC;
+      fB = fX;
+    } else if(3 <= fHPrime && fHPrime < 4) {
+      fR = 0;
+      fG = fX;
+      fB = fC;
+    } else if(4 <= fHPrime && fHPrime < 5) {
+      fR = fX;
+      fG = 0;
+      fB = fC;
+    } else if(5 <= fHPrime && fHPrime < 6) {
+      fR = fC;
+      fG = 0;
+      fB = fX;
+    } else {
+      fR = 0;
+      fG = 0;
+      fB = 0;
+    }
+
+    fR += fM;
+    fG += fM;
+    fB += fM;
+
     NColor out;
-    int H = in.R;
-    float S = in.G / 255.0f;
-    float V = in.B / 255.0f;
+    out.R = fR * 255.0f;
+    out.G = fG * 255.0f;
+    out.B = fB * 255.0f;
 
-    float R,G,B;
-    float C = V * S;
-    float X = C * (1 - std::abs(static_cast<int>(H / 60) % 2 - 1));
-    float m = V - C;
-
-    if(0 <= H && H < 60)
-    {
-        R = C;
-        G = X;
-        B = 0;
-    }
-    if(60 <= H && H < 120)
-    {
-        R = X;
-        G = C;
-        B = 0;
-    }
-    if(120 <= H && H < 180)
-    {
-        R = 0;
-        G = C;
-        B = X;
-    }
-    if(180 <= H && H < 240)
-    {
-        R = 0;
-        G = X;
-        B = C;
-    }
-    if(240 <= H && H < 300)
-    {
-        R = X;
-        G = 0;
-        B = C;
-    }
-    if(300 <= H && H < 360)
-    {
-        R = C;
-        G = 0;
-        B = X;
-    }
-
-    out.R = static_cast<int>((R + m) * 255);
-    out.G = static_cast<int>((G + m) * 255);
-    out.B = static_cast<int>((B + m) * 255);
     return out;
 }
 
