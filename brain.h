@@ -19,6 +19,7 @@
 #include <glm/gtx/intersect.hpp>
 
 #include "model.h"
+#include "brainmodel.h"
 #include "camera.h"
 #include "mri.h"
 #include "colorsettings.h"
@@ -51,7 +52,7 @@ public:
     void updatePosition();
     void loadAppendedNodeData(std::string filepath);
 
-    Model mesh;
+    BrainModel mesh;
     glm::mat4 position;
 
     GLWidget *screen;

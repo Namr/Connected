@@ -266,15 +266,25 @@ void GLWidget::paintGL()
     if (primaryShouldReload == 1)
     {
         primaryBrain.reloadBrain(primaryNodeName, primaryEdgeName);
-        primaryBrain.mesh = Model();
-        primaryBrain.mesh.loadFromNV(f, primaryMeshName);
+        primaryBrain.mesh = BrainModel();
+        if(primaryMeshName.substr(primaryMeshName.find_last_of(".") + 1) == "nv")
+            primaryBrain.mesh.loadFromNV(f, primaryMeshName);
+        else if(primaryMeshName.substr(primaryMeshName.find_last_of(".") + 1) == "vtk")
+            primaryBrain.mesh.loadFromVTK(f, primaryMeshName, "assets/Atlas_Left_Destrieux.txt", "assets/LookUpTable_Destrieux.txt");
+        else
+            primaryBrain.mesh.loadFromObj(f, primaryMeshName, false);
         primaryShouldReload = 0;
     }
     else if (secondaryShouldReload == 1)
     {
         secondaryBrain.reloadBrain(secondaryNodeName, secondaryEdgeName);
-        secondaryBrain.mesh = Model();
-        secondaryBrain.mesh.loadFromNV(f, secondaryMeshName);
+        secondaryBrain.mesh = BrainModel();
+        if(secondaryMeshName.substr(secondaryMeshName.find_last_of(".") + 1) == "nv")
+            secondaryBrain.mesh.loadFromNV(f, secondaryMeshName);
+        else if(secondaryMeshName.substr(secondaryMeshName.find_last_of(".") + 1) == "vtk")
+            secondaryBrain.mesh.loadFromVTK(f, secondaryMeshName, "assets/Atlas_Left_Destrieux.txt", "assets/LookUpTable_Destrieux.txt");
+        else
+            secondaryBrain.mesh.loadFromObj(f, primaryMeshName, false);
         secondaryShouldReload = 0;
     }
 

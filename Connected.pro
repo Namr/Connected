@@ -36,6 +36,7 @@ SOURCES += \
     colorsettings.cpp \
     networksettings.cpp \
     mrisettings.cpp \
+    brainmodel.cpp \
     screenquad.cpp
 
 HEADERS += \
@@ -52,6 +53,7 @@ HEADERS += \
     networksettings.h \
     mrisettings.h \
     screenquad.h
+    brainmodel.h \
 
 FORMS += \
         connected.ui \
@@ -67,9 +69,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 unix:!macx: LIBS += -ltiff -lGL
 
 win32:INCLUDEPATH += "C:/Program Files (x86)/glm/include/" \
-                     "C:/Program Files/boost/boost_1_67_0/" \
-                     "C:/Program Files (x86)/tiff/include/" \
-                     "C:/Program Files (x86)/HoloPlayAPI/include/"
+                     "C:/Program Files (x86)/boost_1_67_0/" \
+                     "C:/Program Files (x86)/tiff/" #\
+                     #"C:/Program Files (x86)/HoloPlayAPI/include/"
 
-win32: LIBS += "-LC:/Program Files (x86)/tiff/lib/" -ltiff \
-               "-LC:/Program Files (x86)/HoloPlayAPI/lib/win32" -lHoloPlayAPI
+win32: LIBS += "-LC:/Program Files (x86)/tiff/" -llibtiff #\
+               #"-LC:/Program Files (x86)/HoloPlayAPI/lib/win32" -lHoloPlayAPI

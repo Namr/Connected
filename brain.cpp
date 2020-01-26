@@ -29,7 +29,7 @@ Brain::Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, QStringList con
     //init all the models for each part of the brain model, these will be rendered many times over to create the brain
     mri = MRI(f);
     sphere = Model();
-    mesh = Model();
+    mesh = BrainModel();
     connector = Model();
     sphere.loadFromObj(f, "assets/sphere.obj", 0);
     mesh.loadFromNV(f, "assets/BrainMesh_ICBM152_smoothed.nv");
