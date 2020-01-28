@@ -36,12 +36,8 @@ class Brain
     std::vector<float> nodeSizes;
     std::vector<std::vector<std::vector<float>>> connections;
 
-    std::vector<std::vector<float>> appendedNodeData;
-
-    float lerp(float a, float b, float f);
     NColor rgb2hsv(NColor in);
     NColor hsv2rgb(NColor in);
-    NColor clerp(NColor a, NColor b, float f);
     float map(float s, float a1, float a2, float b1, float b2);
 public:
     Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, QStringList connectionPath);
@@ -65,6 +61,8 @@ public:
     NColor red;
     NColor white;
     NColor black;
+    float lerp(float a, float b, float f);
+    NColor clerp(NColor a, NColor b, float f);
     float nodeSize = 1.5f;
     bool isScaling = false;
     float connectionSize = 0.3f;
@@ -78,8 +76,11 @@ public:
     bool displayHeatMap = false;
     bool connectionStrengthColor = true;
     bool hasTime = false;
-    float currentFrame = 0.0f;
     int numFrames = 0;
+
+    std::vector<std::vector<float>> appendedNodeData;
+    float currentFrame = 0.0f;
+
     int *milisecondsPerFrame;
     quint64 nextFrameTime = 0;
 };

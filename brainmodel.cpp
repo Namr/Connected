@@ -1,5 +1,5 @@
 #include "brainmodel.h"
-
+#include "brain.h"
 
 BrainModel::BrainModel()
 {
@@ -120,9 +120,19 @@ void BrainModel::loadFromVTK(QOpenGLFunctions_3_2_Core *f, std::string VTKpath, 
     lookupTableFile.open(lookupTablePath);
     std::string line;
 
+    isColored = true;
     //iterate over each line in the node file if it is found, store it in line, and operate on it
     if (modelFile.is_open() && IDFile.is_open() && lookupTableFile.is_open())
     {
+
+        while(getline(lookupTableFile, line))
+        {
+            std::vector<std::string> tokenized;
+            boost::split(tokenized, line, [](char c) { return c == ' ' || c == '	'; });
+            int index = std::distance(brain->nodeNames.begin(), std::find(brain->nodeNames.begin(), brain->nodeNames.end(), tokenized[2]));
+
+            idLookUp.insert(std::make_pair(stoi(tokenized[0]), index));
+        }
         getline(modelFile, line);
         //go down lines until you find the one that specifies the number of points
         while(line.find("POINTS") == std::string::npos)
@@ -137,6 +147,8 @@ void BrainModel::loadFromVTK(QOpenGLFunctions_3_2_Core *f, std::string VTKpath, 
         for(int i = 0; i < numPoints / 3; i++)
         {
             std::vector<std::string> tokenized;
+
+
             boost::split(tokenized, line, [](char c) { return c == ' ' || c == '	'; });
             vertices.push_back(std::stof(tokenized[0]));
             vertices.push_back(std::stof(tokenized[1]));
@@ -145,6 +157,12 @@ void BrainModel::loadFromVTK(QOpenGLFunctions_3_2_Core *f, std::string VTKpath, 
             vertices.push_back(0.0f);
             vertices.push_back(0.0f);
 
+            getline(IDFile, line);
+            line.erase(remove_if(line.begin(), line.end(), isspace), line.end());
+            vertices.push_back(idLookUp[(int)stof(line)]);
+
+
+
             vertices.push_back(std::stof(tokenized[3]));
             vertices.push_back(std::stof(tokenized[4]));
             vertices.push_back(std::stof(tokenized[5]));
@@ -152,12 +170,24 @@ void BrainModel::loadFromVTK(QOpenGLFunctions_3_2_Core *f, std::string VTKpath, 
             vertices.push_back(0.0f);
             vertices.push_back(0.0f);
 
+            getline(IDFile, line);
+            line.erase(remove_if(line.begin(), line.end(), isspace), line.end());
+            vertices.push_back(idLookUp[(int)stof(line)]);
+
+
+
             vertices.push_back(std::stof(tokenized[6]));
             vertices.push_back(std::stof(tokenized[7]));
             vertices.push_back(std::stof(tokenized[8]));
             //add blank texCoords
             vertices.push_back(0.0f);
             vertices.push_back(0.0f);
+
+            getline(IDFile, line);
+            line.erase(remove_if(line.begin(), line.end(), isspace), line.end());
+            vertices.push_back(idLookUp[(int)stof(line)]);
+
+
             getline(modelFile, line);
         }
         //skip over comment line
@@ -269,7 +299,7 @@ void BrainModel::GLInit(QOpenGLFunctions_3_2_Core *f)
 
     GLuint idAttrib = GLCheckError(f->glGetAttribLocation(shaderProgram, "id"))
     f->glEnableVertexAttribArray(idAttrib);
-    f->glVertexAttribPointer(idAttrib, 1, GL_INT, GL_FALSE, 6 * sizeof(float), (void*)(1 * sizeof(float)));
+    f->glVertexAttribPointer(idAttrib, 1, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(5 * sizeof(float)));
 
 
     uniColor = f->glGetUniformLocation(shaderProgram, "objColor");
@@ -281,7 +311,10 @@ void BrainModel::GLInit(QOpenGLFunctions_3_2_Core *f)
     uniTexture = f->glGetUniformLocation(shaderProgram, "textureArray");
     uniLayer = f->glGetUniformLocation(shaderProgram, "layer");
     uniMRIView = f->glGetUniformLocation(shaderProgram, "MRIView");
+    uniIsColor = f->glGetUniformLocation(shaderProgram, "isColored");
+    uniNodeColors = f->glGetUniformLocation(shaderProgram, "nodeColors");
 
+    f->glUniform1i(uniIsColor, isColored);
     f->glUniform4f(uniColor, 1.0f, 0.0f, 0.0f, 1.0f);
     f->glUniform1i(uniIsTexOn, 0);
     f->glUniform1i(uniView, view);
@@ -298,6 +331,17 @@ void BrainModel::render(QOpenGLFunctions_3_2_Core *f, Camera &camera)
     f->glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(camera.view));
     f->glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(camera.proj));
     f->glUniformMatrix4fv(uniParent, 1, GL_FALSE, glm::value_ptr(parentPosition));
+
+    if(isColored)
+    {
+        std::vector<glm::vec3> signalColors;
+        for(int i = 0; i < brain->appendedNodeData[0].size(); i++)
+        {
+            signalColors.push_back(glm::vec3(brain->appendedNodeData[(int) brain->currentFrame][i], 0.0f, 0.0f));
+        }
+        f->glUniform3fv(uniNodeColors, signalColors.size(), glm::value_ptr(signalColors.data()[0]));
+    }
+
     f->glUniform1f(uniLayer, layer);
     f->glUniform1i(uniMRIView, view);
 
@@ -316,6 +360,21 @@ void BrainModel::render(QOpenGLFunctions_3_2_Core *f, Camera &camera, float r, f
     f->glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(camera.view));
     f->glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(camera.proj));
     f->glUniformMatrix4fv(uniParent, 1, GL_FALSE, glm::value_ptr(parentPosition));
+
+    if(isColored)
+    {
+        std::vector<glm::vec3> signalColors;
+        for(int i = 0; i < brain->appendedNodeData.size(); i++)
+        {
+            float signalSize = brain->lerp(brain->appendedNodeData[i][floor(brain->currentFrame)], brain->appendedNodeData[i][ceil(brain->currentFrame)], brain->currentFrame - floor(brain->currentFrame));
+            NColor signalColor = brain->clerp(brain->blue, brain->red, signalSize);
+            signalColors.push_back(glm::vec3(signalColor.R / 255.0f, signalColor.G / 255.0f, signalColor.B / 255.0f));
+        }
+        signalColors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+        signalColors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+        signalColors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+        f->glUniform3fv(uniNodeColors, 150, glm::value_ptr(signalColors[0]));
+    }
 
     f->glUniform4f(uniColor, r, g, b, a);
 

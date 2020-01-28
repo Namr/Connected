@@ -267,6 +267,7 @@ void GLWidget::paintGL()
     {
         primaryBrain.reloadBrain(primaryNodeName, primaryEdgeName);
         primaryBrain.mesh = BrainModel();
+        primaryBrain.mesh.brain = &primaryBrain;
         if(primaryMeshName.substr(primaryMeshName.find_last_of(".") + 1) == "nv")
             primaryBrain.mesh.loadFromNV(f, primaryMeshName);
         else if(primaryMeshName.substr(primaryMeshName.find_last_of(".") + 1) == "vtk")
@@ -279,6 +280,7 @@ void GLWidget::paintGL()
     {
         secondaryBrain.reloadBrain(secondaryNodeName, secondaryEdgeName);
         secondaryBrain.mesh = BrainModel();
+        secondaryBrain.mesh.brain = &secondaryBrain;
         if(secondaryMeshName.substr(secondaryMeshName.find_last_of(".") + 1) == "nv")
             secondaryBrain.mesh.loadFromNV(f, secondaryMeshName);
         else if(secondaryMeshName.substr(secondaryMeshName.find_last_of(".") + 1) == "vtk")

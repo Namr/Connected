@@ -30,6 +30,7 @@ Brain::Brain(QOpenGLFunctions_3_2_Core *f, std::string nodePath, QStringList con
     mri = MRI(f);
     sphere = Model();
     mesh = BrainModel();
+    mesh.brain = this;
     connector = Model();
     sphere.loadFromObj(f, "assets/sphere.obj", 0);
     mesh.loadFromNV(f, "assets/BrainMesh_ICBM152_smoothed.nv");
@@ -55,7 +56,9 @@ void Brain::reloadBrain(std::string nodePath, QStringList connectionPaths)
     std::string line;
 
     //make sure numFrames is at the local minimum number it can be
-    numFrames = (numFrames > connectionPaths.size() || !hasTime) ? connectionPaths.size() : numFrames;
+    if(!hasAppendedData)
+        numFrames = (numFrames > connectionPaths.size() || !hasTime) ? connectionPaths.size() : numFrames;
+
     hasTime = numFrames > 1 ? true : false;
 
     //iterate over each line in the node file if it is found, store it in line, and operate on it

@@ -19,8 +19,10 @@
 #include <boost/algorithm/string.hpp>
 
 #include "camera.h"
-
 #include "tiny_obj_loader.h"
+
+class Brain;
+
 class BrainModel
 {
     GLuint loadShader(QOpenGLFunctions_3_2_Core *f, const char *filepath, GLenum type);
@@ -29,12 +31,11 @@ class BrainModel
     unsigned int VAO, VBO, EBO;
     GLuint shaderProgram;
     GLint uniTrans, uniView, uniProj, uniColor, uniParent;
-    GLint uniIsTexOn, uniTexture, uniLayer, uniMRIView;
+    GLint uniIsTexOn, uniTexture, uniLayer, uniMRIView, uniIsColor, uniNodeColors;
     std::vector<GLuint> triangles;
     std::vector<float> vertices;
     std::vector<float> normals;
-    std::vector<int> ids;
-
+    std::map<int, int> idLookUp;
 public:
     BrainModel();
     void loadFromObj(QOpenGLFunctions_3_2_Core *f, std::string path, int hasTextures);
@@ -47,6 +48,8 @@ public:
     int view = 0;
     glm::mat4 model;
     glm::mat4 parentPosition;
+    bool isColored = false;
+    Brain *brain;
 };
 
 #endif // BRAINMODEL_H
