@@ -65,6 +65,7 @@ public:
     NColor clerp(NColor a, NColor b, float f);
     float nodeSize = 1.5f;
     bool isScaling = false;
+    bool isConnectionScaling = true;
     float connectionSize = 0.3f;
     float graphSignalSize = 20.0f;
 
@@ -74,6 +75,7 @@ public:
 
     bool hasAppendedData = false;
     bool displayHeatMap = false;
+    bool displayUnusedNodes = true;
     bool connectionStrengthColor = true;
     bool hasTime = false;
     int numFrames = 0;

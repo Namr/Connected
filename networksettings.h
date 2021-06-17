@@ -23,9 +23,11 @@ public:
     float textThreshold = 1.0f;
     int textSize = 10;
     bool isScaling = false;
+    bool isConnectionScaling = true;
     bool displayFrame = false;
     bool displayHeatmap = false;
     bool connectionStrengthColor = true;
+    bool showUnusedNodes = true;
     int milisecsPerFrame = 220;
 private slots:
     void on_nodeSizeSlider_sliderMoved(int position);
@@ -50,6 +52,9 @@ private slots:
 
     void on_checkBox_4_toggled(bool checked);
 
+    void on_checkBox_5_toggled(bool checked);
+
+    void on_checkBox_6_toggled(bool checked);
 private:
     Ui::NetworkSettings *ui;
 };

@@ -24,6 +24,7 @@ Connected::Connected(QWidget *parent)
 
     ui.screen->nodeSize = &NSettings->nodeSize;
     ui.screen->isScaling = &NSettings->isScaling;
+    ui.screen->showUnusedNodes = &NSettings->showUnusedNodes;
     ui.screen->connectionSize = &NSettings->connectionSize;
     ui.screen->graphSignalSize = &NSettings->graphSignalSize;
     ui.screen->threshold = &NSettings->threshold;
@@ -33,7 +34,7 @@ Connected::Connected(QWidget *parent)
     ui.screen->displayHeatmap = &NSettings->displayHeatmap;
     ui.screen->connectionStrengthColor = &NSettings->connectionStrengthColor;
     ui.screen->msPerFrame = &NSettings->milisecsPerFrame;
-
+    ui.screen->isConnectionScaling = &NSettings->isConnectionScaling;
     ui.screen->coronal = &MSettings->coronal;
     ui.screen->axial = &MSettings->axial;
 

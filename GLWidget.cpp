@@ -260,6 +260,12 @@ void GLWidget::paintGL()
     primaryBrain.isScaling = *isScaling;
     secondaryBrain.isScaling = *isScaling;
 
+    primaryBrain.isConnectionScaling = *isConnectionScaling;
+    secondaryBrain.isConnectionScaling = *isConnectionScaling;
+
+    primaryBrain.displayUnusedNodes = *showUnusedNodes;
+    secondaryBrain.displayUnusedNodes = *showUnusedNodes;
+
     primaryBrain.milisecondsPerFrame = msPerFrame;
     secondaryBrain.milisecondsPerFrame = msPerFrame;
 

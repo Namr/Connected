@@ -40,7 +40,27 @@
       <item>
        <widget class="QCheckBox" name="checkBox">
         <property name="text">
-         <string>Scale to Node Sizes in File</string>
+         <string>Scale Nodes by Sizes in File</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox_5">
+        <property name="text">
+         <string>Scale Connections by Strength</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBox_6">
+        <property name="text">
+         <string>Show Unused Nodes</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -223,7 +243,7 @@
      <x>0</x>
      <y>0</y>
      <width>491</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

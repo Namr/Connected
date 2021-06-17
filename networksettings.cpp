@@ -28,6 +28,11 @@ void NetworkSettings::refresh()
     else
         ui->checkBox->setCheckState(Qt::CheckState::Unchecked);
 
+    if(isConnectionScaling)
+        ui->checkBox_5->setCheckState(Qt::CheckState::Checked);
+    else
+        ui->checkBox_5->setCheckState(Qt::CheckState::Unchecked);
+
     if(displayFrame)
         ui->checkBox_2->setCheckState(Qt::CheckState::Checked);
     else
@@ -42,6 +47,11 @@ void NetworkSettings::refresh()
         ui->checkBox_4->setCheckState(Qt::CheckState::Checked);
     else
         ui->checkBox_4->setCheckState(Qt::CheckState::Unchecked);
+
+    if(showUnusedNodes)
+        ui->checkBox_6->setCheckState(Qt::CheckState::Checked);
+    else
+        ui->checkBox_6->setCheckState(Qt::CheckState::Unchecked);
 }
 
 void NetworkSettings::on_nodeSizeSlider_sliderMoved(int position)
@@ -97,4 +107,14 @@ void NetworkSettings::on_checkBox_3_toggled(bool checked)
 void NetworkSettings::on_checkBox_4_toggled(bool checked)
 {
     connectionStrengthColor = checked;
+}
+
+void NetworkSettings::on_checkBox_5_toggled(bool checked)
+{
+    isConnectionScaling = checked;
+}
+
+void NetworkSettings::on_checkBox_6_toggled(bool checked)
+{
+    showUnusedNodes = checked;
 }

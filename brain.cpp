@@ -299,7 +299,7 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
         //for each node that this node is connected to (for this frame), draw a connection
         int connectedNode = 0;
         bool shouldRenderText = false;
-
+        bool canRenderSphere = false;
         int brainFrame = currentFrame > (connections.size() - 1) ? (connections.size() - 1) : currentFrame;
         for (float connection : connections[brainFrame][node])
         {
@@ -307,6 +307,10 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
             if(connection > textThreshold && connectedNode != node)
             {
                 shouldRenderText = true;
+            }
+            if(connection > threshold && connectedNode != node)
+            {
+                canRenderSphere = true;
             }
             //filter out connections below threshold or filter out non isolated nodes if the mouse is down
             if (connection > threshold && (mouseDown == 0 || hit || selectedNode == node || selectedNode == connectedNode))
@@ -323,7 +327,10 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
 
                 //now scale it so it actually reaches that node
                 float dist = glm::distance(glm::vec3(sphere.model[3]), glm::vec3(nodePositions[connectedNode][3]));
-                connector.model = glm::scale(connector.model, glm::vec3(connection * connectionSize, connection * connectionSize, dist * 0.5));
+                if(isConnectionScaling)
+                    connector.model = glm::scale(connector.model, glm::vec3(connection * connectionSize, connection * connectionSize, dist * 0.5));
+                else
+                    connector.model = glm::scale(connector.model, glm::vec3(connectionSize, connectionSize, dist * 0.5));
                 //this line ensures the scale occurs from the BASE of the model
                 connector.model *= glm::mat4(1, 0, 0, 0,
                     0, 1, 0, 0,
@@ -382,8 +389,10 @@ void Brain::update(QOpenGLFunctions_3_2_Core *f, Camera &camera, float xpos, flo
                 NColor signalColor = clerp(blue, red, (signalSize + 1.0f) / 2.0f);
                 sphere.render(f, camera, signalColor.R / 255.0f, signalColor.G / 255.0f, signalColor.B / 255.0f, 1.0f);
             }
-            else
+            else if(displayUnusedNodes || canRenderSphere)
+            {
                 sphere.render(f, camera, colors[nodeColors[node]].R / 255.0f, colors[nodeColors[node]].G / 255.0f, colors[nodeColors[node]].B / 255.0f, colors[nodeColors[node]].A / 255.0f);
+            }
         }
         //render text if applicable
         if(shouldRenderText == true)

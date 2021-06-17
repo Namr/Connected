@@ -78,6 +78,8 @@ public:
     float *textThreshold;
     int *textSize;
     bool *isScaling;
+    bool *isConnectionScaling;
+    bool *showUnusedNodes;
     bool *displayFrame;
     bool *displayHeatmap;
     bool *connectionStrengthColor;
